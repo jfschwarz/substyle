@@ -6,7 +6,7 @@ import pick from 'lodash/pick'
 import merge from 'lodash/merge'
 
 
-export default function substyle({ style, className }, nestedKeys=[], defaultStyle) {
+export default function substyle({ style, className }, nestedKeys, defaultStyle) {
 
   if(typeof nestedKeys === 'string') {
     nestedKeys = [nestedKeys]
