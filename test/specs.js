@@ -6,9 +6,10 @@ describe('substyle', function () {
 
   const myStyle = {
 
-    toggle: {
-      display: 'block',
-      width: 50,
+    width: '100%',
+
+    ':hover': {
+      background: 'silver'
     },
 
     '&active': {
@@ -17,6 +18,20 @@ describe('substyle', function () {
 
     '&inactive': {
       background: 'white'
+    },
+
+    '&disabled': {
+      pointerEvents: 'none'
+    },
+
+
+    toggle: {
+      display: 'block',
+      width: 50,
+    },
+
+    btn: {
+      cursor: 'pointer'
     }
 
   }
@@ -51,34 +66,10 @@ describe('substyle', function () {
     expect(props).to.not.have.property('style')
   })
 
-  it('should accept a default inline style object', function () {
-    const defaultStyle = {
-      toggle: { width: 100 }
-    }
-    const { style } = substyle({ className: 'my-class' }, 'toggle', defaultStyle)
-    expect(style).to.deep.equal({ width: 100 })
-  })
-
-  it('should be guaranteed that custom inline styles overwrite default inline styles', function () {
-    const defaultStyle = {
-      toggle: { width: 100, border: '1px solid black' }
-    }
-    const { style } = substyle({ style: myStyle }, 'toggle', defaultStyle)
-    expect(style).to.deep.equal({ 
-      display: 'block',
-      width: 50, 
-      border: '1px solid black'
-    })
-  })
-
   it('should support passing multiple keys in an array', function () {
-    const defaultStyle = {
-      btn: { cursor: 'pointer' }
-    }
     const { style, className } = substyle(
       { style: myStyle, className: 'my-class' }, 
-      [ 'toggle', 'btn' ], 
-      defaultStyle
+      [ 'toggle', 'btn' ]
     )
 
     expect(className).to.equal('my-class__toggle my-class__btn')
@@ -90,13 +81,9 @@ describe('substyle', function () {
   })
 
   it('should support passing multiple keys as an object', function () {
-    const defaultStyle = {
-      '&disabled': { pointerEvents: 'none' }
-    }
     const { style, className } = substyle(
       { style: myStyle, className: 'my-class' }, 
-      { '&active': true, '&inactive': false, '&disabled': true }, 
-      defaultStyle
+      { '&active': true, '&inactive': false, '&disabled': true }
     )
 
     expect(className).to.equal('my-class--active my-class--disabled')
@@ -106,8 +93,32 @@ describe('substyle', function () {
     })
   })
 
-  it('should merge nested inline styles', function () {
-    const defaultStyleWithDeepNesting = {
+  it('should return the original className when nestedKeys is not specified or empty', function () {
+    const { className } = substyle({ className: 'my-class' })
+    expect(className).to.equal('my-class')
+
+    const { className: sameClassName } = substyle({ className: 'my-class' }, { '@active': false })
+    expect(sameClassName).to.equal('my-class')
+
+    const { className: stillTheSameClassName } = substyle({ className: 'my-class' }, undefined)
+    expect(stillTheSameClassName).to.equal('my-class')
+  })
+
+  it('should return the top-level inline style definitions when nestedKeys is not specified', function () {
+    const { style } = substyle({ style: myStyle })
+    expect(style).to.have.property('width', '100%')
+  })
+
+  it('should include nested inline style definitions for pseudo-class selectors when nestedKeys is not specified', function () {
+    const { style } = substyle({ style: myStyle })
+    expect(style).to.have.property(':hover')
+    expect(style[':hover']).to.deep.equal({
+      background: 'silver'
+    })
+  })
+
+  it('should merge nested inline styles in the order of the nestedKeys', function () {
+    const styleWithDeepNesting = {
       toggle: {
         width: 100,
 
@@ -115,11 +126,9 @@ describe('substyle', function () {
           fontSize: '11pt',
           color: 'blue'
         }
-      }
-    }
-    const customStyleWithDeepNesting = {
-      toggle: {
-        display: 'block',
+      },
+
+      specialToggle: {
         width: 50,
 
         label: {
@@ -127,15 +136,24 @@ describe('substyle', function () {
         }
       }
     }
-    const { style } = substyle({ style: customStyleWithDeepNesting }, 'toggle', defaultStyleWithDeepNesting)
 
+    const { style } = substyle({ style: styleWithDeepNesting }, ['toggle', 'specialToggle'])
     expect(style).to.deep.equal({
-      display: 'block',
       width: 50,
 
       label: {
         fontSize: '11pt',
         color: 'red'
+      }
+    })
+
+    const { style: otherStyle } = substyle({ style: styleWithDeepNesting }, ['specialToggle', 'toggle'])
+    expect(otherStyle).to.deep.equal({
+      width: 100,
+
+      label: {
+        fontSize: '11pt',
+        color: 'blue'
       }
     })
   });

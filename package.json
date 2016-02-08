@@ -30,8 +30,7 @@
   "homepage": "https://github.com/jfschwarz/substyle#readme",
   "dependencies": {
     "invariant": "^2.2.0",
-    "lodash": "^4.3.0",
-    "warning": "^2.1.0"
+    "lodash": "^4.3.0"
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
