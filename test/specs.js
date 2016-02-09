@@ -156,6 +156,19 @@ describe('substyle', function () {
         color: 'blue'
       }
     })
-  });
+  })
+
+  it('should also pick the inline style sub object under the camelized version of the key', function () {
+    const styleWithCamelCaseKey = {
+      specialToggle: {
+        width: 50
+      }
+    }
+
+    const { style } = substyle({ style: styleWithCamelCaseKey }, 'special-toggle')
+    expect(style).to.deep.equal({
+      width: 50
+    })
+  })
 
 })
