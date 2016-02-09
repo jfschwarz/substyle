@@ -38,12 +38,12 @@ describe('substyle', function () {
 
 
   
-  it('should derive a BEM compatible classNames for a passed nested element key', function () {
+  it('should derive a BEM compliant classNames for a passed nested element key', function () {
     const { className } = substyle({ className: 'my-class' }, 'toggle')
     expect(className).to.equal('my-class__toggle')
   })
 
-  it('should derive a BEM compatible classNames for a passed modifier key', function () {
+  it('should derive a BEM compliant classNames for a passed modifier key', function () {
     const { className } = substyle({ className: 'my-class' }, '&active')
     expect(className).to.equal('my-class--active')
   })
