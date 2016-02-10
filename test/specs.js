@@ -45,7 +45,7 @@ describe('substyle', function () {
 
   it('should derive a BEM compliant classNames for a passed modifier key', function () {
     const { className } = substyle({ className: 'my-class' }, '&active')
-    expect(className).to.equal('my-class--active')
+    expect(className).to.equal('my-class my-class--active')
   })
 
   it('should should select the nested inline styles for the given key', function () {
@@ -64,6 +64,21 @@ describe('substyle', function () {
   it('should not return a style when no style has been set in the props', function () {
     const props = substyle({ className: 'my-class' }, 'toggle')
     expect(props).to.not.have.property('style')
+  })
+
+
+  it('should include direct style definitions if a modifier key is used', function () {
+    const { style } = substyle(
+      { style: myStyle }, 
+      '&active'
+    )
+    expect(style).to.deep.equal({ 
+      width: '100%',
+      ':hover': {
+        background: 'silver'
+      },
+      background: 'blue'
+    })
   })
 
   it('should support passing multiple keys in an array', function () {
@@ -86,8 +101,12 @@ describe('substyle', function () {
       { '&active': true, '&inactive': false, '&disabled': true }
     )
 
-    expect(className).to.equal('my-class--active my-class--disabled')
+    expect(className).to.equal('my-class my-class--active my-class--disabled')
     expect(style).to.deep.equal({ 
+      width: '100%',
+      ':hover': {
+        background: 'silver'
+      },
       background: 'blue',
       pointerEvents: 'none'
     })

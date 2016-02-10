@@ -1,8 +1,11 @@
 import invariant from 'invariant'
+import warning from 'warning'
 import keys from 'lodash/keys'
 import values from 'lodash/values'
 import pickBy from 'lodash/fp/pickBy'
 import merge from 'lodash/merge'
+import all from 'lodash/fp/all'
+import some from 'lodash/fp/some'
 
 
 export default function substyle({ style, className }, nestedKeys) {
@@ -22,26 +25,46 @@ export default function substyle({ style, className }, nestedKeys) {
     Array.isArray(nestedKeys), 
     'Second parameter must be a string, an array of strings, an object with boolean values, or a falsy value'
   )
+  
+  let someAreModifiers = some(isModifier, nestedKeys)
+  let allAreModifiers = all(isModifier, nestedKeys)
+
+  warning(
+    allAreModifiers || !someAreModifiers,
+    `Mixing element and modifier keys in the same substyle call is discouraged `+
+    `(got the following keys: [` + nestedKeys.map(k => `'${k}'`).join(', ') + `])`
+  )
+
+  warning(
+    !className || className.split(' ').length === 1 || nestedKeys.length === 0,
+    `Deriving class names from a \`className\` prop that already uses multiple class names is discouraged `+
+    `(got the following className: '${className}')`
+  )
+
+  const useDirectStyles = nestedKeys.length === 0 || someAreModifiers
 
   return {
 
-    ...( style ? { 
-      style : nestedKeys.length > 0 ? merge({},
+    ...( style && { 
+      style : merge({},
+        useDirectStyles && pickDirectStyles(style),
         ...values(pickNestedStyles(style, nestedKeys))
-      ) : pickDirectStyles(style)
-    } : {} ),
+      )
+    }),
 
-    ...( className ? { 
-      className : nestedKeys.length > 0 ? nestedKeys.map(
-        key => className + (key[0] === '&' ? 
-                  '--' + key.substring(1) : 
-                  '__' + key)
-      ).join(' ') : className
-    } : {} )
+    ...( className && { 
+      className : [
+        ...(useDirectStyles && [className]),
+        ...nestedKeys.map(key => className + classNameSuffix(key))
+      ].join(' ')
+    })
 
   }
 
 }
+
+const isModifier = key => key[0] === '&'
+const isPseudoClass = key => key[0] === ':'
 
 const pickNestedStyles = (style, nestedKeys) => {
   let nestedStyles = {};
@@ -54,8 +77,9 @@ const pickNestedStyles = (style, nestedKeys) => {
 }
 
 const pickDirectStyles = pickBy(
-  (value, key) => typeof value !== "object" || key[0] === ':'
+  (value, key) => typeof value !== "object" || isPseudoClass(key)
 )
 
-const camelize = str => str.replace(/-(\w)/g, (m, c) => c.toUpperCase())
+const camelize = key => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())
+const classNameSuffix = key => isModifier(key) ? '--' + key.substring(1) : '__' + key
 
