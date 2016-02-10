@@ -38,12 +38,12 @@ describe('substyle', function () {
 
 
   
-  it('should derive a BEM compliant classNames for a passed nested element key', function () {
+  it('should derive a BEM compliant className for a passed nested element key', function () {
     const { className } = substyle({ className: 'my-class' }, 'toggle')
     expect(className).to.equal('my-class__toggle')
   })
 
-  it('should derive a BEM compliant classNames for a passed modifier key', function () {
+  it('should derive a BEM compliant className for a passed modifier key', function () {
     const { className } = substyle({ className: 'my-class' }, '&active')
     expect(className).to.equal('my-class my-class--active')
   })
@@ -112,7 +112,7 @@ describe('substyle', function () {
     })
   })
 
-  it('should return the original className when nestedKeys is not specified or empty', function () {
+  it('should return the original className when selectedKeys is not specified or empty', function () {
     const { className } = substyle({ className: 'my-class' })
     expect(className).to.equal('my-class')
 
@@ -123,12 +123,12 @@ describe('substyle', function () {
     expect(stillTheSameClassName).to.equal('my-class')
   })
 
-  it('should return the top-level inline style definitions when nestedKeys is not specified', function () {
+  it('should return the top-level inline style definitions when selectedKeys is not specified', function () {
     const { style } = substyle({ style: myStyle })
     expect(style).to.have.property('width', '100%')
   })
 
-  it('should include nested inline style definitions for pseudo-class selectors when nestedKeys is not specified', function () {
+  it('should include nested inline style definitions for pseudo-class selectors when selectedKeys is not specified', function () {
     const { style } = substyle({ style: myStyle })
     expect(style).to.have.property(':hover')
     expect(style[':hover']).to.deep.equal({
@@ -136,7 +136,7 @@ describe('substyle', function () {
     })
   })
 
-  it('should merge nested inline styles in the order of the nestedKeys', function () {
+  it('should merge nested inline styles in the order of the selectedKeys', function () {
     const styleWithDeepNesting = {
       toggle: {
         width: 100,
