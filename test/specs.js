@@ -1,43 +1,41 @@
 import { expect } from 'chai'
 
-import substyle from '../src'
+import substyle, { defaultStyle } from '../src'
+
+const myStyle = {
+
+  width: '100%',
+
+  ':hover': {
+    background: 'silver'
+  },
+
+  '&active': {
+    background: 'blue'
+  },
+
+  '&inactive': {
+    background: 'white'
+  },
+
+  '&disabled': {
+    pointerEvents: 'none'
+  },
+
+
+  toggle: {
+    display: 'block',
+    width: 50,
+  },
+
+  btn: {
+    cursor: 'pointer'
+  }
+
+}
 
 describe('substyle', function () {
 
-  const myStyle = {
-
-    width: '100%',
-
-    ':hover': {
-      background: 'silver'
-    },
-
-    '&active': {
-      background: 'blue'
-    },
-
-    '&inactive': {
-      background: 'white'
-    },
-
-    '&disabled': {
-      pointerEvents: 'none'
-    },
-
-
-    toggle: {
-      display: 'block',
-      width: 50,
-    },
-
-    btn: {
-      cursor: 'pointer'
-    }
-
-  }
-
-
-  
   it('should derive a BEM compliant className for a passed nested element key', function () {
     const { className } = substyle({ className: 'my-class' }, 'toggle')
     expect(className).to.equal('my-class__toggle')
@@ -188,6 +186,17 @@ describe('substyle', function () {
     expect(style).to.deep.equal({
       width: 50
     })
+  })
+
+})
+
+describe('defaultStyle', function () {
+
+  it('should return a substyle that is preconfigured to merge the style prop with some default styles', function () {
+     const substyleWithDefaultStyles = defaultStyle({ width: 50 }, { nested: { height: 10, width: 10 }}) 
+     const props = { style: { height: 50, nested: { width: 20 } } }
+     expect(substyleWithDefaultStyles(props)).to.deep.equal({ style: { height: 50, width: 50 } })
+     expect(substyleWithDefaultStyles(props, 'nested')).to.deep.equal({ style: { height: 10, width: 20 } })
   })
 
 })
