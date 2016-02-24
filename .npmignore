@@ -2,3 +2,5 @@
 *.log
 src
 test
+.babelrc
+.gitignore
