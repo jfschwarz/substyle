@@ -3,7 +3,7 @@ Universal styling for reusable React components
 
 ## Example
 
-Let's create a reusable `Popover` component:
+Let's create a reusable `Popover` component using _substyle_:
 
 ```javascript
 const Popover = (props) => (
@@ -14,7 +14,7 @@ const Popover = (props) => (
 )
 ```
 
-By using _substyle_, our `Popover` component can now be used with CSS as well as with inline styles:
+That's it: Our `Popover` component can now be used with CSS as well as with inline styles.
 
 ##### For using CSS, assign `className`
 
