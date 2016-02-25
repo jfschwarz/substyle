@@ -133,7 +133,40 @@ As you can see in this example, it's possible to use an array of element keys. I
 
 #### Modifiers
 
-TODO
+```javascript
+const Foo = ({ disabled, ...rest }) => (
+  <div {...substyle(rest, { '&disabled': disabled })}>
+    <div {...substyle(rest, { bar: true, '&disabled': disabled })} />
+  </div>
+)
+
+<Foo className='foo' />                   // <div class='foo'>
+                                          //   <div className='foo__bar' />
+                                          // </div>
+
+<Foo className='foo' disabled />          // <div class='foo foo--disabled'>
+                                          //   <div className='foo__bar' />
+                                          // </div>
+const style = {                             
+  position: 'absolute',                 
+  top: 0,                               
+                                        
+  bar: { width: '100%' },                 // 'bar' element base styles
+  
+  '&disabled': {                          // nested styles for the '&disabled' modifier:
+    opacity: 0.5,                         //  - direct styles to be set on the container
+    bar: { width: '50%' },                //  - 'bar' element styles to be merged with base styles
+  }
+}
+
+                                          // <div style='position: absolute; top: 0;'>
+<Foo style={style} />                     //   <div style='width: 100%' /> 
+                                          // </div>  
+
+                                          // <div style='position: absolute; top: 0; opacity: 0.5;'>
+<Foo style={style} disabled />            //   <div style='width: 50%' /> 
+                                          // </div>  
+```
 
 
 ### Default styles
