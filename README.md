@@ -102,7 +102,7 @@ const Foo = (props) => <div {...substyle(props)}>...</div>
 #### Elements
 
 
-For all React elements returned by the components `render` function other than the root container, `substyle(props, key)` is used with a `key` string as second argument, which identifies the element's type or role within the component. As a result, the corresponding DOM node is assigned a BEM class name of the form `'block__element'` one the one hand, and, on the other hand, receives all nested inline style definitions found under the nested property named `key` of the passed style prop.
+For all React elements returned by the components `render` function other than the root container, `substyle(props, key)` is used with a `key` string as second argument, which identifies the element's type or role within the component. As a result, the corresponding DOM node is assigned a BEM class name of the form `'block__element'` on the one hand, and, on the other hand, receives all nested inline style definitions found under the nested property named `key` of the passed style prop.
 
 **Example**
 
