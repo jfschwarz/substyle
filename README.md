@@ -30,6 +30,8 @@ npm install --save substyle
 Let's create a reusable `Popover` component using _substyle_:
 
 ```javascript
+import substyle from 'substyle'
+
 const Popover = (props) => (
   <div {...substyle(props)}>
     <button {...substyle(props, 'close')}>x</button>
