@@ -1,6 +1,6 @@
 # substyle
 
-_substyle_ is a simple helper function for writing reusable React components that are stylable through both, CSS and inline styles. In its core, it is a simple mapping of the `style` and `className` prop values:
+_substyle_ is a simple helper function for writing reusable React components that are stylable through both, CSS and inline styles. In its core, it is nothing more than a simple mapping of the `style` and `className` prop values:
 
 ```javascript
 ({ style, className }, key) => ({
