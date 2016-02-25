@@ -133,6 +133,10 @@ As you can see in this example, it's possible to use an array of element keys. I
 
 #### Modifiers
 
+Modifiers are used to set styles conditionally based on props or state. If used on the container element, a class name of the form `'block block--modifier'` will be set on that node. In addition to the direct inline style definitions, it will receive the style definitions found nested under the `'&modifier'` property. When using CSS, the additional modifier class name on the block container is already sufficient for being able to customize all nested elements according to the modification, as we can simply write selectors such as `.block--modifier .block__element`. However, for supporting customization through inline styles, we have to explicitly set the modifiers in the `substyle` calls for all nested elements as well.
+
+**Example**
+
 ```javascript
 const Foo = ({ disabled, ...rest }) => (
   <div {...substyle(rest, { '&disabled': disabled })}>
