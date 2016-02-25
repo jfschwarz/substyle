@@ -84,17 +84,19 @@ A React component's render function always returns exactly one React element. Th
 **Example**
 
 ```javascript
-const result = substyle({ 
-  className : 'foo',                      // result.className : 'foo'
-  style : {                               // result.style : {
-    position: 'absolute',                 //   position: 'absolute',
-    top: 0,                               //   top: 0,
-                                          // }
+const Foo = (props) => <div {...substyle(props)}>...</div>
+
+<Foo className='foo' />                   // <div class='foo'>...</div>
+
+<Foo style={{                             // <div style='position: absolute; top: 0;'>...</div>
+    position: 'absolute',                
+    top: 0,                               
+                                          
     bar: {
       width: '100%'
     }
-  }
-})
+  }} 
+/>
 ```
 
 #### Elements
