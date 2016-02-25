@@ -144,5 +144,5 @@ TODO
 
 If you want to see how _substyle_ is used in practice, go have a look at code of existing React components already using it:
 
-- [react-day-picker-substyled](https://github.com/jfschwarz/react-day-picker-substyled)
-- [react-mentions](https://github.com/effektif/react-mentions)
+- [react-day-picker-substyled](https://github.com/jfschwarz/react-day-picker-substyled/blob/master/src/DayPicker.js)
+- [react-mentions](https://github.com/effektif/react-mentions/blob/master/src/MentionsInput.js)
