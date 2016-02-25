@@ -128,7 +128,7 @@ const Foo = (props) => <div {...substyle(props)}>
 />
 ```
 
-As you can see in this example, it's possible to use an array of element keys. In turn, the element is assigned multiple class names, one derived for each specified key. At the same time, nested inlines styles are picked from all properties found for these keys.
+As you can see in this example, it's possible to use an array of element keys. In turn, the element receives multiple class names, one derived for each specified key. At the same time, nested inlines styles are picked from all properties found for these keys.
 
 
 #### Modifiers
