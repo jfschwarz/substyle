@@ -1,5 +1,14 @@
 # substyle
-Universal styling for reusable React components
+
+_substyle_ is a simple helper function for writing reusable React components that are stylable through both, CSS and inline styles. In its core, it is a simple mapping of the `style` and `className` prop values:
+
+```javascript
+({ style, className }, key) => ({
+  className: key ? className && `${className}__${key}` : className,
+  style: key ? style && style[key] : style
+})
+```
+
 
 ## Example
 
