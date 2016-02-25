@@ -101,7 +101,35 @@ const Foo = (props) => <div {...substyle(props)}>...</div>
 
 #### Elements
 
-TODO
+
+For all React elements returned by the components `render` function other than the root container, `substyle(props, key)` is used with a `key` string as second argument, which identifies the element's type within the component. As a result, the corresponding DOM node is assigned a BEM class name of the form `'block__element'` one the one hand, and, on the other hand, receives all nested inline style definitions found under the nested property named `key` of the passed style prop.
+
+**Example**
+
+```javascript
+const Foo = (props) => <div {...substyle(props)}>
+  <div {...substyle(props, 'bar')} />
+  <div {...substyle(props, ['bar', 'baz'])} />
+</div>
+
+<Foo className='foo' />                   // <div class='foo'>
+                                          //   <div className='foo__bar' />
+                                          //   <div className='foo__bar foo__baz' />
+                                          // </div>
+
+<Foo style={{                             // <div style='position: absolute; top: 0;'>
+    position: 'absolute',                 //   <div style='width: 100%' /> 
+    top: 0,                               //   <div style='width: 100%' /> 
+                                          // </div> 
+    bar: {
+      width: '100%'
+    }
+  }} 
+/>
+```
+
+As you can see in this example, it's also possible use an array of element keys. In turn, the element is assigned multiple class names, one derived for each specified key. At the same time, nested inlines styles are picked from all properties found for these keys.
+
 
 #### Modifiers
 
