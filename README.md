@@ -71,8 +71,28 @@ So what does this achieve? First, it assigns class names derived from the elemen
 
 ## How to use
 
-_substyle_ picks up the idea of [BEM methodology](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/) of breaking style definitions down into **B**lock, **E**lement, and **M**odifier parts. In fact, _substyle_ generates derived class names that follow BEM syntax. You do not have to know anything about BEM other than understanding how the three basic terms relate to React components. And this is straight-forward:
+_substyle_ picks up the idea of [BEM methodology](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/) of breaking style definitions down into **B**lock, **E**lement, and **M**odifier parts. In fact, _substyle_ generates derived class names that follow BEM syntax. You don't have to know anything about BEM other than understanding how the three basic terms relate to React components. And this is straightforward:
 
 - **block**: component
 - **element**: descendant element of a component
 - **modifier**: represents a specific state or variation of a block or element
+
+#### Block 
+
+A React component's render function always returns exactly one React element. This container element, often a `div`, wraps all descendant elements and represents the component block in the DOM. As such, it is assigned the block name as class name and receives the direct style definitions of the nested inline style object. For deriving the block styles, simply call `substyle(props)` without a second argument.
+
+**Example**
+
+```javascript
+const result = substyle({ 
+  className : 'foo',                      // result.className : 'foo'
+  style : {                               // result.style : {
+    position: 'absolute',                 //   position: 'absolute',
+    top: 0,                               //   top: 0,
+                                          // }
+    bar: {
+      width: '100%'
+    }
+  }
+})
+```
