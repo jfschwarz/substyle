@@ -47,7 +47,7 @@ That's it: Our `Popover` component can now be used with CSS as well as with inli
 ```javascript
 // JSX                                        // Rendered HTML
 
-<Popover className="popover">                 // <div class="popover">
+<Popover className='popover'>                 // <div class='popover'>
   ...                                         //   <button class="popover__close">x</button>
 </Popover>                                    //   ...
                                               // </div>
@@ -58,7 +58,7 @@ That's it: Our `Popover` component can now be used with CSS as well as with inli
 ```javascript
 // JSX                                        // Rendered HTML
                          
-<Popover style={{                             // <div style="background: white;">
+<Popover style={{                             // <div style='background: white;'>
   background: 'white',                        //   <button style="right: 0;">x</button>
   close: { right: 0 }                         //   ...  
 }}>                                           // </div>
