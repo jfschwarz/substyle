@@ -71,7 +71,7 @@ So what does this achieve? First, it assigns class names derived from the elemen
 
 ## How to use
 
-_substyle_ picks up the idea of [BEM methodology](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/) of breaking style definitions down into **b**lock, **e**lement, and **m**odifier parts. In fact, _substyle_ generates derived class names that follow BEM syntax. For using _substyle_ you do not have to know anything about BEM other than understanding how the three basic terms relate to React components. And this is straight-forward:
+_substyle_ picks up the idea of [BEM methodology](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/) of breaking style definitions down into **B**lock, **E**lement, and **M**odifier parts. In fact, _substyle_ generates derived class names that follow BEM syntax. For using _substyle_ you do not have to know anything about BEM other than understanding how the three basic terms relate to React components. And this is straight-forward:
 
 - **block**: component
 - **element**: descendant element of a component
