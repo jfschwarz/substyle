@@ -16,6 +16,12 @@ First, let's clarify the term _reusable component_. Reuse here does NOT mean com
 Eliminating CSS in favor of inline styles solves these problems as inline style definitions are properly coupled with components and there is no need to deal with global class names. ...
 
 
+## Installation
+
+```
+npm install --save substyle
+```
+
 ## Example
 
 Let's create a reusable `Popover` component using _substyle_:
