@@ -7,21 +7,8 @@ const myStyle = {
   width: '100%',
 
   ':hover': {
-    background: 'silver'
+    background: 'silver',
   },
-
-  '&active': {
-    background: 'blue'
-  },
-
-  '&inactive': {
-    background: 'white'
-  },
-
-  '&disabled': {
-    pointerEvents: 'none'
-  },
-
 
   toggle: {
     display: 'block',
@@ -29,8 +16,24 @@ const myStyle = {
   },
 
   btn: {
-    cursor: 'pointer'
-  }
+    cursor: 'pointer',
+  },
+
+  '&active': {
+    background: 'blue',
+  },
+
+  '&inactive': {
+    background: 'white',
+  },
+
+  '&disabled': {
+    pointerEvents: 'none',
+
+    btn: {
+      cursor: 'default',
+    },
+  },
 
 }
 
@@ -65,11 +68,8 @@ describe('substyle', function () {
   })
 
 
-  it('should include direct style definitions if a modifier key is used', function () {
-    const { style } = substyle(
-      { style: myStyle }, 
-      '&active'
-    )
+  it('should include direct style definitions if only modifier keys are used', function () {
+    const { style } = substyle({ style: myStyle }, '&active')
     expect(style).to.deep.equal({ 
       width: '100%',
       ':hover': {
@@ -77,6 +77,18 @@ describe('substyle', function () {
       },
       background: 'blue'
     })
+  })
+
+  it('should merge element styles nested under modifiers if selectedKeys contain both, element keys and modifier keys', function () {
+    const { style } = substyle({ style: myStyle }, ['btn', '&disabled'])
+    expect(style).to.deep.equal({ 
+      cursor: 'default',
+    })
+  })
+
+  it('should not generate additional class names for modifiers if selectedKeys contain element keys', function () {
+    const { className } = substyle({ className: 'my-class' }, ['btn', '&disabled'])
+    expect(className).to.equal('my-class__btn')
   })
 
   it('should support passing multiple keys in an array', function () {
@@ -134,6 +146,7 @@ describe('substyle', function () {
     })
   })
 
+  // TODO: rethink this! is it better maybe to merge in appearance order?
   it('should merge nested inline styles in the order of the selectedKeys', function () {
     const styleWithDeepNesting = {
       toggle: {

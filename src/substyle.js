@@ -3,9 +3,8 @@ import warning from 'warning'
 import keys from 'lodash/keys'
 import values from 'lodash/values'
 import pickBy from 'lodash/fp/pickBy'
+import negate from 'lodash/negate'
 import merge from 'lodash/merge'
-import all from 'lodash/fp/all'
-import some from 'lodash/fp/some'
 
 
 export default function substyle({ style, className }, selectedKeys) {
@@ -25,15 +24,6 @@ export default function substyle({ style, className }, selectedKeys) {
     Array.isArray(selectedKeys), 
     'Second parameter must be a string, an array of strings, an object with boolean values, or a falsy value'
   )
-  
-  let someAreModifiers = some(isModifier, selectedKeys)
-  let allAreModifiers = all(isModifier, selectedKeys)
-
-  warning(
-    allAreModifiers || !someAreModifiers,
-    `Mixing element and modifier keys in the same substyle call is discouraged `+
-    `(got the following keys: [` + selectedKeys.map(k => `'${k}'`).join(', ') + `])`
-  )
 
   warning(
     !className || className.split(' ').length === 1 || selectedKeys.length === 0,
@@ -41,22 +31,27 @@ export default function substyle({ style, className }, selectedKeys) {
     `(got the following className: '${className}')`
   )
 
-  const useDirectStyles = selectedKeys.length === 0 || someAreModifiers
+  const modifierKeys = selectedKeys.filter(isModifier)
+  const elementKeys = selectedKeys.filter(isElement)
 
+  const pickElementStyles = pickNestedStyles.bind(null, elementKeys)
+  const pickModifierStyles = pickNestedStyles.bind(null, modifierKeys)
+  
   return {
 
     ...( style && { 
       style : merge({},
-        useDirectStyles && pickDirectStyles(style),
-        ...values(pickNestedStyles(style, selectedKeys))
+        ...[ style, ...values(pickModifierStyles(style)) ].map(
+          elementKeys.length > 0 ? pickElementStyles : pickDirectStyles
+        )
       )
     }),
 
     ...( className && { 
-      className : [
-        ...(useDirectStyles && [className]),
-        ...selectedKeys.map(key => className + classNameSuffix(key))
-      ].join(' ')
+      className : (elementKeys.length === 0 ?
+        [ className, ...modifierKeys.map(key => className + '--' + key.substring(1)) ] :
+        elementKeys.map(key => className + '__' + key)
+      ).join(' ')
     })
 
   }
@@ -64,11 +59,12 @@ export default function substyle({ style, className }, selectedKeys) {
 }
 
 const isModifier = key => key[0] === '&'
+const isElement = negate(isModifier)
 const isPseudoClass = key => key[0] === ':'
 
-const pickNestedStyles = (style, selectedKeys) => {
+const pickNestedStyles = (keys, style) => {
   let nestedStyles = {};
-  selectedKeys.forEach(key => {
+  keys.forEach(key => {
     const camelCaseKey = camelize(key);
     if(style[camelCaseKey] && typeof style[camelCaseKey] === "object") nestedStyles[camelCaseKey] = style[camelCaseKey];
     if(style[key] && typeof style[key] === "object" ) nestedStyles[key] = style[key]
@@ -81,5 +77,3 @@ const pickDirectStyles = pickBy(
 )
 
 const camelize = key => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())
-const classNameSuffix = key => isModifier(key) ? '--' + key.substring(1) : '__' + key
-
