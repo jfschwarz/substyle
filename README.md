@@ -69,7 +69,7 @@ That's it: Our `Popover` component can now be used with CSS as well as with inli
 So what does this achieve? First, it assigns class names derived from the element's `className` prop. If the component is used without a `className`, it's safe to assume that none of the child elements require a class name to be set. Second, if a `style` object is supplied to the element, it selects the nested sub object under the specified key for the child element. By using the same keys for derived class names and nested element style definitions, a consistent naming scheme is established.
 
 
-## Understand how to use it
+## How to use it
 
 _substyle_ picks up the idea of [BEM methodology](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/) of breaking style definitions down into **B**lock, **E**lement, and **M**odifier parts. In fact, _substyle_ generates derived class names that follow BEM syntax. You don't have to know anything about BEM other than understanding how the three basic terms relate to React components. And this is straightforward:
 
@@ -134,3 +134,15 @@ As you can see in this example, it's possible to use an array of element keys. I
 #### Modifiers
 
 TODO
+
+
+### Default styles
+
+TODO
+
+## Real world examples
+
+If you want to see how _substyle_ is used in practice, go have a look at code of existing React components already using it:
+
+- [react-day-picker-substyled](https://github.com/jfschwarz/react-day-picker-substyled)
+- [react-mentions](https://github.com/effektif/react-mentions)
