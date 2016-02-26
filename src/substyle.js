@@ -4,6 +4,7 @@ import keys from 'lodash/keys'
 import values from 'lodash/values'
 import pickBy from 'lodash/fp/pickBy'
 import negate from 'lodash/negate'
+import flatten from 'lodash/flatten'
 import merge from 'lodash/merge'
 
 
@@ -34,16 +35,16 @@ export default function substyle({ style, className }, selectedKeys) {
   const modifierKeys = selectedKeys.filter(isModifier)
   const elementKeys = selectedKeys.filter(isElement)
 
-  const pickElementStyles = pickNestedStyles.bind(null, elementKeys)
-  const pickModifierStyles = pickNestedStyles.bind(null, modifierKeys)
-  
+  const getElementStyles = (style) => values(pickNestedStyles(style, elementKeys))
+  const getModifierStyles = (style) => values(pickNestedStyles(style, modifierKeys))
+
   return {
 
     ...( style && { 
       style : merge({},
-        ...[ style, ...values(pickModifierStyles(style)) ].map(
-          elementKeys.length > 0 ? pickElementStyles : pickDirectStyles
-        )
+        ...flatten([ style, ...getModifierStyles(style) ].map(
+          elementKeys.length > 0 ? getElementStyles : pickDirectStyles
+        ))
       )
     }),
 
@@ -62,7 +63,7 @@ const isModifier = key => key[0] === '&'
 const isElement = negate(isModifier)
 const isPseudoClass = key => key[0] === ':'
 
-const pickNestedStyles = (keys, style) => {
+const pickNestedStyles = (style, keys) => {
   let nestedStyles = {};
   keys.forEach(key => {
     const camelCaseKey = camelize(key);
