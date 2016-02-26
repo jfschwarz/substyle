@@ -146,6 +146,17 @@ describe('substyle', function () {
     })
   })
 
+  it('should include nested inline style definitions for media queries when selectedKeys is not specified', function () {
+    const styleWithMedia = {
+      background: 'white',
+      '@media (min-width: 320px)': {
+        width: '100%'
+      }
+    }
+    const { style } = substyle({ style: styleWithMedia })
+    expect(style).to.have.property('@media (min-width: 320px)')
+  })
+
   // TODO: rethink this! is it better maybe to merge in appearance order?
   it('should merge nested inline styles in the order of the selectedKeys', function () {
     const styleWithDeepNesting = {

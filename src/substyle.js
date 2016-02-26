@@ -61,7 +61,7 @@ export default function substyle({ style, className }, selectedKeys) {
 
 const isModifier = key => key[0] === '&'
 const isElement = negate(isModifier)
-const isPseudoClass = key => key[0] === ':'
+const isPseudoClassOrMedia = key => key[0] === ':' || key.substring(0, 6) === '@media'
 
 const pickNestedStyles = (style, keys) => {
   let nestedStyles = {};
@@ -74,7 +74,7 @@ const pickNestedStyles = (style, keys) => {
 }
 
 const pickDirectStyles = pickBy(
-  (value, key) => typeof value !== "object" || isPseudoClass(key)
+  (value, key) => typeof value !== "object" || isPseudoClassOrMedia(key)
 )
 
 const camelize = key => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())
