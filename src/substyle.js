@@ -2,10 +2,13 @@ import invariant from 'invariant'
 import warning from 'warning'
 import keys from 'lodash/keys'
 import values from 'lodash/values'
-import pickBy from 'lodash/fp/pickBy'
 import negate from 'lodash/negate'
+import identity from 'lodash/identity'
 import flatten from 'lodash/flatten'
 import merge from 'lodash/merge'
+import filter from 'lodash/fp/filter'
+import map from 'lodash/fp/map'
+import compose from 'lodash/fp/compose'
 
 
 export default function substyle({ style, className }, selectedKeys) {
@@ -32,26 +35,29 @@ export default function substyle({ style, className }, selectedKeys) {
     `(got the following className: '${className}')`
   )
 
-  const modifierKeys = selectedKeys.filter(isModifier)
-  const elementKeys = selectedKeys.filter(isElement)
+  const baseClassName = className && className.split(' ')[0]
+  const toElementClassNames = map(key => baseClassName + '__' + key)
+  const toModifierClassNames = map(key => baseClassName + '--' + key.substring(1))
 
-  const getElementStyles = (style) => values(pickNestedStyles(style, elementKeys))
-  const getModifierStyles = (style) => values(pickNestedStyles(style, modifierKeys))
+  const modifierKeys = filter(isModifier, selectedKeys)
+  const elementKeys = filter(isElement, selectedKeys)
+
+  const hoistElementStyles = (style) => values(pickNestedStyles(style, elementKeys))
+  const hoistModifierStyles = (style) => values(pickNestedStyles(style, modifierKeys))
+  const hoistAllElementStyles = elementKeys.length > 0 ? compose(flatten, map(hoistElementStyles)) : identity
 
   return {
 
     ...( style && { 
       style : merge({},
-        ...flatten([ style, ...getModifierStyles(style) ].map(
-          elementKeys.length > 0 ? getElementStyles : pickDirectStyles
-        ))
+        ...hoistAllElementStyles([ style, ...hoistModifierStyles(style) ])
       )
     }),
 
     ...( className && { 
       className : (elementKeys.length === 0 ?
-        [ className, ...modifierKeys.map(key => className + '--' + key.substring(1)) ] :
-        elementKeys.map(key => className + '__' + key)
+        [ className, ...toModifierClassNames(modifierKeys) ] :
+        toElementClassNames(elementKeys)
       ).join(' ')
     })
 
@@ -61,7 +67,7 @@ export default function substyle({ style, className }, selectedKeys) {
 
 const isModifier = key => key[0] === '&'
 const isElement = negate(isModifier)
-const isPseudoClassOrMedia = key => key[0] === ':' || key.substring(0, 6) === '@media'
+// const isPseudoClassOrMedia = key => key[0] === ':' || key.substring(0, 6) === '@media'
 
 const pickNestedStyles = (style, keys) => {
   let nestedStyles = {};
@@ -73,8 +79,8 @@ const pickNestedStyles = (style, keys) => {
   return nestedStyles;
 }
 
-const pickDirectStyles = pickBy(
-  (value, key) => typeof value !== "object" || isPseudoClassOrMedia(key)
-)
+// const pickDirectStyles = pickBy(
+//   (value, key) => typeof value !== "object" || isPseudoClassOrMedia(key) || isModifier(key)
+// )
 
 const camelize = key => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())

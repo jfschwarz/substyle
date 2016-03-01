@@ -212,6 +212,29 @@ describe('substyle', function () {
     })
   })
 
+  it('should correctly merge modifiers with existing classNames', function () {
+    const { className } = substyle({ className: 'foo foo--bar' }, '&baz')
+    expect(className).to.equal('foo foo--bar foo--baz')
+  })
+
+  it('should select the style definitions for all modifiers if container elements introduce nested substyle calls', function () {
+    const myStyle = {
+      position: 'absolute',
+      '&outer': {
+        cursor: 'pointer',
+      },
+      '&inner': {
+        color: 'red' 
+      }
+    }
+    const { style } = substyle(substyle({ style: myStyle }, '&outer'), '&inner')
+    expect(style).to.deep.equal({
+      position: 'absolute',
+      cursor: 'pointer',
+      color: 'red'
+    })
+  })
+
 })
 
 describe('defaultStyle', function () {
