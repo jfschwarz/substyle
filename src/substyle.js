@@ -69,6 +69,7 @@ const isModifier = key => key[0] === '&'
 const isElement = negate(isModifier)
 // const isPseudoClassOrMedia = key => key[0] === ':' || key.substring(0, 6) === '@media'
 
+// TODO: rather use the order of style definitions for overwriting precendence!!
 const pickNestedStyles = (style, keys) => {
   let nestedStyles = {};
   keys.forEach(key => {

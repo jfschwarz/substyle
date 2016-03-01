@@ -68,14 +68,11 @@ describe('substyle', function () {
   })
 
 
-  it('should include direct style definitions if only modifier keys are used', function () {
+  it('should include all direct style definitions if only modifier keys are used, hoisting those for the active modifiers', function () {
     const { style } = substyle({ style: myStyle }, '&active')
     expect(style).to.deep.equal({ 
-      width: '100%',
-      ':hover': {
-        background: 'silver'
-      },
-      background: 'blue'
+      ...myStyle,
+      background: 'blue' // hoisted from &active
     })
   })
 
@@ -113,12 +110,13 @@ describe('substyle', function () {
 
     expect(className).to.equal('my-class my-class--active my-class--disabled')
     expect(style).to.deep.equal({ 
-      width: '100%',
-      ':hover': {
-        background: 'silver'
+      ...myStyle,
+
+      background: 'blue',    // hoisted from &active
+      pointerEvents: 'none', // hoisted from &disabled
+      btn: {                 
+        cursor: 'default',   // overriden btn styles hoisted from &disabled
       },
-      background: 'blue',
-      pointerEvents: 'none'
     })
   })
 
@@ -231,19 +229,14 @@ describe('substyle', function () {
     expect(style).to.deep.equal({
       position: 'absolute',
       cursor: 'pointer',
-      color: 'red'
+      color: 'red',
+      '&outer': {
+        cursor: 'pointer',
+      },
+      '&inner': {
+        color: 'red' 
+      }
     })
-  })
-
-})
-
-describe('defaultStyle', function () {
-
-  it('should return a substyle that is preconfigured to merge the style prop with some default styles', function () {
-     const substyleWithDefaultStyles = defaultStyle({ width: 50 }, { nested: { height: 10, width: 10 }}) 
-     const props = { style: { height: 50, nested: { width: 20 } } }
-     expect(substyleWithDefaultStyles(props)).to.deep.equal({ style: { height: 50, width: 50 } })
-     expect(substyleWithDefaultStyles(props, 'nested')).to.deep.equal({ style: { height: 10, width: 20 } })
   })
 
 })
