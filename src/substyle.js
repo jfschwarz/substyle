@@ -44,13 +44,13 @@ export default function substyle({ style, className }, selectedKeys) {
 
   const hoistElementStyles = (style) => values(pickNestedStyles(style, elementKeys))
   const hoistModifierStyles = (style) => values(pickNestedStyles(style, modifierKeys))
-  const hoistAllElementStyles = elementKeys.length > 0 ? compose(flatten, map(hoistElementStyles)) : identity
+  const hoistElementStylesFromEach = elementKeys.length > 0 ? compose(flatten, map(hoistElementStyles)) : identity
 
   return {
 
     ...( style && { 
       style : merge({},
-        ...hoistAllElementStyles([ style, ...hoistModifierStyles(style) ])
+        ...hoistElementStylesFromEach([ style, ...hoistModifierStyles(style) ])
       )
     }),
 
@@ -67,21 +67,18 @@ export default function substyle({ style, className }, selectedKeys) {
 
 const isModifier = key => key[0] === '&'
 const isElement = negate(isModifier)
-// const isPseudoClassOrMedia = key => key[0] === ':' || key.substring(0, 6) === '@media'
 
-// TODO: rather use the order of style definitions for overwriting precendence!!
-const pickNestedStyles = (style, keys) => {
-  let nestedStyles = {};
-  keys.forEach(key => {
-    const camelCaseKey = camelize(key);
-    if(style[camelCaseKey] && typeof style[camelCaseKey] === "object") nestedStyles[camelCaseKey] = style[camelCaseKey];
-    if(style[key] && typeof style[key] === "object" ) nestedStyles[key] = style[key]
-  })
-  return nestedStyles;
+const pickNestedStyles = (style, keysToPick) => {
+  const camelizedKeysToPick = map(camelize, keysToPick)
+  const styleKeys = keys(style)
+  const result = {}
+  for(let i=0, l=styleKeys.length; i<l; ++i) {
+    const key = styleKeys[i]
+    if(keysToPick.indexOf(key) >= 0 || camelizedKeysToPick.indexOf(camelize(key)) >= 0) {
+      result[key] = style[key]
+    }
+  }
+  return result
 }
-
-// const pickDirectStyles = pickBy(
-//   (value, key) => typeof value !== "object" || isPseudoClassOrMedia(key) || isModifier(key)
-// )
 
 const camelize = key => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())

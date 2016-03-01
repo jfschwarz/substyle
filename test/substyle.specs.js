@@ -156,7 +156,7 @@ describe('substyle', function () {
   })
 
   // TODO: rethink this! is it better maybe to merge in appearance order?
-  it('should merge nested inline styles in the order of the selectedKeys', function () {
+  it('should merge nested inline styles in the order of appearance in the object', function () {
     const styleWithDeepNesting = {
       toggle: {
         width: 100,
@@ -185,8 +185,28 @@ describe('substyle', function () {
         color: 'red'
       }
     })
+    const { style: sameStyle } = substyle({ style: styleWithDeepNesting }, ['specialToggle', 'toggle'])
+    expect(sameStyle).to.deep.equal(style)
 
-    const { style: otherStyle } = substyle({ style: styleWithDeepNesting }, ['specialToggle', 'toggle'])
+    const styleWithOtherOrder = {
+      specialToggle: {
+        width: 50,
+
+        label: {
+          color: 'red'
+        }
+      },
+
+      toggle: {
+        width: 100,
+
+        label: {
+          fontSize: '11pt',
+          color: 'blue'
+        }
+      }
+    }
+    const { style: otherStyle } = substyle({ style: styleWithOtherOrder }, ['toggle', 'specialToggle'])
     expect(otherStyle).to.deep.equal({
       width: 100,
 
@@ -194,6 +214,26 @@ describe('substyle', function () {
         fontSize: '11pt',
         color: 'blue'
       }
+    })
+  })
+
+  it('should merge modifier styles for nested elements after the base styles for those elements', function () {
+    const myStyle = {
+      '&narrow': {
+        toggle: {
+          width: 50,
+        }
+      },
+
+      toggle: {
+        width: 100,
+        color: 'red'
+      }
+    }
+    const { style } = substyle({ style: myStyle }, ['toggle', '&narrow'])
+    expect(style).to.deep.equal({
+      width: 50,
+      color: 'red'
     })
   })
 
