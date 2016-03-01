@@ -1,5 +1,4 @@
 import invariant from 'invariant'
-import warning from 'warning'
 import keys from 'lodash/keys'
 import values from 'lodash/values'
 import negate from 'lodash/negate'
@@ -26,13 +25,7 @@ export default function substyle({ style, className }, selectedKeys) {
 
   invariant(
     Array.isArray(selectedKeys), 
-    'Second parameter must be a string, an array of strings, an object with boolean values, or a falsy value'
-  )
-
-  warning(
-    !className || className.split(' ').length === 1 || selectedKeys.length === 0,
-    `Deriving class names from a \`className\` prop that already uses multiple class names is discouraged `+
-    `(got the following className: '${className}')`
+    'Second parameter must be a string, an array of strings, a plain object with boolean values, or a falsy value'
   )
 
   const baseClassName = className && className.split(' ')[0]
