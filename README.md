@@ -175,7 +175,22 @@ const style = {
 
 ### Default styles
 
-TODO
+In many cases, a component defines some default inline styles. User custom styles should than be merged with the these styles. *substyle* includes a small convenience function for this purpose: It is called with the default styles object, and returns a *substyle* function which is preconfigured to merge the `style` prop with the default style (using lodash's [merge](https://lodash.com/docs#merge) function).
+
+
+```
+import { defaultStyle } from 'substyle'
+
+// create preconfigured substyle
+const substyle = defaultStyle({
+  position: 'relative',
+  foo: {
+    position: 'absolute'
+  }
+})
+```
+
+
 
 ### css modules
 
