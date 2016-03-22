@@ -181,6 +181,11 @@ TODO
 
 TODO
 
+implementation ideas:
+
+- let users pass a `classNames` containing a nested object mapping element / modifier keys to generated css module class names
+- OR only derive a unique block class names via automatically and derive all element class names the same way as now (requires a custom generateScopedName function passed with the postcss options)
+
 ## Real world examples
 
 If you want to see how _substyle_ is used in practice, go have a look at code of existing React components already using it:
