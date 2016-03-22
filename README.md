@@ -177,6 +177,10 @@ const style = {
 
 TODO
 
+### css modules
+
+TODO
+
 ## Real world examples
 
 If you want to see how _substyle_ is used in practice, go have a look at code of existing React components already using it:
