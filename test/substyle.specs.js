@@ -286,6 +286,16 @@ describe('substyle', function () {
     const { style } = substyle({ style: myStyle })
     expect(style.toggle.toString()).to.equal(undefined)
     expect(style['&active'].toString()).to.equal(undefined)
-  });
+  })
+
+  it('should not attach toString to nested pseudo class or media query objects', function () {
+    // this will cause the styles to be filtered out by Radium and prevents IE choking up
+    const { style } = substyle({ style: { 
+      ':hover': { color: 'red' },
+      '@media only screen and (min-width: 600px)': { color: 'red' } 
+    } })
+    expect(style[':hover'].toString).to.equal(Object.prototype.toString)
+    expect(style['@media only screen and (min-width: 600px)'].toString).to.equal(Object.prototype.toString)
+  })
 
 })
