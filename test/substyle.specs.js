@@ -281,4 +281,11 @@ describe('substyle', function () {
     })
   })
 
+  it('should attach toString functions to all nested element/modifier styles', function () {
+    // this will cause the styles to be filtered out by Radium and prevents IE choking up
+    const { style } = substyle({ style: myStyle })
+    expect(style.toggle.toString()).to.equal(undefined)
+    expect(style['&active'].toString()).to.equal(undefined)
+  });
+
 })
