@@ -7,7 +7,9 @@ import flatten from 'lodash/flatten'
 import merge from 'lodash/merge'
 import filter from 'lodash/fp/filter'
 import map from 'lodash/fp/map'
+import mapValues from 'lodash/mapValues'
 import compose from 'lodash/fp/compose'
+import isPlainObject from 'lodash/isPlainObject'
 
 
 export default function substyle({ style, className }, selectedKeys) {
@@ -42,9 +44,9 @@ export default function substyle({ style, className }, selectedKeys) {
   return {
 
     ...( style && { 
-      style : merge({},
+      style : attachToStringToObjects(merge({},
         ...hoistElementStylesFromEach([ style, ...hoistModifierStyles(style) ])
-      )
+      ))
     }),
 
     ...( className && { 
@@ -59,6 +61,7 @@ export default function substyle({ style, className }, selectedKeys) {
 }
 
 const isModifier = key => key[0] === '&'
+const isPseudoOrMedia = key => key[0] === ':' || key[0] === '@'
 const isElement = negate(isModifier)
 
 const pickNestedStyles = (style, keysToPick) => {
@@ -75,3 +78,11 @@ const pickNestedStyles = (style, keysToPick) => {
 }
 
 const camelize = key => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())
+
+const attachToStringToObjects = ({ toString, ...styles }) => mapValues(styles, (value, key, ...args) => {
+  if(!isPseudoOrMedia(key) && Object.prototype.toString.call(value) === '[object Object]') {
+    value = {...value}
+    value.toString = () => undefined
+  }
+  return value
+})

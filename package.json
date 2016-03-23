@@ -7,7 +7,7 @@
     "clean": "rimraf lib",
     "build": "babel src --out-dir lib",
     "test": "NODE_ENV=test mocha",
-    "prepublish": "npm run test && npm run clean && npm run build"
+    "prepublish": "npm run clean && npm run build"
   },
   "repository": {
     "type": "git",
@@ -30,7 +30,7 @@
   "homepage": "https://github.com/jfschwarz/substyle#readme",
   "dependencies": {
     "invariant": "^2.2.0",
-    "lodash": "^4.3.0",
+    "lodash": "^4.5.0",
     "warning": "^2.1.0"
   },
   "devDependencies": {
