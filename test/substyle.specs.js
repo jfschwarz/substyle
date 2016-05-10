@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { stripToStrings } from './utils'
+
 import substyle, { defaultStyle } from '../src'
 
 const myStyle = {
@@ -37,8 +37,6 @@ const myStyle = {
 
 }
 
-
-
 describe('substyle', function () {
 
   it('should derive a BEM compliant className for a passed nested element key', function () {
@@ -53,7 +51,7 @@ describe('substyle', function () {
 
   it('should should select the nested inline styles for the given key', function () {
     const { style } = substyle({ style: myStyle }, 'toggle')
-    expect(stripToStrings(style)).to.deep.equal({
+    expect(style).to.deep.equal({
       display: 'block',
       width: 50
     })
@@ -72,7 +70,7 @@ describe('substyle', function () {
 
   it('should include all direct style definitions if only modifier keys are used, hoisting those for the active modifiers', function () {
     const { style } = substyle({ style: myStyle }, '&active')
-    expect(stripToStrings(style)).to.deep.equal({ 
+    expect(style).to.deep.equal({ 
       ...myStyle,
       background: 'blue' // hoisted from &active
     })
@@ -80,7 +78,7 @@ describe('substyle', function () {
 
   it('should merge element styles nested under modifiers if selectedKeys contain both, element keys and modifier keys', function () {
     const { style } = substyle({ style: myStyle }, ['btn', '&disabled'])
-    expect(stripToStrings(style)).to.deep.equal({ 
+    expect(style).to.deep.equal({ 
       cursor: 'default',
     })
   })
@@ -97,7 +95,7 @@ describe('substyle', function () {
     )
 
     expect(className).to.equal('my-class__toggle my-class__btn')
-    expect(stripToStrings(style)).to.deep.equal({ 
+    expect(style).to.deep.equal({ 
       display: 'block',
       width: 50,
       cursor: 'pointer'
@@ -111,7 +109,7 @@ describe('substyle', function () {
     )
 
     expect(className).to.equal('my-class my-class--active my-class--disabled')
-    expect(stripToStrings(style)).to.deep.equal({ 
+    expect(style).to.deep.equal({ 
       ...myStyle,
 
       background: 'blue',    // hoisted from &active
@@ -179,7 +177,7 @@ describe('substyle', function () {
     }
 
     const { style } = substyle({ style: styleWithDeepNesting }, ['toggle', 'specialToggle'])
-    expect(stripToStrings(style)).to.deep.equal({
+    expect(style).to.deep.equal({
       width: 50,
 
       label: {
@@ -188,7 +186,7 @@ describe('substyle', function () {
       }
     })
     const { style: sameStyle } = substyle({ style: styleWithDeepNesting }, ['specialToggle', 'toggle'])
-    expect(stripToStrings(sameStyle)).to.deep.equal(stripToStrings(style))
+    expect(sameStyle).to.deep.equal(style)
 
     const styleWithOtherOrder = {
       specialToggle: {
@@ -209,7 +207,7 @@ describe('substyle', function () {
       }
     }
     const { style: otherStyle } = substyle({ style: styleWithOtherOrder }, ['toggle', 'specialToggle'])
-    expect(stripToStrings(otherStyle)).to.deep.equal({
+    expect(otherStyle).to.deep.equal({
       width: 100,
 
       label: {
@@ -233,7 +231,7 @@ describe('substyle', function () {
       }
     }
     const { style } = substyle({ style: myStyle }, ['toggle', '&narrow'])
-    expect(stripToStrings(style)).to.deep.equal({
+    expect(style).to.deep.equal({
       width: 50,
       color: 'red'
     })
@@ -247,7 +245,7 @@ describe('substyle', function () {
     }
 
     const { style } = substyle({ style: styleWithCamelCaseKey }, 'special-toggle')
-    expect(stripToStrings(style)).to.deep.equal({
+    expect(style).to.deep.equal({
       width: 50
     })
   })
@@ -268,7 +266,7 @@ describe('substyle', function () {
       }
     }
     const { style } = substyle(substyle({ style: myStyle }, '&outer'), '&inner')
-    expect(stripToStrings(style)).to.deep.equal({
+    expect(style).to.deep.equal({
       position: 'absolute',
       cursor: 'pointer',
       color: 'red',
@@ -279,23 +277,6 @@ describe('substyle', function () {
         color: 'red' 
       }
     })
-  })
-
-  it('should attach toString functions to all nested element/modifier styles', function () {
-    // this will cause the styles to be filtered out by Radium and prevents IE choking up
-    const { style } = substyle({ style: myStyle })
-    expect(style.toggle.toString()).to.equal(undefined)
-    expect(style['&active'].toString()).to.equal(undefined)
-  })
-
-  it('should not attach toString to nested pseudo class or media query objects', function () {
-    // this will cause the styles to be filtered out by Radium and prevents IE choking up
-    const { style } = substyle({ style: { 
-      ':hover': { color: 'red' },
-      '@media only screen and (min-width: 600px)': { color: 'red' } 
-    } })
-    expect(style[':hover'].toString).to.equal(Object.prototype.toString)
-    expect(style['@media only screen and (min-width: 600px)'].toString).to.equal(Object.prototype.toString)
   })
 
 })

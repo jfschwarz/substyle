@@ -1,5 +1,4 @@
 import { expect } from 'chai'
-import { stripToStrings } from './utils'
 import { defaultStyle } from '../src'
 
 describe('defaultStyle', function () {
@@ -10,8 +9,8 @@ describe('defaultStyle', function () {
        { nested: { height: 10, width: 10 }}
      ) 
      const props = { style: { height: 50, nested: { width: 20 } } }
-     expect(stripToStrings(substyleWithDefaultStyles(props).style)).to.deep.equal({ height: 50, width: 50, nested: { height: 10, width: 20 } })
-     expect(stripToStrings(substyleWithDefaultStyles(props, 'nested').style)).to.deep.equal({ height: 10, width: 20 })
+     expect(substyleWithDefaultStyles(props)).to.deep.equal({ style: { height: 50, width: 50, nested: { height: 10, width: 20 } } })
+     expect(substyleWithDefaultStyles(props, 'nested')).to.deep.equal({ style: { height: 10, width: 20 } })
   })
 
 })
