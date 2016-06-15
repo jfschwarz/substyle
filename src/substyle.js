@@ -36,7 +36,7 @@ export default function substyle({ style, className }, selectedKeys) {
   const elementKeys = filter(isElement, selectedKeys)
 
   const hoistElementStyles = (style) => values(pickNestedStyles(style, elementKeys))
-  const hoistModifierStyles = (style) => values(pickNestedStyles(style, modifierKeys))
+  const hoistModifierStyles = (style) => values(pickNestedStylesRecursive(style, modifierKeys))
   const hoistElementStylesFromEach = elementKeys.length > 0 ? compose(flatten, map(hoistElementStyles)) : identity
 
   return {
@@ -72,6 +72,19 @@ const pickNestedStyles = (style, keysToPick) => {
     }
   }
   return result
+}
+
+const pickNestedStylesRecursive = (style, keysToPick) => {
+  const result = pickNestedStyles(style, keysToPick)
+  const resultKeys = keys(result)
+  let finalResult = result
+  for(let i=0, l=resultKeys.length; i<l; ++i) {
+    finalResult = { 
+      ...finalResult, 
+      ...pickNestedStylesRecursive(result[resultKeys[i]], keysToPick)
+    }
+  }
+  return finalResult
 }
 
 const camelize = key => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())

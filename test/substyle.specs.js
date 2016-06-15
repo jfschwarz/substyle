@@ -279,4 +279,43 @@ describe('substyle', function () {
     })
   })
 
+  it('should hoist from multiple levels deep of nested modifier keys in inline styles', () => {
+    const myStyle = {
+      position: 'absolute',
+      '&clickable': {
+        cursor: 'pointer',
+        '&red': {
+          color: 'red',
+          '&small': {
+            width: 50,
+          },
+        },
+      },
+    }
+    const { style } = substyle({ style: myStyle }, ['&clickable', '&red', '&small'])
+    expect(style).to.include({
+      position: 'absolute',
+      cursor: 'pointer', // hoisted from first level
+      color: 'red', // hoisted from 2 levels deep
+      width: 50, // hoisted from 3 levels deep
+    })
+  })
+
+  it('should make sure that more specific, i.e., deeper nested modifier styles, override styles higher up the object', () => {
+    const myStyle = {
+      position: 'absolute',
+      width: 4,
+      '&red': {
+        width: 2,
+        '&small': {
+          width: 1,
+        },
+      },
+
+      width: 3,
+    }
+    const { style } = substyle({ style: myStyle }, ['&red', '&small'])
+    expect(style).to.have.property('width', 1)
+  })
+
 })
