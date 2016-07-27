@@ -173,16 +173,20 @@ const style = {
 ```
 
 
-### Default styles
+### Chaining & default styles
 
-In many cases, a component defines some default inline styles. User custom styles should than be merged with the these styles. *substyle* includes a small convenience function for this purpose: The `defaultStyle` factory function is called with the default styles object, and returns a *substyle* function which is preconfigured to merge the `style` prop with the default style (using lodash's [merge](https://lodash.com/docs#merge) function).
+Every *substyle* call return a new instance of the *substyle* function which is preconfigured to use
+the styles selected in the previous call as a default. The `style` prop passed in the chained 
+*substyle* call will be merged with the default styles 
+(using lodash's [merge](https://lodash.com/docs#merge) function).
 
+TODO
 
 ```javascript
-import { defaultStyle } from 'substyle'
+import substyle from 'substyle'
 
 // create preconfigured substyle
-const substyle = defaultStyle({
+const mySubstyle = substyle({
   position: 'relative',
   foo: {
     position: 'absolute'
@@ -190,6 +194,21 @@ const substyle = defaultStyle({
 })
 ```
 
+### Selector function for modifier keys
+
+TODO
+
+TODO: Also point out the possibility to bind derived substyle in render function
+
+```
+const substyleForMyComp = substyle(
+  { style: defaultStyles },
+  (props) => ({ '&disabled': props.readOnly })
+)
+
+const boundSubstyleForMyComp = elementKey => substyleForMyComp.bind(null, this.props)
+<div {...boundSubstyleForMyComp('myEl')} />
+```
 
 
 ### css modules
