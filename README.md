@@ -201,6 +201,15 @@ implementation ideas:
 - let users pass a `classNames` containing a nested object mapping element / modifier keys to generated css module class names
 - OR only derive a unique block class names via automatically and derive all element class names the same way as now (requires a custom generateScopedName function passed with the postcss options)
 
+
+### css in JS
+
+TODO
+
+implementation ideas:
+
+- add option to hook in 'transform' functions that take the selected inline style definitions and can turn them into css, e.g., by using aphrodite's StyleSheet.create or some wrapper around react-css
+
 ## Real world examples
 
 If you want to see how _substyle_ is used in practice, go have a look at code of existing React components already using it:
