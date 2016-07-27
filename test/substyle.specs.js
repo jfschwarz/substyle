@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 
-import substyle, { defaultStyle } from '../src'
+import substyle from '../src'
 
 const myStyle = {
 
