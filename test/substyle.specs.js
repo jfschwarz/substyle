@@ -318,4 +318,18 @@ describe('substyle', function () {
     expect(style).to.have.property('width', 1)
   })
 
+  it('should allow passing a function as second arg which is supposed to return the keys to select', () => {
+    const { className } = substyle({ className: 'foo' }, () => 'bar')
+    expect(className).to.equal('foo__bar')
+  })
+
+  it('should pass the props (first arg) as an argument to the keys selector function', () => {
+    const props = { className: 'foo', otherProp: 'bar' }
+    const selectKeys = (...args) => {
+      expect(args).to.have.length(1)
+      expect(args[0]).to.equal(props)
+    }
+    substyle(props, selectKeys)
+  })
+
 })

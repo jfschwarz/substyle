@@ -1,19 +1,16 @@
 import invariant from 'invariant'
-import keys from 'lodash/keys'
-import values from 'lodash/values'
-import negate from 'lodash/negate'
-import identity from 'lodash/identity'
-import flatten from 'lodash/flatten'
-import merge from 'lodash/merge'
-import filter from 'lodash/fp/filter'
-import map from 'lodash/fp/map'
-import compose from 'lodash/fp/compose'
+import { keys, values, negate, identity, flatten, merge } from 'lodash'
+import { filter, map, compose } from 'lodash/fp'
 
 
 function createSubstyle(closureProps) {
   function substyle(props, selectedKeys) {
     const style = (closureProps.style || props.style) && merge({}, closureProps.style, props.style)
     const className = props.className || closureProps.className
+
+    if(Object.prototype.toString.call(selectedKeys) === '[object Function]') {
+      selectedKeys = selectedKeys(props)
+    }
 
     if(!selectedKeys) {
       selectedKeys = []
@@ -28,7 +25,8 @@ function createSubstyle(closureProps) {
 
     invariant(
       Array.isArray(selectedKeys), 
-      'Second parameter must be a string, an array of strings, a plain object with boolean values, or a falsy value'
+      'Second parameter must be a string, an array of strings, a plain object with boolean ' +
+      'values, a falsy value, or a function with a return value of one of these four types.'
     )
 
     const baseClassName = className && className.split(' ')[0]
@@ -40,7 +38,9 @@ function createSubstyle(closureProps) {
 
     const hoistElementStyles = (style) => values(pickNestedStyles(style, elementKeys))
     const hoistModifierStyles = (style) => values(pickNestedStylesRecursive(style, modifierKeys))
-    const hoistElementStylesFromEach = elementKeys.length > 0 ? compose(flatten, map(hoistElementStyles)) : identity
+    const hoistElementStylesFromEach = elementKeys.length > 0 ? 
+      compose(flatten, map(hoistElementStyles)) : 
+      identity
 
     return createSubstyle({
 
@@ -60,6 +60,7 @@ function createSubstyle(closureProps) {
     })
   }
 
+  // assign `style` and/or `className` props to the return function object
   Object.assign(substyle, closureProps)
   return substyle
 }
