@@ -69,6 +69,10 @@ That's it: Our `Popover` component can now be used with CSS as well as with inli
 So what does this achieve? First, it assigns class names derived from the element's `className` prop. If the component is used without a `className`, it's safe to assume that none of the child elements require a class name to be set. Second, if a `style` object is supplied to the element, it selects the nested sub object under the specified key for the child element. By using the same keys for derived class names and nested element style definitions, a consistent naming scheme is established.
 
 
+## API
+
+TODO
+
 ## How to use it
 
 _substyle_ picks up the idea of [BEM methodology](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/) of breaking style definitions down into **B**lock, **E**lement, and **M**odifier parts. In fact, _substyle_ generates derived class names that follow BEM syntax. You don't have to know anything about BEM other than understanding how the three basic terms relate to React components. And this is straightforward:
@@ -173,16 +177,20 @@ const style = {
 ```
 
 
-### Default styles
+### Chaining & default styles
 
-In many cases, a component defines some default inline styles. User custom styles should than be merged with the these styles. *substyle* includes a small convenience function for this purpose: The `defaultStyle` factory function is called with the default styles object, and returns a *substyle* function which is preconfigured to merge the `style` prop with the default style (using lodash's [merge](https://lodash.com/docs#merge) function).
+Every *substyle* call return a new instance of the *substyle* function which is preconfigured to use
+the styles selected in the previous call as a default. The `style` prop passed in the chained 
+*substyle* call will be merged with the default styles 
+(using lodash's [merge](https://lodash.com/docs#merge) function).
 
+TODO
 
 ```javascript
-import { defaultStyle } from 'substyle'
+import substyle from 'substyle'
 
 // create preconfigured substyle
-const substyle = defaultStyle({
+const mySubstyle = substyle({
   position: 'relative',
   foo: {
     position: 'absolute'
@@ -190,6 +198,21 @@ const substyle = defaultStyle({
 })
 ```
 
+### Selector function for modifier keys
+
+TODO
+
+TODO: Also point out the possibility to bind derived substyle in render function
+
+```
+const substyleForMyComp = substyle(
+  { style: defaultStyles },
+  (props) => ({ '&disabled': props.readOnly })
+)
+
+const boundSubstyleForMyComp = elementKey => substyleForMyComp.bind(null, this.props)
+<div {...boundSubstyleForMyComp('myEl')} />
+```
 
 
 ### css modules
@@ -200,6 +223,15 @@ implementation ideas:
 
 - let users pass a `classNames` containing a nested object mapping element / modifier keys to generated css module class names
 - OR only derive a unique block class names via automatically and derive all element class names the same way as now (requires a custom generateScopedName function passed with the postcss options)
+
+
+### css in JS
+
+TODO
+
+implementation ideas:
+
+- add option to hook in 'transform' functions that take the selected inline style definitions and can turn them into css, e.g., by using aphrodite's StyleSheet.create or some wrapper around react-css
 
 ## Real world examples
 
