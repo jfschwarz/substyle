@@ -83,6 +83,25 @@ describe('substyle', function () {
     })
   })
 
+  it('should not hoist modifier styles inside of element sub styles', () => {
+    const { style } = substyle({ 
+      style: {
+        myel: {
+          color: 'blue',
+          '&mymod': {
+            color: 'red'
+          }
+        }
+      }
+    }, ['myel', '&mymod'])
+    expect(style).to.deep.equal({
+      color: 'blue',
+      '&mymod': {
+        color: 'red'
+      }
+    })
+  })
+
   it('should not generate additional class names for modifiers if selectedKeys contain element keys', function () {
     const { className } = substyle({ className: 'my-class' }, ['btn', '&disabled'])
     expect(className).to.equal('my-class__btn')
