@@ -56,31 +56,9 @@ describe('substyle', function () {
     expect(props).to.not.have.property('style')
   })
 
-  it('should preserve nested styles for media queries and pseudo selectors', () => {
-    const { style } = substyle({ style: myStyle })
-    expect(style).to.deep.equal({
-      width: '100%',
-
-      ':hover': {
-        background: 'silver',
-      },
-
-      '@media (min-width: 600px)': {
-        width: '50%',
-      },
-    })
-  })
-
-  it.only('should hoist style definitions for the active modifiers', function () {
+  it('should hoist style definitions for the active modifiers', function () {
     const { style } = substyle({ style: myStyle }, '&active')
     expect(style).to.have.property('background', 'blue' ) // hoisted from &active
-  })
-
-  it('should merge element styles nested under modifiers if selectedKeys contain both, element keys and modifier keys', function () {
-    const { style } = substyle({ style: myStyle }, ['btn', '&disabled'])
-    expect(style).to.deep.equal({ 
-      cursor: 'default',
-    })
   })
 
   it('should not hoist modifier styles inside of element sub styles', () => {
@@ -96,9 +74,6 @@ describe('substyle', function () {
     }, ['myel', '&mymod'])
     expect(style).to.deep.equal({
       color: 'blue',
-      '&mymod': {
-        color: 'red'
-      }
     })
   })
 
@@ -117,29 +92,40 @@ describe('substyle', function () {
   })
 
   it('should support passing multiple keys as an object', function () {
-    const { style, className } = substyle(
+    const derivedSubstyle = substyle(
       { style: myStyle, className: 'my-class' }, 
       { '&active': true, '&inactive': false, '&disabled': true }
     )
+    const { style, className } = derivedSubstyle
 
     expect(className).to.equal('my-class my-class--active my-class--disabled')
     expect(style).to.deep.equal({ 
-      ...myStyle,
+      width: '100%',
+
+      ':hover': {
+        background: 'silver',
+      },
+
+      '@media (min-width: 600px)': {
+        width: '50%',
+      },
 
       background: 'blue',    // hoisted from &active
       pointerEvents: 'none', // hoisted from &disabled
-      btn: {                 
-        cursor: 'default',   // overriden btn styles hoisted from &disabled
-      },
+    })
+
+    const { style: btnStyle } = derivedSubstyle({}, 'btn')
+    expect(btnStyle).to.deep.equal({                 
+      cursor: 'default',   // overridden btn styles hoisted from &disabled
     })
   })
 
-  it('should return the top-level inline style definitions when selectedKeys is not specified', function () {
+  it('should return the top-level inline style definitions if selectedKeys is not specified', function () {
     const { style } = substyle({ style: myStyle })
     expect(style).to.have.property('width', '100%')
   })
 
-  it('should include nested inline style definitions for pseudo-class selectors when selectedKeys is not specified', function () {
+  it('should include nested inline style definitions for pseudo-class selectors', function () {
     const { style } = substyle({ style: myStyle })
     expect(style).to.have.property(':hover')
     expect(style[':hover']).to.deep.equal({
@@ -147,7 +133,7 @@ describe('substyle', function () {
     })
   })
 
-  it('should include nested inline style definitions for media queries when selectedKeys is not specified', function () {
+  it('should include nested inline style definitions for media queries', function () {
     const styleWithMedia = {
       background: 'white',
       '@media (min-width: 320px)': {
@@ -178,18 +164,25 @@ describe('substyle', function () {
       }
     }
 
-    const { style } = substyle({ style: styleWithDeepNesting }, ['toggle', 'specialToggle'])
+    const derivedSubstyle = substyle({ style: styleWithDeepNesting }, ['toggle', 'specialToggle'])
+    const { style } = derivedSubstyle
     expect(style).to.deep.equal({
       width: 50,
-
-      label: {
-        fontSize: '11pt',
-        color: 'red'
-      }
     })
-    const { style: sameStyle } = substyle({ style: styleWithDeepNesting }, ['specialToggle', 'toggle'])
-    expect(sameStyle).to.deep.equal(style)
+    const { style: labelStyle } = derivedSubstyle({}, 'label')
+    expect(labelStyle).to.deep.equal({
+      fontSize: '11pt',
+      color: 'red'
+    })
 
+    // changing the order of selections does not change the result ...
+    const derivedSameSubstyle = substyle({ style: styleWithDeepNesting }, ['specialToggle', 'toggle'])
+    const { style: sameStyle } = derivedSameSubstyle
+    expect(sameStyle).to.deep.equal(style)
+    const { style: sameLabelStyle } = derivedSameSubstyle({}, 'label')
+    expect(sameLabelStyle).to.deep.equal(labelStyle)
+
+    // ... while changing the order in the style definition does
     const styleWithOtherOrder = {
       specialToggle: {
         width: 50,
@@ -208,14 +201,23 @@ describe('substyle', function () {
         }
       }
     }
-    const { style: otherStyle } = substyle({ style: styleWithOtherOrder }, ['toggle', 'specialToggle'])
+    const derivedOtherStyle = substyle({ style: styleWithOtherOrder }, ['toggle', 'specialToggle'])
+    const { style: otherStyle } = derivedOtherStyle
     expect(otherStyle).to.deep.equal({
       width: 100,
+    })
+    const { style: labelOtherStyle } = derivedOtherStyle({}, 'label')
+    expect(labelOtherStyle).to.deep.equal({
+      fontSize: '11pt',
+      color: 'blue'
+    })
 
-      label: {
-        fontSize: '11pt',
-        color: 'blue'
-      }
+  })
+
+  it('should merge element styles nested under modifiers if selectedKeys contain both, element keys and modifier keys', function () {
+    const { style } = substyle({ style: myStyle }, ['btn', '&disabled'])
+    expect(style).to.deep.equal({ 
+      cursor: 'default',
     })
   })
 
@@ -252,30 +254,6 @@ describe('substyle', function () {
     })
   })
 
-  it('should select the style definitions for all modifiers if container elements introduce nested substyle calls', function () {
-    const myStyle = {
-      position: 'absolute',
-      '&outer': {
-        cursor: 'pointer',
-      },
-      '&inner': {
-        color: 'red' 
-      }
-    }
-    const { style } = substyle(substyle({ style: myStyle }, '&outer'), '&inner')
-    expect(style).to.deep.equal({
-      position: 'absolute',
-      cursor: 'pointer',
-      color: 'red',
-      '&outer': {
-        cursor: 'pointer',
-      },
-      '&inner': {
-        color: 'red' 
-      }
-    })
-  })
-
   it('should hoist from multiple levels deep of nested modifier keys in inline styles', () => {
     const myStyle = {
       position: 'absolute',
@@ -289,7 +267,7 @@ describe('substyle', function () {
         },
       },
     }
-    const { style } = substyle({ style: myStyle }, ['&clickable', '&red', '&small'])
+    const { style } = substyle({ style: myStyle }, ['&clickable', '&small', '&red'])
     expect(style).to.include({
       position: 'absolute',
       cursor: 'pointer', // hoisted from first level
