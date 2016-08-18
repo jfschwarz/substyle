@@ -13,7 +13,7 @@ describe('chaining', () => {
     })
     const props = { style: { height: 50, nested: { width: 20 } } }
     expect({...substyleWithDefaultStyles(props)}).to.deep.equal(
-      { style: { height: 50, width: 50, nested: { height: 10, width: 20 } } }
+      { style: { height: 50, width: 50 } }
     )
     expect({...substyleWithDefaultStyles(props, 'nested')}).to.deep.equal(
       { style: { height: 10, width: 20 } }
