@@ -10,6 +10,10 @@ const myStyle = {
     background: 'silver',
   },
 
+  '@media (min-width: 600px)': {
+    width: '50%',
+  },
+
   toggle: {
     display: 'block',
     width: 50,
@@ -48,17 +52,28 @@ describe('substyle', function () {
   })
 
   it('should not return a style when no style has been set in the props', function () {
-    const props = substyle({ className: 'my-class' }, 'toggle')
+    const props = substyle({ }, 'toggle')
     expect(props).to.not.have.property('style')
   })
 
+  it('should preserve nested styles for media queries and pseudo selectors', () => {
+    const { style } = substyle({ style: myStyle })
+    expect(style).to.deep.equal({
+      width: '100%',
 
-  it('should include all direct style definitions if only modifier keys are used, hoisting those for the active modifiers', function () {
-    const { style } = substyle({ style: myStyle }, '&active')
-    expect(style).to.deep.equal({ 
-      ...myStyle,
-      background: 'blue' // hoisted from &active
+      ':hover': {
+        background: 'silver',
+      },
+
+      '@media (min-width: 600px)': {
+        width: '50%',
+      },
     })
+  })
+
+  it.only('should hoist style definitions for the active modifiers', function () {
+    const { style } = substyle({ style: myStyle }, '&active')
+    expect(style).to.have.property('background', 'blue' ) // hoisted from &active
   })
 
   it('should merge element styles nested under modifiers if selectedKeys contain both, element keys and modifier keys', function () {

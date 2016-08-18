@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 import substyle from '../src'
 
-describe.only('`className` management', () => {
+describe('`className` management', () => {
 
   it('should derive a BEM compliant className for a passed nested element key', function () {
     const { className } = substyle({ className: 'my-class' }, 'toggle')
