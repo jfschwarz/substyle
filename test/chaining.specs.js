@@ -42,7 +42,7 @@ describe('chaining', () => {
         color: 'red' 
       }
     }
-    const { style } =  substyle({ style: myStyle }, '&outer')('&inner')
+    const { style } =  substyle({ style: myStyle }, '&outer')({}, '&inner')
     expect(style).to.deep.equal({
       position: 'absolute',
       cursor: 'pointer',
