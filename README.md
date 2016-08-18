@@ -1,5 +1,33 @@
 # substyle
 
+_substyle_ is a simple helper function for writing themeable components, i.e., components whose 
+styling can be fully customized by users.
+
+**Features:**
+- Let's users customize styles for all child nodes and components
+- Overwritable default styling
+- Custom styling can be provided through: global css, css modules, inline styles, 
+[Radium](http://projects.formidablelabs.com/radium/), 
+[Aphrodite](https://github.com/Khan/aphrodite), 
+[React Style](https://github.com/js-next/react-style), 
+[JSS](https://github.com/jsstyles/jss)
+- Optional, automatic BEM class name generation
+
+### Alternatives
+Theme as props: Component author keeps control of the theme API - desireable?
+
+https://github.com/markdalgleish/react-themeable Very similar to substyle, but does not address 
+composition and default style definition
+
+
+
+
+
+
+
+
+--------
+
 _substyle_ is a simple helper function for writing reusable React components that are stylable through both, CSS and inline styles. In its core, it is nothing more than a simple mapping of the `style` and `className` prop values:
 
 ```javascript

@@ -71,6 +71,7 @@ function createSubstyle(closureProps) {
   }
 
   // assign `style` and/or `className` props to the return function object
+  // TODO call propsDecorator function
   Object.assign(substyle, propsForSpread)
   return substyle
 }
