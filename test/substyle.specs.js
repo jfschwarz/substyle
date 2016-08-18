@@ -39,27 +39,12 @@ const myStyle = {
 
 describe('substyle', function () {
 
-  it('should derive a BEM compliant className for a passed nested element key', function () {
-    const { className } = substyle({ className: 'my-class' }, 'toggle')
-    expect(className).to.equal('my-class__toggle')
-  })
-
-  it('should derive a BEM compliant className for a passed modifier key', function () {
-    const { className } = substyle({ className: 'my-class' }, '&active')
-    expect(className).to.equal('my-class my-class--active')
-  })
-
   it('should should select the nested inline styles for the given key', function () {
     const { style } = substyle({ style: myStyle }, 'toggle')
     expect(style).to.deep.equal({
       display: 'block',
       width: 50
     })
-  })
-
-  it('should not return a className when no className has been set in the props', function () {
-    const props = substyle({ style: myStyle }, 'toggle')
-    expect(props).to.not.have.property('className')
   })
 
   it('should not return a style when no style has been set in the props', function () {
@@ -102,11 +87,6 @@ describe('substyle', function () {
     })
   })
 
-  it('should not generate additional class names for modifiers if selectedKeys contain element keys', function () {
-    const { className } = substyle({ className: 'my-class' }, ['btn', '&disabled'])
-    expect(className).to.equal('my-class__btn')
-  })
-
   it('should support passing multiple keys in an array', function () {
     const { style, className } = substyle(
       { style: myStyle, className: 'my-class' }, 
@@ -139,17 +119,6 @@ describe('substyle', function () {
     })
   })
 
-  it('should return the original className when selectedKeys is not specified or empty', function () {
-    const { className } = substyle({ className: 'my-class' })
-    expect(className).to.equal('my-class')
-
-    const { className: sameClassName } = substyle({ className: 'my-class' }, { '@active': false })
-    expect(sameClassName).to.equal('my-class')
-
-    const { className: stillTheSameClassName } = substyle({ className: 'my-class' }, undefined)
-    expect(stillTheSameClassName).to.equal('my-class')
-  })
-
   it('should return the top-level inline style definitions when selectedKeys is not specified', function () {
     const { style } = substyle({ style: myStyle })
     expect(style).to.have.property('width', '100%')
@@ -174,7 +143,6 @@ describe('substyle', function () {
     expect(style).to.have.property('@media (min-width: 320px)')
   })
 
-  // TODO: rethink this! is it better maybe to merge in appearance order?
   it('should merge nested inline styles in the order of appearance in the object', function () {
     const styleWithDeepNesting = {
       toggle: {
@@ -269,11 +237,6 @@ describe('substyle', function () {
     })
   })
 
-  it('should correctly merge modifiers with existing classNames', function () {
-    const { className } = substyle({ className: 'foo foo--bar' }, '&baz')
-    expect(className).to.equal('foo foo--bar foo--baz')
-  })
-
   it('should select the style definitions for all modifiers if container elements introduce nested substyle calls', function () {
     const myStyle = {
       position: 'absolute',
@@ -335,11 +298,6 @@ describe('substyle', function () {
     }
     const { style } = substyle({ style: myStyle }, ['&red', '&small'])
     expect(style).to.have.property('width', 1)
-  })
-
-  it('should allow passing a function as second arg which is supposed to return the keys to select', () => {
-    const { className } = substyle({ className: 'foo' }, () => 'bar')
-    expect(className).to.equal('foo__bar')
   })
 
   it('should pass the props (first arg) as an argument to the keys selector function', () => {
