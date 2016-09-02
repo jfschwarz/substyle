@@ -1,5 +1,5 @@
 import invariant from 'invariant'
-import { keys, values, negate, identity, flatten, merge } from 'lodash'
+import { keys, values, negate, identity, flatten, merge, assign } from 'lodash'
 import { filter, map, compose } from 'lodash/fp'
 
 
@@ -61,7 +61,7 @@ function createSubstyle(closureProps) {
   }
 
   // assign `style` and/or `className` props to the return function object
-  Object.assign(substyle, closureProps)
+  assign(substyle, closureProps)
   return substyle
 }
 
