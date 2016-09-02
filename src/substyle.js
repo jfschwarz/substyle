@@ -1,5 +1,5 @@
 import invariant from 'invariant'
-import { keys, values, negate, identity, flatten, merge } from 'lodash'
+import { keys, values, negate, identity, flatten, merge, assign } from 'lodash'
 import { filter, map, compose } from 'lodash/fp'
 
 import { pickDirectStyles, pickNestedStyles, pickNestedStylesRecursive } from './pickStyles'
@@ -72,7 +72,7 @@ function createSubstyle(closureProps) {
 
   // assign `style` and/or `className` props to the return function object
   // TODO call propsDecorator function
-  Object.assign(substyle, propsForSpread)
+  assign(substyle, propsForSpread)
   return substyle
 }
 
