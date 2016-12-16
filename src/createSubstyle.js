@@ -4,13 +4,13 @@ import { keys, values, negate, identity, flatten, merge, assign } from 'lodash'
 import { filter, map, compose } from 'lodash/fp'
 
 import { pickDirectStyles, pickNestedStyles, pickNestedStylesRecursive } from './pickStyles'
-import type { KeysT } from './types'
+import type { PropsT, KeysT } from './types'
 
 
 const isModifier = key => key[0] === '&'
 const isElement = negate(isModifier)
 
-function createSubstyle(closureProps: Object, propsDecorator: ({ style, className }) => Object = identity) {
+function createSubstyle(closureProps: Object, propsDecorator: (props: PropsT) => Object = identity) {
   function substyle(selectedKeys?: KeysT) {
     const style = closureProps.style
     const className = closureProps.className
@@ -76,4 +76,4 @@ function createSubstyle(closureProps: Object, propsDecorator: ({ style, classNam
   return substyle
 }
 
-export default createSubstyle({})
+export default createSubstyle
