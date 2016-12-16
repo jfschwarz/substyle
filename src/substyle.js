@@ -1,21 +1,20 @@
+// @flow
 import invariant from 'invariant'
 import { keys, values, negate, identity, flatten, merge, assign } from 'lodash'
 import { filter, map, compose } from 'lodash/fp'
 
 import { pickDirectStyles, pickNestedStyles, pickNestedStylesRecursive } from './pickStyles'
+import type { KeysT } from './types'
 
 
 const isModifier = key => key[0] === '&'
 const isElement = negate(isModifier)
 
-function createSubstyle(closureProps, propsDecorator: ({ style, className }) => Object = identity) {
-  function substyle(props, selectedKeys) {
-    const style = (closureProps.style || props.style) && merge({}, closureProps.style, props.style)
-    const className = props.className || closureProps.className
-
-    if(Object.prototype.toString.call(selectedKeys) === '[object Function]') {
-      selectedKeys = selectedKeys(props)
-    }
+function createSubstyle(closureProps: Object, propsDecorator: ({ style, className }) => Object = identity) {
+  function substyle(selectedKeys?: KeysT) {
+    const style = closureProps.style
+    const className = closureProps.className
+    const classNames = closureProps.classNames
 
     if(!selectedKeys) {
       selectedKeys = []
@@ -30,8 +29,8 @@ function createSubstyle(closureProps, propsDecorator: ({ style, className }) => 
 
     invariant(
       Array.isArray(selectedKeys),
-      'Second parameter must be a string, an array of strings, a plain object with boolean ' +
-      'values, a falsy value, or a function with a return value of one of these four types.'
+      'Parameter must be a string, an array of strings, ' +
+      'a plain object with boolean values, or a falsy value.'
     )
 
     const baseClassName = className && className.split(' ')[0]
@@ -60,18 +59,20 @@ function createSubstyle(closureProps, propsDecorator: ({ style, className }) => 
           [ className, ...toModifierClassNames(modifierKeys) ] :
           toElementClassNames(elementKeys)
         ).join(' ')
-      })
+      }),
+
+      classNames,
 
     })
   }
 
-  const propsForSpread = {
+  const propsForSpread = propsDecorator({
     ...closureProps,
     ...(closureProps.style ? { style: pickDirectStyles(closureProps.style) } : {}),
-  }
+  })
 
   // assign `style` and/or `className` props to the return function object
-  assign(substyle, propsDecorator(propsForSpread))
+  assign(substyle, propsForSpread)
   return substyle
 }
 
