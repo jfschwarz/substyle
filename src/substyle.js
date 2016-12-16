@@ -8,7 +8,7 @@ import { pickDirectStyles, pickNestedStyles, pickNestedStylesRecursive } from '.
 const isModifier = key => key[0] === '&'
 const isElement = negate(isModifier)
 
-function createSubstyle(closureProps) {
+function createSubstyle(closureProps, propsDecorator: ({ style, className }) => Object = identity) {
   function substyle(props, selectedKeys) {
     const style = (closureProps.style || props.style) && merge({}, closureProps.style, props.style)
     const className = props.className || closureProps.className
@@ -29,7 +29,7 @@ function createSubstyle(closureProps) {
     }
 
     invariant(
-      Array.isArray(selectedKeys), 
+      Array.isArray(selectedKeys),
       'Second parameter must be a string, an array of strings, a plain object with boolean ' +
       'values, a falsy value, or a function with a return value of one of these four types.'
     )
@@ -43,19 +43,19 @@ function createSubstyle(closureProps) {
 
     const hoistElementStyles = (style) => values(pickNestedStyles(style, elementKeys))
     const hoistModifierStyles = (style) => values(pickNestedStylesRecursive(style, modifierKeys))
-    const hoistElementStylesFromEach = elementKeys.length > 0 ? 
-      compose(flatten, map(hoistElementStyles)) : 
+    const hoistElementStylesFromEach = elementKeys.length > 0 ?
+      compose(flatten, map(hoistElementStyles)) :
       identity
 
     return createSubstyle({
 
-      ...( style && { 
+      ...( style && {
         style : merge({},
           ...hoistElementStylesFromEach([ style, ...hoistModifierStyles(style) ])
         )
       }),
 
-      ...( className && { 
+      ...( className && {
         className : (elementKeys.length === 0 ?
           [ className, ...toModifierClassNames(modifierKeys) ] :
           toElementClassNames(elementKeys)
@@ -71,8 +71,7 @@ function createSubstyle(closureProps) {
   }
 
   // assign `style` and/or `className` props to the return function object
-  // TODO call propsDecorator function
-  assign(substyle, propsForSpread)
+  assign(substyle, propsDecorator(propsForSpread))
   return substyle
 }
 
