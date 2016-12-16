@@ -42,6 +42,7 @@
     "babel-register": "^6.11.6",
     "chai": "^3.5.0",
     "mocha": "^2.4.5",
+    "react": "^15.4.1",
     "rimraf": "^2.5.1"
   },
   "peerDependencies": {
