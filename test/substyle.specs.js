@@ -312,4 +312,22 @@ describe('substyle', function () {
     expect(style).to.have.property('width', 1)
   })
 
+  it('should take default styles as second arg to merge the style prop with', function () {
+    const defaultStyle = {
+      width: 50,
+      nested: { height: 10, width: 10 },
+    }
+
+    const substyle = createSubstyle({
+      style: { height: 50, nested: { width: 20 } },
+    })
+    const substyleWithDefaultStyle = substyle(undefined, defaultStyle)
+    expect({...substyleWithDefaultStyle}).to.deep.equal(
+      { style: { height: 50, width: 50 } }
+    )
+    expect({...substyleWithDefaultStyle('nested')}).to.deep.equal(
+      { style: { height: 10, width: 20 } }
+    )
+  })
+
 })
