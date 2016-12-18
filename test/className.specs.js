@@ -1,48 +1,52 @@
 import { expect } from 'chai'
 
-import substyle from '../src'
+import createSubstyle from '../src/createSubstyle'
 
 describe('`className` management', () => {
 
   it('should derive a BEM compliant className for a passed nested element key', function () {
-    const { className } = substyle({ className: 'my-class' }, 'toggle')
+    const substyle = createSubstyle({ className: 'my-class' })
+    const { className } = substyle('toggle')
     expect(className).to.equal('my-class__toggle')
   })
 
   it('should derive a BEM compliant className for a passed modifier key', function () {
-    const { className } = substyle({ className: 'my-class' }, '&active')
+    const substyle = createSubstyle({ className: 'my-class' })
+    const { className } = substyle('&active')
     expect(className).to.equal('my-class my-class--active')
   })
 
   it('should not return a className when no className has been set in the props', function () {
-    const props = substyle({ }, 'toggle')
+    const substyle = createSubstyle({})
+    const props = substyle('toggle')
     expect(props).to.not.have.property('className')
   })
 
   it('should not generate additional class names for modifiers if selectedKeys contain element keys', function () {
-    const { className } = substyle({ className: 'my-class' }, ['btn', '&disabled'])
+    const substyle = createSubstyle({ className: 'my-class' })
+    const { className } = substyle(['btn', '&disabled'])
     expect(className).to.equal('my-class__btn')
   })
 
   it('should return the original className when selectedKeys is not specified or empty', function () {
-    const { className } = substyle({ className: 'my-class' })
+    const substyle = createSubstyle({ className: 'my-class' })
+    const { className } = substyle
     expect(className).to.equal('my-class')
 
-    const { className: sameClassName } = substyle({ className: 'my-class' }, { '@active': false })
+    const { className: sameClassName } = substyle({ '@active': false })
     expect(sameClassName).to.equal('my-class')
 
-    const { className: stillTheSameClassName } = substyle({ className: 'my-class' }, undefined)
+    const { className: againTheSameClassName } = substyle([])
+    expect(againTheSameClassName).to.equal('my-class')
+
+    const { className: stillTheSameClassName } = substyle()
     expect(stillTheSameClassName).to.equal('my-class')
   })
 
   it('should correctly merge modifiers with existing classNames', function () {
-    const { className } = substyle({ className: 'foo foo--bar' }, '&baz')
+    const substyle = createSubstyle({ className: 'foo foo--bar' })
+    const { className } = substyle('&baz')
     expect(className).to.equal('foo foo--bar foo--baz')
-  })
-
-  it('should allow passing a function as second arg which is supposed to return the keys to select', () => {
-    const { className } = substyle({ className: 'foo' }, () => 'bar')
-    expect(className).to.equal('foo__bar')
   })
 
 })
