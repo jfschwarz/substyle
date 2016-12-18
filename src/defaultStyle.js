@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import { createElement } from 'react'
 
 import createSubstyle from './createSubstyle'
 import mergeStyles from './mergeStyles'
@@ -12,11 +12,9 @@ const createDefaultStyle = (
   function WithDefaultStyle({ style, className, classNames, ...rest }) {
     const substyle = createSubstyle({ style, className, classNames })
     const modifiers = getModifiers && getModifiers(rest)
-    return (
-      <WrappedComponent
-        style={substyle(modifiers, defaultStyle)}
-        {...rest}
-      />
+    return createElement(
+      WrappedComponent,
+      { style: substyle(modifiers, defaultStyle), ...rest }
     )
   }
 
