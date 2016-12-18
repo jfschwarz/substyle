@@ -1,6 +1,9 @@
 // @flow
 import invariant from 'invariant'
-import { keys, values, negate, identity, flatten, merge, assign, isFunction } from 'lodash'
+import {
+  keys, values, negate, identity, flatten, merge, assign,
+  isFunction, isPlainObject, isString, isArray,
+} from 'lodash'
 import { filter, map, compose } from 'lodash/fp'
 
 import defaultPropsDecorator from './defaultPropsDecorator'
@@ -19,11 +22,11 @@ function createSubstyle(
 
   const substyle = styleIsFunction ? style :
     (selectedKeys: KeysT, defaultStyle?: Object) => {
-      if(!selectedKeys) {
+      if (!selectedKeys) {
         selectedKeys = []
-      } else if(typeof selectedKeys === 'string') {
+      } else if (isString(selectedKeys)) {
         selectedKeys = [selectedKeys]
-      } else if(Object.prototype.toString.call(selectedKeys) === '[object Object]') {
+      } else if (isPlainObject(selectedKeys)) {
         selectedKeys = keys(selectedKeys).reduce(
           (keys, key) => keys.concat(selectedKeys[key] ? [key] : []),
           []
@@ -31,9 +34,14 @@ function createSubstyle(
       }
 
       invariant(
-        Array.isArray(selectedKeys),
-        'Parameter must be a string, an array of strings, ' +
+        isArray(selectedKeys),
+        'First parameter must be a string, an array of strings, ' +
         'a plain object with boolean values, or a falsy value.'
+      )
+
+      invariant(
+        !defaultStyle || isPlainObject(defaultStyle),
+        'Optional second parameter must be a plain object.'
       )
 
       const baseClassName = className && className.split(' ')[0]

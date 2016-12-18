@@ -188,7 +188,7 @@ describe('substyle', function () {
     const sameSubsubstyle = sameSubstyle(['specialToggle', 'toggle'])
     const { style: sameStyle } = sameSubsubstyle
     expect(sameStyle).to.deep.equal(style)
-    const { style: sameLabelStyle } = sameSubsubstyle({}, 'label')
+    const { style: sameLabelStyle } = sameSubsubstyle('label')
     expect(sameLabelStyle).to.deep.equal(labelStyle)
 
     // ... while changing the order in the style definition does
@@ -217,7 +217,7 @@ describe('substyle', function () {
     expect(otherStyle).to.deep.equal({
       width: 100,
     })
-    const { style: labelOtherStyle } = otherSubsubstyle({}, 'label')
+    const { style: labelOtherStyle } = otherSubsubstyle('label')
     expect(labelOtherStyle).to.deep.equal({
       fontSize: '11pt',
       color: 'blue'
