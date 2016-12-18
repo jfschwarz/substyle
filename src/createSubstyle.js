@@ -21,7 +21,7 @@ function createSubstyle(
   const styleIsFunction = isFunction(style)
 
   const substyle = styleIsFunction ? style :
-    (selectedKeys: KeysT, defaultStyle?: Object) => {
+    (selectedKeys?: KeysT, defaultStyle?: Object) => {
       if (!selectedKeys) {
         selectedKeys = []
       } else if (isString(selectedKeys)) {
