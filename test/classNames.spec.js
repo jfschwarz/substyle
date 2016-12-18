@@ -1,3 +1,5 @@
+import { expect } from 'chai'
+
 import createSubstyle from '../src/createSubstyle'
 
 describe('`classNames` mapping', () => {
