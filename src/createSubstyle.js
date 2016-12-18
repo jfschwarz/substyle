@@ -18,7 +18,7 @@ function createSubstyle(
   const styleIsFunction = isFunction(style)
 
   const substyle = styleIsFunction ? style :
-    (selectedKeys?: KeysT) => {
+    (selectedKeys: KeysT, defaultStyle?: Object) => {
       if(!selectedKeys) {
         selectedKeys = []
       } else if(typeof selectedKeys === 'string') {
@@ -51,9 +51,10 @@ function createSubstyle(
 
       return createSubstyle({
 
-        ...(style && {
+        ...((style || defaultStyle) && {
           style: merge({},
-            ...hoistElementStylesFromEach([ style, ...hoistModifierStyles(style) ])
+            ...hoistElementStylesFromEach([ defaultStyle, ...hoistModifierStyles(defaultStyle) ]),
+            ...hoistElementStylesFromEach([ style, ...hoistModifierStyles(style) ]),
           )
         }),
 
@@ -64,7 +65,7 @@ function createSubstyle(
           ).join(' ')
         }),
 
-      })
+      }, propsDecorator)
     }
 
   const styleProps = {

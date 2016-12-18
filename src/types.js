@@ -2,7 +2,7 @@
 
 export type KeysT = string | Array<string> | { [string]: boolean };
 
-export type SubstyleT = (select: KeysT) => SubstyleT;
+export type SubstyleT = (select: KeysT, defaultStyle?: Object) => SubstyleT;
 
 export type StyleT = SubstyleT | Object;
 
