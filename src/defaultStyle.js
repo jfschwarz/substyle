@@ -2,7 +2,6 @@
 import { createElement } from 'react'
 
 import createSubstyle from './createSubstyle'
-import mergeStyles from './mergeStyles'
 import type { KeysT } from './types'
 
 const createDefaultStyle = (
@@ -19,8 +18,8 @@ const createDefaultStyle = (
   }
 
   const wrappedComponentName = WrappedComponent.displayName || WrappedComponent.name
-  WithDefaultStyle.displayName = `withDefaultStyle(${wrappedComponentName}`
-  return WithDefaultStyle;
+  WithDefaultStyle.displayName = `withDefaultStyle(${wrappedComponentName})`
+  return WithDefaultStyle
 }
 
 export default createDefaultStyle

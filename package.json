@@ -42,8 +42,11 @@
     "babel-preset-stage-2": "^6.18.0",
     "babel-register": "^6.18.0",
     "chai": "^3.5.0",
+    "enzyme": "^2.6.0",
     "mocha": "^2.4.5",
     "react": "^15.4.1",
+    "react-addons-test-utils": "^15.4.1",
+    "react-dom": "^15.4.1",
     "rimraf": "^2.5.1"
   },
   "peerDependencies": {
