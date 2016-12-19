@@ -1,25 +1,29 @@
 # substyle
 
-_substyle_ is a simple helper function for writing themeable components, i.e., components whose 
+_substyle_ is a simple helper function for writing themeable components, i.e., components whose
 styling can be fully customized by users.
 
 **Features:**
 - Let's users customize styles for all child nodes and components
 - Overwritable default styling
-- Custom styling can be provided through: global css, css modules, inline styles, 
-[Radium](http://projects.formidablelabs.com/radium/), 
-[Aphrodite](https://github.com/Khan/aphrodite), 
-[React Style](https://github.com/js-next/react-style), 
+- Custom styling can be provided through: global css, css modules, inline styles,
+[Radium](http://projects.formidablelabs.com/radium/),
+[Aphrodite](https://github.com/Khan/aphrodite),
+[React Style](https://github.com/js-next/react-style),
 [JSS](https://github.com/jsstyles/jss)
 - Optional, automatic BEM class name generation
+
+### Interesting ideas
+
+- https://github.com/nikgraf/future-react-ui
 
 ### Alternatives
 Theme as props: Component author keeps control of the theme API - desireable?
 
-https://github.com/markdalgleish/react-themeable Very similar to substyle, but does not address 
+https://github.com/markdalgleish/react-themeable Very similar to substyle, but does not address
 composition and default style definition
 
-
+https://github.com/javivelasco/react-css-themr
 
 
 
@@ -85,7 +89,7 @@ That's it: Our `Popover` component can now be used with CSS as well as with inli
 
 ```javascript
 // JSX                                        // Rendered HTML
-                         
+
 <Popover style={{                             // <div style='background: white;'>
   background: 'white',                        //   <button style="right: 0;">x</button>
   close: { right: 0 }                         //   ...  
@@ -109,7 +113,7 @@ _substyle_ picks up the idea of [BEM methodology](http://csswizardry.com/2013/01
 - **element**: descendant element of a component
 - **modifier**: represents a specific state or variation of a block or element
 
-#### Block 
+#### Block
 
 A React component's render function always returns exactly one React element. This container element, often a `div`, wraps all descendant elements and represents the component block in the DOM. As such, it is assigned the block name as class name and receives the direct style definitions of the nested inline style object. For deriving the block styles, simply call `substyle(props)` without a second argument.
 
@@ -123,11 +127,11 @@ const Foo = (props) => <div {...substyle(props)}>...</div>
 <Foo style={{                             // <div style='position: absolute; top: 0;'>...</div>
     position: 'absolute',                
     top: 0,                               
-                                          
+
     bar: {
       width: '100%'
     }
-  }} 
+  }}
 />
 ```
 
@@ -150,13 +154,13 @@ const Foo = (props) => <div {...substyle(props)}>
                                           // </div>
 
 <Foo style={{                             // <div style='position: absolute; top: 0;'>
-    position: 'absolute',                 //   <div style='width: 100%' /> 
-    top: 0,                               //   <div style='width: 100%' /> 
-                                          // </div> 
+    position: 'absolute',                 //   <div style='width: 100%' />
+    top: 0,                               //   <div style='width: 100%' />
+                                          // </div>
     bar: {
       width: '100%'
     }
-  }} 
+  }}
 />
 ```
 
@@ -186,9 +190,9 @@ const Foo = ({ disabled, ...rest }) => (
 const style = {                             
   position: 'absolute',                 
   top: 0,                               
-                                        
+
   bar: { width: '100%' },                 // 'bar' element base styles
-  
+
   '&disabled': {                          // nested styles for the '&disabled' modifier:
     opacity: 0.5,                         //  - direct styles to be set on the container
     bar: { width: '50%' },                //  - 'bar' element styles to be merged with base styles
@@ -196,11 +200,11 @@ const style = {
 }
 
                                           // <div style='position: absolute; top: 0;'>
-<Foo style={style} />                     //   <div style='width: 100%' /> 
+<Foo style={style} />                     //   <div style='width: 100%' />
                                           // </div>  
 
                                           // <div style='position: absolute; top: 0; opacity: 0.5;'>
-<Foo style={style} disabled />            //   <div style='width: 50%' /> 
+<Foo style={style} disabled />            //   <div style='width: 50%' />
                                           // </div>  
 ```
 
@@ -208,8 +212,8 @@ const style = {
 ### Chaining & default styles
 
 Every *substyle* call return a new instance of the *substyle* function which is preconfigured to use
-the styles selected in the previous call as a default. The `style` prop passed in the chained 
-*substyle* call will be merged with the default styles 
+the styles selected in the previous call as a default. The `style` prop passed in the chained
+*substyle* call will be merged with the default styles
 (using lodash's [merge](https://lodash.com/docs#merge) function).
 
 TODO
