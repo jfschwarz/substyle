@@ -7,11 +7,11 @@ import {
 import { filter, map, compose } from 'lodash/fp'
 
 import defaultPropsDecorator from './defaultPropsDecorator'
-import { pickDirectStyles, pickNestedStyles, pickNestedStylesRecursive } from './pickStyles'
+import { pickNestedStyles, pickNestedStylesRecursive } from './pickStyles'
 import type { PropsT, KeysT } from './types'
 
 
-const isModifier = key => key[0] === '&'
+const isModifier = (key: string) => key[0] === '&'
 const isElement = negate(isModifier)
 
 function createSubstyle(
@@ -21,14 +21,15 @@ function createSubstyle(
   const styleIsFunction = isFunction(style)
 
   const substyle = styleIsFunction ? style :
-    (selectedKeys?: KeysT, defaultStyle?: Object) => {
-      if (!selectedKeys) {
+    (select?: KeysT, defaultStyle?: Object) => {
+      let selectedKeys
+      if (!select) {
         selectedKeys = []
-      } else if (isString(selectedKeys)) {
-        selectedKeys = [selectedKeys]
-      } else if (isPlainObject(selectedKeys)) {
-        selectedKeys = keys(selectedKeys).reduce(
-          (keys, key) => keys.concat(selectedKeys[key] ? [key] : []),
+      } else if (isString(select)) {
+        selectedKeys = [select]
+      } else if (isPlainObject(select)) {
+        selectedKeys = keys(select).reduce(
+          (acc: Array<string>, key: string) => acc.concat(select[key] ? [key] : []),
           []
         )
       }
@@ -45,14 +46,18 @@ function createSubstyle(
       )
 
       const baseClassName = className && className.split(' ')[0]
-      const toElementClassNames = map(key => baseClassName + '__' + key)
-      const toModifierClassNames = map(key => baseClassName + '--' + key.substring(1))
+      const toElementClassNames = map((key: string) => `${baseClassName}__${key}`)
+      const toModifierClassNames = map((key: string) => `${baseClassName}--${key.substring(1)}`)
 
       const modifierKeys = filter(isModifier, selectedKeys)
       const elementKeys = filter(isElement, selectedKeys)
 
-      const hoistElementStyles = (style) => values(pickNestedStyles(style, elementKeys))
-      const hoistModifierStyles = (style) => values(pickNestedStylesRecursive(style, modifierKeys))
+      const hoistElementStyles = (styleObject: Object) => (
+        values(pickNestedStyles(styleObject, elementKeys))
+      )
+      const hoistModifierStyles = (styleObject: Object) => (
+        values(pickNestedStylesRecursive(styleObject, modifierKeys))
+      )
       const hoistElementStylesFromEach = elementKeys.length > 0 ?
         compose(flatten, map(hoistElementStyles)) :
         identity
@@ -61,16 +66,16 @@ function createSubstyle(
 
         ...((style || defaultStyle) && {
           style: merge({},
-            ...hoistElementStylesFromEach([ defaultStyle, ...hoistModifierStyles(defaultStyle) ]),
-            ...hoistElementStylesFromEach([ style, ...hoistModifierStyles(style) ]),
-          )
+            ...hoistElementStylesFromEach([defaultStyle, ...hoistModifierStyles(defaultStyle)]),
+            ...hoistElementStylesFromEach([style, ...hoistModifierStyles(style)]),
+          ),
         }),
 
         ...(className && {
           className: (elementKeys.length === 0 ?
-            [ className, ...toModifierClassNames(modifierKeys) ] :
+            [className, ...toModifierClassNames(modifierKeys)] :
             toElementClassNames(elementKeys)
-          ).join(' ')
+          ).join(' '),
         }),
 
       }, propsDecorator)
@@ -86,7 +91,7 @@ function createSubstyle(
       className: [
         styleProps.className,
         className,
-      ].join(' ').trim()
+      ].join(' ').trim(),
     }),
   })
 

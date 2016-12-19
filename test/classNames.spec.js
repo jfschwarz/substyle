@@ -3,7 +3,6 @@ import { expect } from 'chai'
 import createSubstyle from '../src/createSubstyle'
 
 describe.skip('`classNames` mapping', () => {
-
   it('should use the mapped class name when selecting a nested element', () => {
     const substyle = createSubstyle({
       className: 'container',
@@ -57,5 +56,4 @@ describe.skip('`classNames` mapping', () => {
     const { className } = substyle(['&readOnly', '&nestedModifier'])
     expect(className).to.equal('container container-as-modified-readonly')
   })
-
 })

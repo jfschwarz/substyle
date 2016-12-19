@@ -3,34 +3,33 @@ import { expect } from 'chai'
 import createSubstyle from '../src/createSubstyle'
 
 describe('`className` management', () => {
-
   it('should derive a BEM compliant className for a passed nested element key', () => {
     const substyle = createSubstyle({ className: 'my-class' })
-    const { className } = substyle('toggle')
+    const { className } = substyle('toggle')
     expect(className).to.equal('my-class__toggle')
   })
 
   it('should derive a BEM compliant className for a passed modifier key', () => {
     const substyle = createSubstyle({ className: 'my-class' })
-    const { className } = substyle('&active')
+    const { className } = substyle('&active')
     expect(className).to.equal('my-class my-class--active')
   })
 
   it('should derive not include modifiers of parents elements in nested class names', () => {
     const substyle = createSubstyle({ className: 'my-class' })
-    const { className } = substyle('&active')('nested')
+    const { className } = substyle('&active')('nested')
     expect(className).to.equal('my-class__nested')
   })
 
   it('should not return a className when no className has been set in the props', () => {
     const substyle = createSubstyle({})
-    const props = substyle('toggle')
+    const props = substyle('toggle')
     expect(props).to.not.have.property('className')
   })
 
   it('should not generate additional class names for modifiers if selectedKeys contain element keys', () => {
     const substyle = createSubstyle({ className: 'my-class' })
-    const { className } = substyle(['btn', '&disabled'])
+    const { className } = substyle(['btn', '&disabled'])
     expect(className).to.equal('my-class__btn')
   })
 
@@ -54,5 +53,4 @@ describe('`className` management', () => {
     const { className } = substyle('&baz')
     expect(className).to.equal('foo foo--bar foo--baz')
   })
-
 })

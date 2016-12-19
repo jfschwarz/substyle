@@ -3,7 +3,6 @@ import { expect } from 'chai'
 import createSubstyle from '../src/createSubstyle'
 
 describe('chaining', () => {
-
   it('should support chaining calls to selected deeper nested styles', () => {
     const substyle = createSubstyle({
       style: {
@@ -43,5 +42,4 @@ describe('chaining', () => {
     const { style: sameStyle } = substyle(['&outer', '&inner'])
     expect(sameStyle).to.deep.equal(style)
   })
-
 })

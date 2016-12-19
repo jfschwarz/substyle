@@ -10,7 +10,6 @@ const render = (element) => (
 )
 
 describe.only('`defaultStyle` higher-order component', () => {
-
   const MyComponent = ({ style, ...rest }) => createElement('div', { ...style, ...rest },
     createElement('span', { ...style('nested') })
   )
