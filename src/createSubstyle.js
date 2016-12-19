@@ -14,6 +14,20 @@ import type { PropsT, KeysT } from './types'
 const isModifier = (key: string) => key[0] === '&'
 const isElement = negate(isModifier)
 
+const coerceSelectedKeys = (select?: KeysT) => {
+  if (!select) {
+    return []
+  } else if (isString(select)) {
+    return [select]
+  } else if (isPlainObject(select)) {
+    return keys(select).reduce(
+      (acc: Array<string>, key: string) => acc.concat(select[key] ? [key] : []),
+      []
+    )
+  }
+  return select
+}
+
 function createSubstyle(
   { style, className, classNames }: PropsT,
   propsDecorator: (props: PropsT) => Object = defaultPropsDecorator,
@@ -22,17 +36,7 @@ function createSubstyle(
 
   const substyle = styleIsFunction ? style :
     (select?: KeysT, defaultStyle?: Object) => {
-      let selectedKeys
-      if (!select) {
-        selectedKeys = []
-      } else if (isString(select)) {
-        selectedKeys = [select]
-      } else if (isPlainObject(select)) {
-        selectedKeys = keys(select).reduce(
-          (acc: Array<string>, key: string) => acc.concat(select[key] ? [key] : []),
-          []
-        )
-      }
+      const selectedKeys = coerceSelectedKeys(select)
 
       invariant(
         isArray(selectedKeys),
