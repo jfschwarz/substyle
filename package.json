@@ -7,6 +7,7 @@
     "clean": "rimraf lib",
     "build": "babel src --out-dir lib",
     "test": "NODE_ENV=test mocha",
+    "lint": "eslint src test",
     "prepublish": "npm run test && npm run clean && npm run build"
   },
   "repository": {
@@ -43,6 +44,11 @@
     "babel-register": "^6.18.0",
     "chai": "^3.5.0",
     "enzyme": "^2.6.0",
+    "eslint": "^3.12.2",
+    "eslint-config-signavio": "^1.4.1",
+    "eslint-config-signavio-test": "^1.2.1",
+    "eslint-plugin-chai-expect": "^1.1.1",
+    "eslint-plugin-mocha": "^4.7.0",
     "mocha": "^2.4.5",
     "react": "^15.4.1",
     "react-addons-test-utils": "^15.4.1",
