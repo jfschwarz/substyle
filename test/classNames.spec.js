@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 import createSubstyle from '../src/createSubstyle'
 
-describe('`classNames` mapping', () => {
+describe.skip('`classNames` mapping', () => {
 
   it('should use the mapped class name when selecting a nested element', () => {
     const substyle = createSubstyle({
