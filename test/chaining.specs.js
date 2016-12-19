@@ -4,7 +4,25 @@ import createSubstyle from '../src/createSubstyle'
 
 describe('chaining', () => {
 
-  it('should select the style definitions for all modifiers substyle calls', function () {
+  it('should support chaining calls to selected deeper nested styles', () => {
+    const substyle = createSubstyle({
+      style: {
+        first: {
+          color: 'red',
+          second: {
+            cursor: 'pointer',
+          },
+        },
+      },
+    })
+
+    const { style } = substyle('first')('second')
+    expect(style).to.deep.equal({
+      cursor: 'pointer',
+    })
+  })
+
+  it('should select the style definitions for all modifiers substyle calls', () => {
     const myStyle = {
       position: 'absolute',
       '&outer': {
