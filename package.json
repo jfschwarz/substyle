@@ -45,7 +45,7 @@
     "chai": "^3.5.0",
     "enzyme": "^2.6.0",
     "eslint": "^3.12.2",
-    "eslint-config-signavio": "^1.4.1",
+    "eslint-config-signavio": "^1.4.2",
     "eslint-config-signavio-test": "^1.2.1",
     "eslint-plugin-chai-expect": "^1.1.1",
     "eslint-plugin-mocha": "^4.7.0",
@@ -53,7 +53,8 @@
     "react": "^15.4.1",
     "react-addons-test-utils": "^15.4.1",
     "react-dom": "^15.4.1",
-    "rimraf": "^2.5.1"
+    "rimraf": "^2.5.1",
+    "sinon": "^1.17.6"
   },
   "peerDependencies": {
     "react": ">=15.3.2"

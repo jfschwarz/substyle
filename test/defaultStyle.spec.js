@@ -4,6 +4,7 @@ import { createElement } from 'react'
 
 import defaultStyle from '../src/defaultStyle'
 import createSubstyle from '../src/createSubstyle'
+import { ENHANCER_CONTEXT_NAME } from '../src/types'
 
 describe('`defaultStyle` higher-order component', () => {
   const MyComponent = ({ style, ...rest }) => createElement('div', { ...style, ...rest },
@@ -85,5 +86,20 @@ describe('`defaultStyle` higher-order component', () => {
       color: 'red',
       opacity: 0.5,
     })
+  })
+
+  it('should support depency injection via context for additional HoC to wrap the component', () => {
+    const MyStyledComponent = defaultStyle()(MyComponent)
+    const wrapInSection = (WrappedComponent) => (props) => (
+      createElement('section', {},
+        createElement(WrappedComponent, props)
+      )
+    )
+    const wrapper = shallow(createElement(MyStyledComponent), {
+      context: {
+        [ENHANCER_CONTEXT_NAME]: wrapInSection,
+      },
+    })
+    expect(wrapper.get(0).type().type).to.equal('section')
   })
 })

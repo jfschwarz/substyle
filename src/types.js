@@ -1,4 +1,6 @@
 // @flow
+/* eslint-disable import/prefer-default-export */
+export const ENHANCER_CONTEXT_NAME = '__substyle__Enhancer'
 
 export type KeysT = string | Array<string> | { [string]: boolean };
 
@@ -17,4 +19,8 @@ export type PropsT = {
   style?: StyleT,
   className?: string,
   classNames?: ClassNamesT,
+};
+
+export type ContextT = {
+  [ENHANCER_CONTEXT_NAME]: ?(WrappedComponent: ReactClass) => ReactClass,
 };
