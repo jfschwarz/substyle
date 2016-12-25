@@ -7,7 +7,7 @@ import { ENHANCER_CONTEXT_NAME } from './types'
 import type { KeysT, PropsT } from './types'
 
 const createDefaultStyle = (
-  defaultStyle: Object,
+  defaultStyle?: Object,
   getModifiers?: (props: Object) => KeysT
 ) => (WrappedComponent: ReactClass) => {
   function WithDefaultStyle(

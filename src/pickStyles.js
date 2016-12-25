@@ -10,7 +10,7 @@ export const pickDirectStyles = (style) => {
     const isDirect = (
       Object.prototype.toString.call(style[key]) !== '[object Object]' ||  // style defs
       key[0] === ':' ||  // pseudo selectors
-      key[0] === '@'  // media queries
+      key[0] === '@'  // @media / @keyframes / @supports / @font-face
     )
     if (isDirect) {
       result[key] = style[key]

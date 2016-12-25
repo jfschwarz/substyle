@@ -6,7 +6,7 @@ import defaultStyle from '../src/defaultStyle'
 import createSubstyle from '../src/createSubstyle'
 import { ENHANCER_CONTEXT_NAME } from '../src/types'
 
-describe('`defaultStyle` higher-order component', () => {
+describe('`defaultStyle` higher-order component factory', () => {
   const MyComponent = ({ style, ...rest }) => createElement('div', { ...style, ...rest },
     createElement('span', { ...style('nested') })
   )
