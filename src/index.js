@@ -1,5 +1,5 @@
 import invariant from 'invariant'
-import { isPlainObject } from 'lodash'
+import { isPlainObject, isFunction } from 'lodash'
 
 import createSubstyle from './createSubstyle'
 import defaultStyle from './defaultStyle'
@@ -19,7 +19,7 @@ const injectSubstyle = (...args) => {
     `(got: ${args[0]})`
   )
   invariant(
-    !args[1] || isPlainObject(args[1]),
+    !args[1] || isPlainObject(args[1]) || isFunction(args[1]),
     'Second argument of defaultStyle must a plain object, a function, or a falsy value.\n' +
     `(got: ${args[1]})`
   )
