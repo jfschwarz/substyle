@@ -1,54 +1,15 @@
 # substyle
 
-_substyle_ is a simple helper function for writing themeable components, i.e., components whose
-styling can be fully customized by users.
+There are a lot of competing styling approaches for React applications, from good old css and css modules to inline styles and css-in-js solutions. How can authors of component libraries make sure that component styles can be seamlessly integrated and customized in any application?
 
-**Features:**
-- Let's users customize styles for all child nodes and components
-- Overwritable default styling
-- Custom styling can be provided through: global css, css modules, inline styles,
-[Radium](http://projects.formidablelabs.com/radium/),
-[Aphrodite](https://github.com/Khan/aphrodite),
-[React Style](https://github.com/js-next/react-style),
-[JSS](https://github.com/jsstyles/jss)
-- Optional, automatic BEM class name generation
+_substyle_ is a simple utility for building universally stylable React components. By using _substyle_ your components will support styling through:
 
-### Interesting ideas
-
-- https://github.com/nikgraf/future-react-ui
-
-### Alternatives
-Theme as props: Component author keeps control of the theme API - desireable?
-
-https://github.com/markdalgleish/react-themeable Very similar to substyle, but does not address
-composition and default style definition
-
-https://github.com/javivelasco/react-css-themr
-
-
-
-
-
-
---------
-
-_substyle_ is a simple helper function for writing reusable React components that are stylable through both, CSS and inline styles. In its core, it is nothing more than a simple mapping of the `style` and `className` prop values:
-
-```javascript
-({ style, className }, key) => ({
-  className: key ? className && `${className}__${key}` : className,
-  style: key ? style && style[key] : style
-})
-```
-
-## Motivation
-
-First, let's clarify the term _reusable component_. Reuse here does NOT mean components being used in multiple other components inside a single React application, but refers to **reuse across multiple applications**. Thus, reusable components are usually distributed as npm modules. While you can of course include CSS files in npm modules, there is no way of actually coupling reusable components and their stylesheets without making assumptions about the environment. Many libraries make do with using some prefixed class names and pointing users to a CSS file in the readme, however, this has the following problems: It's all too easy to forget about including the CSS (or removing it once the component is not used anymore) and there's always a risk of global class name conflicts.
-
-Eliminating CSS in favor of inline styles can solve these problems as inline style definitions are properly coupled with components and there is no need to deal with global class names. So when distributing React components, ship inline styles instead of stylesheets. However, you have to ensure that users of your components can fully customize their styling. _substyle_ helps you do just that by designating one consistent scheme for both:
-
-- selecting the right parts of the nested inline styles for each rendered child element
-- deriving an optional and customizable CSS class name for each rendered child element
+- css ([BEM](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/) class names)
+- css modules
+- inline styles (pure and with [Radium](http://formidable.com/open-source/radium/))
+- [Aphrodite](https://github.com/Khan/aphrodite)
+- [React Style](https://github.com/js-next/react-style),
+- [JSS](https://github.com/jsstyles/jss)
 
 
 ## Installation
@@ -59,29 +20,31 @@ npm install --save substyle
 
 ## Example
 
-Let's create a reusable `Popover` component using _substyle_:
+Let's create a simple `Popover` component using _substyle_:
 
 ```javascript
 import substyle from 'substyle'
 
-const Popover = (props) => (
-  <div {...substyle(props)}>
-    <button {...substyle(props, 'close')}>x</button>
-    { props.children }
+const Popover = ({ style, children }) => (
+  <div {...style}>
+    <button {...style('close')}>x</button>
+    { children }
   </div>
 )
+
+export default substyle(Popover)
 ```
 
-That's it: Our `Popover` component can now be used with CSS as well as with inline styles.
+That's all there is for making the styles of the container `div` and the `button` element customizable by users of the `Popover` component.
 
-##### For using CSS, assign `className`
+##### For using css, assign `className`
 
 ```javascript
 // JSX                                        // Rendered HTML
 
-<Popover className='popover'>                 // <div class='popover'>
-  ...                                         //   <button class="popover__close">x</button>
-</Popover>                                    //   ...
+<Popover className="popover">                 // <div class="popover">
+  <span>Hello world!</span>                   //   <button class="popover__close">x</button>
+</Popover>                                    //   <span>Hello world!</span>
                                               // </div>
 ```
 
@@ -90,184 +53,55 @@ That's it: Our `Popover` component can now be used with CSS as well as with inli
 ```javascript
 // JSX                                        // Rendered HTML
 
-<Popover style={{                             // <div style='background: white;'>
+<Popover style={{                             // <div style="background: white;">
   background: 'white',                        //   <button style="right: 0;">x</button>
-  close: { right: 0 }                         //   ...  
+  close: { right: 0 },                        //   <span>Hello world!</span>
 }}>                                           // </div>
-  ...                                  
+  <span>Hello world!</span>                                  
 </Popover>
 ```
 
-So what does this achieve? First, it assigns class names derived from the element's `className` prop. If the component is used without a `className`, it's safe to assume that none of the child elements require a class name to be set. Second, if a `style` object is supplied to the element, it selects the nested sub object under the specified key for the child element. By using the same keys for derived class names and nested element style definitions, a consistent naming scheme is established.
+## How to use it
 
+TODO
 
 ## API
 
-TODO
+The default export of the _substyle_ module is a facade around `defaultStyle`, providing a more versatile API. It's a function that can be be used as a higher-order component for enhancing a React component class by injecting the special ´style´ prop.
 
-## How to use it
+#### `substyle(Component)` (default export as higher-order component)
 
-_substyle_ picks up the idea of [BEM methodology](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/) of breaking style definitions down into **B**lock, **E**lement, and **M**odifier parts. In fact, _substyle_ generates derived class names that follow BEM syntax. You don't have to know anything about BEM other than understanding how the three basic terms relate to React components. And this is straightforward:
+Returns an enhanced version of `Component` which supports `style`, `className`, and `classNames` props and maps them to a single [special `style` prop]().
 
-- **block**: component
-- **element**: descendant element of a component
-- **modifier**: represents a specific state or variation of a block or element
+#### Arguments
 
-#### Block
+- `Component` _(React component)_
 
-A React component's render function always returns exactly one React element. This container element, often a `div`, wraps all descendant elements and represents the component block in the DOM. As such, it is assigned the block name as class name and receives the direct style definitions of the nested inline style object. For deriving the block styles, simply call `substyle(props)` without a second argument.
+The same function can also be used as a factory. This allows to define default styles and modifiers:
 
-**Example**
+#### `substyle([defaultStyles], [mapPropsToModifiers])` (default export as higher-order component factory)
 
-```javascript
-const Foo = (props) => <div {...substyle(props)}>...</div>
+`Returns a version of the higher-order component that is preconfigured to merge `defaultStyles` with user specified style definitions.
 
-<Foo className='foo' />                   // <div class='foo'>...</div>
+#### Arguments
 
-<Foo style={{                             // <div style='position: absolute; top: 0;'>...</div>
-    position: 'absolute',                
-    top: 0,                               
+- `defaultStyle` _(Object)_ If specified,
 
-    bar: {
-      width: '100%'
-    }
-  }}
-/>
-```
-
-#### Elements
+- `mapPropsToModifiers(): modifiers` _(Function | Object)_ If specified,
 
 
-For all React elements returned by the component's `render` function other than the root container, `substyle(props, key)` is used with a `key` string as second argument, which identifies the element's type or role within the component. As a result, the corresponding DOM node is assigned a BEM class name of the form `'block__element'` on the one hand, and, on the other hand, receives all nested inline style definitions found under the nested property named `key` of the passed style prop.
+Enhancing a component with the _substyle_ higher-order function injects a function as the `style` prop. This function has properties assigned to it which are supposed to be passed as props to the root element returned by the component's render function.
 
-**Example**
+### `style([keys])` (injected prop)
 
-```javascript
-const Foo = (props) => <div {...substyle(props)}>
-  <div {...substyle(props, 'bar')} />
-  <div {...substyle(props, ['bar', 'baz'])} />
-</div>
+Returns a new `style` instance with the nested style definitions for the passed `key`. The return value can be passed as `style` prop to an element of a substyle-enabled component or spread into the props of a DOM element.
 
-<Foo className='foo' />                   // <div class='foo'>
-                                          //   <div className='foo__bar' />
-                                          //   <div className='foo__bar foo__baz' />
-                                          // </div>
+It might seem a bit weird at first to use the spread operator on a function, but a function is also just a JavaScript object which supports setting, getting--and spreading--properties.
 
-<Foo style={{                             // <div style='position: absolute; top: 0;'>
-    position: 'absolute',                 //   <div style='width: 100%' />
-    top: 0,                               //   <div style='width: 100%' />
-                                          // </div>
-    bar: {
-      width: '100%'
-    }
-  }}
-/>
-```
+The `style` property on any instance of the `style` function (`style.style`) contains only the direct styles
 
-As you can see in this example, it's possible to use an array of element keys. In turn, the element receives multiple class names, one derived for each key item. At the same time, nested inlines styles are picked from all properties found for these keys.
+_style_ supports chaining, since the return value of _style_ is another instance of the same function.
 
+#### Arguments
 
-#### Modifiers
-
-Modifiers are used to set styles conditionally based on props or state. If used on the container element, a class name of the form `'block block--modifier'` will be set on that node. In addition to the direct inline style definitions, it will receive the style definitions found nested under the `'&modifier'` property. When using CSS, the additional modifier class name on the block container is already sufficient for being able to customize all nested elements according to the modification, as we can simply write selectors such as `.block--modifier .block__element`. However, for supporting customization through inline styles, we have to explicitly set the modifiers in the `substyle` calls for all nested elements as well.
-
-**Example**
-
-```javascript
-const Foo = ({ disabled, ...rest }) => (
-  <div {...substyle(rest, { '&disabled': disabled })}>
-    <div {...substyle(rest, { bar: true, '&disabled': disabled })} />
-  </div>
-)
-
-<Foo className='foo' />                   // <div class='foo'>
-                                          //   <div className='foo__bar' />
-                                          // </div>
-
-<Foo className='foo' disabled />          // <div class='foo foo--disabled'>
-                                          //   <div className='foo__bar' />
-                                          // </div>
-const style = {                             
-  position: 'absolute',                 
-  top: 0,                               
-
-  bar: { width: '100%' },                 // 'bar' element base styles
-
-  '&disabled': {                          // nested styles for the '&disabled' modifier:
-    opacity: 0.5,                         //  - direct styles to be set on the container
-    bar: { width: '50%' },                //  - 'bar' element styles to be merged with base styles
-  }
-}
-
-                                          // <div style='position: absolute; top: 0;'>
-<Foo style={style} />                     //   <div style='width: 100%' />
-                                          // </div>  
-
-                                          // <div style='position: absolute; top: 0; opacity: 0.5;'>
-<Foo style={style} disabled />            //   <div style='width: 50%' />
-                                          // </div>  
-```
-
-
-### Chaining & default styles
-
-Every *substyle* call return a new instance of the *substyle* function which is preconfigured to use
-the styles selected in the previous call as a default. The `style` prop passed in the chained
-*substyle* call will be merged with the default styles
-(using lodash's [merge](https://lodash.com/docs#merge) function).
-
-TODO
-
-```javascript
-import substyle from 'substyle'
-
-// create preconfigured substyle
-const mySubstyle = substyle({
-  position: 'relative',
-  foo: {
-    position: 'absolute'
-  }
-})
-```
-
-### Selector function for modifier keys
-
-TODO
-
-TODO: Also point out the possibility to bind derived substyle in render function
-
-```
-const substyleForMyComp = substyle(
-  { style: defaultStyles },
-  (props) => ({ '&disabled': props.readOnly })
-)
-
-const boundSubstyleForMyComp = elementKey => substyleForMyComp.bind(null, this.props)
-<div {...boundSubstyleForMyComp('myEl')} />
-```
-
-
-### css modules
-
-TODO
-
-implementation ideas:
-
-- let users pass a `classNames` containing a nested object mapping element / modifier keys to generated css module class names
-- OR only derive a unique block class names via automatically and derive all element class names the same way as now (requires a custom generateScopedName function passed with the postcss options)
-
-
-### css in JS
-
-TODO
-
-implementation ideas:
-
-- add option to hook in 'transform' functions that take the selected inline style definitions and can turn them into css, e.g., by using aphrodite's StyleSheet.create or some wrapper around react-css
-
-## Real world examples
-
-If you want to see how _substyle_ is used in practice, go have a look at code of existing React components already using it:
-
-- [react-day-picker-substyled](https://github.com/jfschwarz/react-day-picker-substyled/blob/master/src/DayPicker.js)
-- [react-mentions](https://github.com/effektif/react-mentions/blob/master/src/MentionsInput.js)
+- `key` _(string | Array | Object)_ Specifies the key under which to find the nested style definitions. If the component is used with a `className` prop, a new class name will be derived for the element by appending the key to the base class name.
