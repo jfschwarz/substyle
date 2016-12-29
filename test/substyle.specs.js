@@ -70,7 +70,7 @@ describe('substyle', function () {
 
   it('should include all direct style definitions if only modifier keys are used, hoisting those for the active modifiers', function () {
     const { style } = substyle({ style: myStyle }, '&active')
-    expect(style).to.deep.equal({ 
+    expect(style).to.deep.equal({
       ...myStyle,
       background: 'blue' // hoisted from &active
     })
@@ -78,13 +78,13 @@ describe('substyle', function () {
 
   it('should merge element styles nested under modifiers if selectedKeys contain both, element keys and modifier keys', function () {
     const { style } = substyle({ style: myStyle }, ['btn', '&disabled'])
-    expect(style).to.deep.equal({ 
+    expect(style).to.deep.equal({
       cursor: 'default',
     })
   })
 
   it('should not hoist modifier styles inside of element sub styles', () => {
-    const { style } = substyle({ 
+    const { style } = substyle({
       style: {
         myel: {
           color: 'blue',
@@ -109,12 +109,12 @@ describe('substyle', function () {
 
   it('should support passing multiple keys in an array', function () {
     const { style, className } = substyle(
-      { style: myStyle, className: 'my-class' }, 
+      { style: myStyle, className: 'my-class' },
       [ 'toggle', 'btn' ]
     )
 
     expect(className).to.equal('my-class__toggle my-class__btn')
-    expect(style).to.deep.equal({ 
+    expect(style).to.deep.equal({
       display: 'block',
       width: 50,
       cursor: 'pointer'
@@ -123,20 +123,54 @@ describe('substyle', function () {
 
   it('should support passing multiple keys as an object', function () {
     const { style, className } = substyle(
-      { style: myStyle, className: 'my-class' }, 
+      { style: myStyle, className: 'my-class' },
       { '&active': true, '&inactive': false, '&disabled': true }
     )
 
     expect(className).to.equal('my-class my-class--active my-class--disabled')
-    expect(style).to.deep.equal({ 
+    expect(style).to.deep.equal({
       ...myStyle,
 
       background: 'blue',    // hoisted from &active
       pointerEvents: 'none', // hoisted from &disabled
-      btn: {                 
+      btn: {
         cursor: 'default',   // overriden btn styles hoisted from &disabled
       },
     })
+  })
+
+  it('should correctly merge nested style definitions when selecting multiple modifiers', function () {
+    const myStyle = {
+      '&small': {
+        height: 10
+      },
+
+      '&top': {
+        top: 0,
+
+        '&small': {
+          color: 'red',
+        },
+      },
+    }
+    const { style } = substyle(
+      { style: myStyle },
+      [ '&small', '&top' ]
+    )
+
+    expect(style).to.have.property('height', 10)
+    expect(style).to.have.property('top', 0)
+    expect(style).to.have.property('color', 'red')
+
+    // reverse modifiers order
+    const { style: sameStyle } = substyle(
+      { style: myStyle },
+      [ '&top', '&small' ]
+    )
+
+    expect(sameStyle).to.have.property('height', 10)
+    expect(sameStyle).to.have.property('top', 0)
+    expect(sameStyle).to.have.property('color', 'red')
   })
 
   it('should return the original className when selectedKeys is not specified or empty', function () {
@@ -281,7 +315,7 @@ describe('substyle', function () {
         cursor: 'pointer',
       },
       '&inner': {
-        color: 'red' 
+        color: 'red'
       }
     }
     const { style } = substyle(substyle({ style: myStyle }, '&outer'), '&inner')
@@ -293,7 +327,7 @@ describe('substyle', function () {
         cursor: 'pointer',
       },
       '&inner': {
-        color: 'red' 
+        color: 'red'
       }
     })
   })

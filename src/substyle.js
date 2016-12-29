@@ -24,7 +24,7 @@ function createSubstyle(closureProps) {
     }
 
     invariant(
-      Array.isArray(selectedKeys), 
+      Array.isArray(selectedKeys),
       'Second parameter must be a string, an array of strings, a plain object with boolean ' +
       'values, a falsy value, or a function with a return value of one of these four types.'
     )
@@ -38,19 +38,19 @@ function createSubstyle(closureProps) {
 
     const hoistElementStyles = (style) => values(pickNestedStyles(style, elementKeys))
     const hoistModifierStyles = (style) => values(pickNestedStylesRecursive(style, modifierKeys))
-    const hoistElementStylesFromEach = elementKeys.length > 0 ? 
-      compose(flatten, map(hoistElementStyles)) : 
+    const hoistElementStylesFromEach = elementKeys.length > 0 ?
+      compose(flatten, map(hoistElementStyles)) :
       identity
 
     return createSubstyle({
 
-      ...( style && { 
+      ...( style && {
         style : merge({},
           ...hoistElementStylesFromEach([ style, ...hoistModifierStyles(style) ])
         )
       }),
 
-      ...( className && { 
+      ...( className && {
         className : (elementKeys.length === 0 ?
           [ className, ...toModifierClassNames(modifierKeys) ] :
           toElementClassNames(elementKeys)
@@ -88,10 +88,9 @@ const pickNestedStylesRecursive = (style, keysToPick) => {
   const resultKeys = keys(result)
   let finalResult = result
   for(let i=0, l=resultKeys.length; i<l; ++i) {
-    finalResult = { 
-      ...finalResult, 
-      ...pickNestedStylesRecursive(result[resultKeys[i]], keysToPick)
-    }
+    finalResult = merge(
+      {}, finalResult, pickNestedStylesRecursive(result[resultKeys[i]], keysToPick)
+    )
   }
   return finalResult
 }
