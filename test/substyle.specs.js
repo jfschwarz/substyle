@@ -267,6 +267,37 @@ describe('substyle', () => {
     })
   })
 
+  it('should correctly merge nested style definitions when selecting multiple modifiers', () => {
+    const substyle = createSubstyle({
+      style: {
+        '&small': {
+          height: 10,
+        },
+
+        '&top': {
+          top: 0,
+
+          '&small': {
+            color: 'red',
+          },
+        },
+      },
+    })
+
+    const { style } = substyle(['&small', '&top'])
+
+    expect(style).to.have.property('height', 10)
+    expect(style).to.have.property('top', 0)
+    expect(style).to.have.property('color', 'red')
+
+    // reverse modifiers order
+    const { style: sameStyle } = substyle(['&top', '&small'])
+
+    expect(sameStyle).to.have.property('height', 10)
+    expect(sameStyle).to.have.property('top', 0)
+    expect(sameStyle).to.have.property('color', 'red')
+  })
+
   it('should hoist from multiple levels deep of nested modifier keys in inline styles', () => {
     const substyle = createSubstyle({
       style: {

@@ -1,4 +1,4 @@
-import { keys } from 'lodash'
+import { keys, merge } from 'lodash'
 
 const camelize = (key) => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())
 
@@ -37,10 +37,9 @@ export const pickNestedStylesRecursive = (style, keysToPick) => {
   const resultKeys = keys(result)
   let finalResult = result
   for (let i = 0, l = resultKeys.length; i < l; i += 1) {
-    finalResult = {
-      ...finalResult,
-      ...pickNestedStylesRecursive(result[resultKeys[i]], keysToPick),
-    }
+    finalResult = merge(
+      {}, finalResult, pickNestedStylesRecursive(result[resultKeys[i]], keysToPick)
+    )
   }
   return finalResult
 }
