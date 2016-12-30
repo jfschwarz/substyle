@@ -1,15 +1,15 @@
 import { expect } from 'chai'
-
 import substyle from '../src'
 
-const myStyle = {
-
+const directStyles = {
   width: '100%',
 
   ':hover': {
     background: 'silver',
   },
+}
 
+const elementStyles = {
   toggle: {
     display: 'block',
     width: 50,
@@ -18,7 +18,9 @@ const myStyle = {
   btn: {
     cursor: 'pointer',
   },
+}
 
+const modifierStyles = {
   '&active': {
     background: 'blue',
   },
@@ -34,6 +36,15 @@ const myStyle = {
       cursor: 'default',
     },
   },
+}
+
+const myStyle = {
+
+  ...directStyles,
+
+  ...elementStyles,
+
+  ...modifierStyles,
 
 }
 
@@ -71,7 +82,21 @@ describe('substyle', function () {
   it('should include all direct style definitions if only modifier keys are used, hoisting those for the active modifiers', function () {
     const { style } = substyle({ style: myStyle }, '&active')
     expect(style).to.deep.equal({
-      ...myStyle,
+      ...directStyles,
+      ...elementStyles,
+
+      // unselected modifiers
+      '&inactive': {
+        background: 'white',
+      },
+      '&disabled': {
+        pointerEvents: 'none',
+
+        btn: {
+          cursor: 'default',
+        },
+      },
+
       background: 'blue' // hoisted from &active
     })
   })
@@ -129,7 +154,11 @@ describe('substyle', function () {
 
     expect(className).to.equal('my-class my-class--active my-class--disabled')
     expect(style).to.deep.equal({
-      ...myStyle,
+      ...directStyles,
+      ...elementStyles,
+      '&inactive': {
+        background: 'white',
+      },
 
       background: 'blue',    // hoisted from &active
       pointerEvents: 'none', // hoisted from &disabled
@@ -171,6 +200,69 @@ describe('substyle', function () {
     expect(sameStyle).to.have.property('height', 10)
     expect(sameStyle).to.have.property('top', 0)
     expect(sameStyle).to.have.property('color', 'red')
+  })
+
+  it('should merge more deeply nested style definitions with higher precedence', function () {
+    const myStyle = {
+      '&top': {
+        top: 10,
+
+        '&small': {
+          top: 1,
+        },
+      },
+
+      '&small': {
+        top: 5
+      },
+    }
+    const { style } = substyle(
+      { style: myStyle },
+      [ '&small', '&top' ]
+    )
+
+    expect(style).to.have.property('top', 1)
+  })
+
+  it('should hoist styles from modifiers even if those are nested under unselected modifer keys', () => {
+    const myStyle = {
+      '&unselected': {
+        '&selected': {
+          top: 1,
+        }
+      },
+    }
+
+    const { style } = substyle(
+      { style: myStyle },
+      '&selected'
+    )
+    expect(style).to.deep.equal({
+      '&unselected': {
+
+        top: 1,
+      },
+    })
+  })
+
+  it('should omit nested style definitions that are hoisted but keep the nesting of unselected modifiers', () => {
+    const myStyle = {
+      position: 'absolute',
+      '&selected': {
+        cursor: 'pointer',
+      },
+      '&unselected': {
+        color: 'red',
+      },
+    }
+    const { style } = substyle({ style: myStyle }, '&selected')
+    expect(style).to.deep.equal({
+      position: 'absolute',
+      cursor: 'pointer',
+      '&unselected': {
+        color: 'red',
+      },
+    })
   })
 
   it('should return the original className when selectedKeys is not specified or empty', function () {
@@ -323,12 +415,6 @@ describe('substyle', function () {
       position: 'absolute',
       cursor: 'pointer',
       color: 'red',
-      '&outer': {
-        cursor: 'pointer',
-      },
-      '&inner': {
-        color: 'red'
-      }
     })
   })
 
@@ -357,7 +443,7 @@ describe('substyle', function () {
   it('should make sure that more specific, i.e., deeper nested modifier styles, override styles higher up the object', () => {
     const myStyle = {
       position: 'absolute',
-      width: 4,
+
       '&red': {
         width: 2,
         '&small': {
