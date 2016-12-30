@@ -1,4 +1,6 @@
-import { keys, merge } from 'lodash'
+import { keys, merge, omit, values, filter } from 'lodash'
+
+import { isModifier } from './filterKeys'
 
 const camelize = (key) => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())
 
@@ -32,14 +34,29 @@ export const pickNestedStyles = (style, keysToPick) => {
   return result
 }
 
-export const pickNestedStylesRecursive = (style, keysToPick) => {
-  const result = pickNestedStyles(style, keysToPick)
-  const resultKeys = keys(result)
-  let finalResult = result
-  for (let i = 0, l = resultKeys.length; i < l; i += 1) {
-    finalResult = merge(
-      {}, finalResult, pickNestedStylesRecursive(result[resultKeys[i]], keysToPick)
-    )
+// breadth-first hoisting of selected modifier style subtrees
+// does not traverse into element, :pseudo-selector or @directive subtrees
+export const hoistModifierStylesRecursive = (style, modifierKeysToPick) => {
+  // hoist styles for selected modifiers on current level
+  const result = merge(
+    omit(style, modifierKeysToPick),
+    ...values(pickNestedStyles(style, modifierKeysToPick))
+  )
+
+  // traverse nested styled for ALL modifiers
+  const modifierKeys = filter(keys(result), isModifier)
+  for (let i = 0, l = modifierKeys.length; i < l; i += 1) {
+    const key = modifierKeys[i]
+    const subresult = hoistModifierStylesRecursive(result[key], modifierKeysToPick)
+    if (modifierKeysToPick.indexOf(key) >= 0) {
+      // selected modifier: hoist subresult
+      delete result[key]
+      merge(result, subresult)
+    } else {
+      // non-selected modifier: replace with subresult
+      result[key] = subresult
+    }
   }
-  return finalResult
+
+  return result
 }

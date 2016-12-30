@@ -1,18 +1,16 @@
 // @flow
 import invariant from 'invariant'
 import {
-  keys, values, negate, identity, flatten, merge, assign,
+  keys, values, identity, flatten, merge, assign,
   isFunction, isPlainObject, isString, isArray,
 } from 'lodash'
 import { filter, map, compose } from 'lodash/fp'
 
 import defaultPropsDecorator from './defaultPropsDecorator'
-import { pickNestedStyles, pickNestedStylesRecursive } from './pickStyles'
+import { pickNestedStyles, hoistModifierStylesRecursive } from './pickStyles'
+import { isModifier, isElement } from './filterKeys'
 import type { PropsT, KeysT } from './types'
 
-
-const isModifier = (key: string) => key[0] === '&'
-const isElement = negate(isModifier)
 
 const coerceSelectedKeys = (select?: KeysT) => {
   if (!select) {
@@ -56,22 +54,20 @@ function createSubstyle(
       const modifierKeys = filter(isModifier, selectedKeys)
       const elementKeys = filter(isElement, selectedKeys)
 
-      const hoistElementStyles = (styleObject: Object) => (
-        values(pickNestedStyles(styleObject, elementKeys))
-      )
-      const hoistModifierStyles = (styleObject: Object) => (
-        values(pickNestedStylesRecursive(styleObject, modifierKeys))
-      )
-      const hoistElementStylesFromEach = elementKeys.length > 0 ?
-        compose(flatten, map(hoistElementStyles)) :
-        identity
+      const collectElementStyles = elementKeys.length > 0 ?
+        (style) => values(pickNestedStyles(style, elementKeys)) :
+        (style) => [style]
 
       return createSubstyle({
 
         ...((style || defaultStyle) && {
           style: merge({},
-            ...hoistElementStylesFromEach([defaultStyle, ...hoistModifierStyles(defaultStyle)]),
-            ...hoistElementStylesFromEach([style, ...hoistModifierStyles(style)]),
+            ...collectElementStyles(
+              hoistModifierStylesRecursive(defaultStyle, modifierKeys)
+            ),
+            ...collectElementStyles(
+              hoistModifierStylesRecursive(style, modifierKeys)
+            )
           ),
         }),
 

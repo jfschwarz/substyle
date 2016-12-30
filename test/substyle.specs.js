@@ -322,6 +322,27 @@ describe('substyle', () => {
     })
   })
 
+  it('should merge more deeply nested style definitions with higher precedence', () => {
+    const substyle = createSubstyle({
+      style: {
+        '&top': {
+          top: 10,
+
+          '&small': {
+            top: 1,
+          },
+        },
+
+        '&small': {
+          top: 5,
+        },
+      },
+    })
+    const { style } = substyle(['&small', '&top'])
+
+    expect(style).to.have.property('top', 1)
+  })
+
   it('should make sure that more specific, i.e., deeper nested modifier styles, override styles higher up the object', () => {
     const substyle = createSubstyle({
       style: {
