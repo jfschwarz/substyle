@@ -1,10 +1,10 @@
 // @flow
 import invariant from 'invariant'
 import {
-  keys, values, identity, flatten, merge, assign,
+  keys, values, merge, assign,
   isFunction, isPlainObject, isString, isArray,
 } from 'lodash'
-import { filter, map, compose } from 'lodash/fp'
+import { filter, map } from 'lodash/fp'
 
 import defaultPropsDecorator from './defaultPropsDecorator'
 import { pickNestedStyles, hoistModifierStylesRecursive } from './pickStyles'
@@ -55,8 +55,8 @@ function createSubstyle(
       const elementKeys = filter(isElement, selectedKeys)
 
       const collectElementStyles = elementKeys.length > 0 ?
-        (style) => values(pickNestedStyles(style, elementKeys)) :
-        (style) => [style]
+        (fromStyle: Object) => values(pickNestedStyles(fromStyle, elementKeys)) :
+        (fromStyle: Object) => [fromStyle]
 
       return createSubstyle({
 
