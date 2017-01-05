@@ -5,7 +5,10 @@ import createSubstyle from './createSubstyle'
 import defaultStyle from './defaultStyle'
 import EnhancerProvider from './EnhancerProvider'
 
+import type { SubstyleT, PropsT } from './types'
+
 export { createSubstyle, EnhancerProvider }
+export type { SubstyleT, PropsT }
 
 const injectSubstyle = (...args) => {
   if (args.length === 1 && !isPlainObject(args[0])) {
