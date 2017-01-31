@@ -57,13 +57,26 @@ That's all there is for making the styles of the container `div` and the `button
   background: 'white',                        //   <button style="right: 0;">x</button>
   close: { right: 0 },                        //   <span>Hello world!</span>
 }}>                                           // </div>
-  <span>Hello world!</span>                                  
+  <span>Hello world!</span>
 </Popover>
 ```
 
 ## How to use it
 
 TODO
+
+### Select style for element
+
+### Pass selected style to string type elements
+
+### Pass selected style to component type elements
+
+### Define default styling
+
+### Define style modifiers
+
+- based on props, as second arg to defaultStyle
+- based on state, by deriving a modified style (recommend hoisting state, e.g., recompose withState)
 
 ## API
 
