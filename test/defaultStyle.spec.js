@@ -88,6 +88,29 @@ describe('`defaultStyle` higher-order component factory', () => {
     })
   })
 
+  it('should give precendence to styles supplied by the user, regardless the modifiers specificty', () => {
+    const MyEnhancedComponent = defaultStyle(
+      {
+        '&readOnly': {
+          opacity: 0.5,
+        },
+      },
+      (props) => ({
+        '&readOnly': props.readOnly,
+      })
+    )(MyComponent)
+    const wrapper = shallow(createElement(MyEnhancedComponent, {
+      readOnly: true,
+      style: {
+        opacity: 0.7,
+      },
+    }))
+    const styleProp = wrapper.props().style
+    expect(styleProp.style).to.deep.equal({
+      opacity: 0.7,
+    })
+  })
+
   it('should support depency injection via context for additional HoC to wrap the component', () => {
     const MyStyledComponent = defaultStyle()(MyComponent)
     const wrapInSection = (WrappedComponent) => (props) => (
