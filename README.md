@@ -78,6 +78,12 @@ TODO
 - based on props, as second arg to defaultStyle
 - based on state, by deriving a modified style (recommend hoisting state, e.g., recompose withState)
 
+### Organize default styles
+
+- essential styles: co-located with component
+- nice example styles/different themes: extra export, css file, or both
+
+
 ## API
 
 The default export of the _substyle_ module is a facade around `defaultStyle`, providing a more versatile API. It's a function that can be be used as a higher-order component for enhancing a React component class by injecting the special ´style´ prop.
