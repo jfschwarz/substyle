@@ -38,4 +38,23 @@ describe('hoistModifierStylesRecursive', () => {
       },
     })
   })
+
+  it('should never mutate nested style objects but create copies when merging', () => {
+    const nested1 = { n1: true }
+    const nested2 = { n2: true }
+    const nested3 = { n3: true }
+    const myStyle = {
+      nested: nested1,
+      '&selected': {
+        nested: nested2,
+      },
+      '&unselected': {
+        nested: nested3,
+      },
+    }
+    const result = hoistModifierStylesRecursive(myStyle, ['&selected'])
+    expect(result.nested).to.not.equal(nested1)
+    expect(result.nested).to.not.equal(nested2)
+    expect(result.nested).to.not.equal(nested3)
+  })
 })

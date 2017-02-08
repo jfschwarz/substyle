@@ -38,7 +38,8 @@ export const pickNestedStyles = (style, keysToPick) => {
 // does not traverse into element, :pseudo-selector or @directive subtrees
 export const hoistModifierStylesRecursive = (style, modifierKeysToPick) => {
   // hoist styles for selected modifiers on current level
-  const result = merge(
+  let result = merge(
+    {},
     omit(style, modifierKeysToPick),
     ...values(pickNestedStyles(style, modifierKeysToPick))
   )
@@ -51,7 +52,7 @@ export const hoistModifierStylesRecursive = (style, modifierKeysToPick) => {
     if (modifierKeysToPick.indexOf(key) >= 0) {
       // selected modifier: hoist subresult
       delete result[key]
-      merge(result, subresult)
+      result = merge({}, result, subresult)
     } else {
       // non-selected modifier: replace with subresult
       result[key] = subresult
