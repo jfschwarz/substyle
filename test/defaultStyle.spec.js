@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import { shallow, mount } from 'enzyme'
 import { createElement, Component } from 'react'
 
+import './utils/dom'
 import defaultStyle from '../src/defaultStyle'
 import createSubstyle from '../src/createSubstyle'
 import { ENHANCER_CONTEXT_NAME } from '../src/types'
@@ -126,15 +127,22 @@ describe('`defaultStyle` higher-order component factory', () => {
     expect(wrapper.get(0).type().type).to.equal('section')
   })
 
-  it.skip('should expose the wrapped component instance via `getWrappedInstance`', () => {
+  it('should expose the wrapped component instance via `getWrappedInstance`', () => {
     class MyClassComponent extends Component {
       render() {
         return (
-          createElement('div', { ...this.props.style })
+          createElement('div')
         )
       }
     }
     const MyEnhancedClassComponent = defaultStyle()(MyClassComponent)
-    mount(createElement(MyEnhancedClassComponent))
+    const instance = mount(createElement(MyEnhancedClassComponent)).instance()
+    expect(instance.getWrappedInstance).to.be.a('function')
+    expect(instance.getWrappedInstance()).to.be.an.instanceOf(MyClassComponent)
+
+    const MyFunctionComponent = () => createElement('div')
+    const MyEnhancedFunctionComponent = defaultStyle()(MyFunctionComponent)
+    const instance2 = mount(createElement(MyEnhancedFunctionComponent)).instance()
+    expect(instance2.getWrappedInstance()).to.not.exist
   })
 })
