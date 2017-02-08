@@ -1,6 +1,6 @@
 // @flow
 import { PureComponent, PropTypes, Children } from 'react'
-import { ENHANCER_CONTEXT_NAME } from './types'
+import { ENHANCER_CONTEXT_NAME, ContextTypes } from './types'
 
 export default class EnhancerProvider extends PureComponent {
   getChildContext() {
@@ -17,8 +17,6 @@ EnhancerProvider.propTypes = {
   children: PropTypes.element.isRequired,
 }
 
-EnhancerProvider.childContextTypes = {
-  [ENHANCER_CONTEXT_NAME]: PropTypes.func,
-}
+EnhancerProvider.childContextTypes = ContextTypes
 
 EnhancerProvider.displayName = 'EnhancerProvider'
