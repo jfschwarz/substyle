@@ -1,34 +1,80 @@
 // @flow
-import { createElement, PropTypes } from 'react'
+import { createElement, Component } from 'react'
+import hoistStatics from 'hoist-non-react-statics'
 import { identity } from 'lodash'
 
 import createSubstyle from './createSubstyle'
-import { ENHANCER_CONTEXT_NAME } from './types'
-import type { KeysT, PropsT } from './types'
+import { PropTypes, ContextTypes, ENHANCER_CONTEXT_NAME } from './types'
+import type { KeysT, PropsT, ContextT } from './types'
+
+// const isStateless(component: Function): boolean {
+//   return !component.render && !(component.prototype && component.prototype.render);
+// }
 
 const createDefaultStyle = (
   defaultStyle?: Object,
-  getModifiers?: (props: Object) => KeysT
+  getModifiers?: (props: Object) => KeysT,
 ) => (WrappedComponent: ReactClass) => {
-  function WithDefaultStyle(
-    { style, className, classNames, ...rest }: PropsT,
-    { [ENHANCER_CONTEXT_NAME]: enhance = identity }: ContextT,
-  ) {
-    const substyle = createSubstyle({ style, className, classNames })
-    const modifiers = getModifiers && getModifiers(rest)
+  class WithDefaultStyle extends Component<void, PropsT, void> {
+    static WrappedComponent: ReactClass;
 
-    return createElement(
-      enhance(WrappedComponent),
-      { style: substyle(modifiers, defaultStyle), ...rest }
-    )
+    constructor(props, context) {
+      super(props, context)
+      this.setWrappedInstance = this.setWrappedInstance.bind(this)
+    }
+
+    render() {
+      const { style, className, classNames, ...rest } = this.props
+
+      const substyle = createSubstyle({ style, className, classNames })
+      const modifiers = getModifiers && getModifiers(rest)
+
+      return createElement(
+        this.getWrappedComponent(),
+        {
+          style: substyle(modifiers, defaultStyle),
+          ref: this.setWrappedInstance,
+          // ...(isStateless && { ref: this.setWrappedInstance })
+          ...rest,
+        }
+      )
+    }
+
+    getWrappedComponent() {
+      const { [ENHANCER_CONTEXT_NAME]: enhance = identity }: ContextT = this.context
+
+      if (this.memoizedEnhance !== enhance) {
+        this.memoizedEnhance = enhance
+        this.enhancedWrappedComponent = enhance(WrappedComponent)
+      }
+
+      return this.enhancedWrappedComponent || WrappedComponent
+    }
+
+    getWrappedInstance() {
+      return this.wrappedInstance
+    }
+
+    setWrappedInstance(ref) {
+      this.wrappedInstance = ref
+    }
   }
 
   const wrappedComponentName = WrappedComponent.displayName || WrappedComponent.name
   WithDefaultStyle.displayName = `withDefaultStyle(${wrappedComponentName})`
 
-  WithDefaultStyle.contextTypes = { [ENHANCER_CONTEXT_NAME]: PropTypes.func }
+  // define prop types based on WrappedComponent's prop types
+  WithDefaultStyle.propTypes = {
+    ...WrappedComponent.propTypes,
+    ...PropTypes,
+  }
 
-  return WithDefaultStyle
+  WithDefaultStyle.contextTypes = ContextTypes
+
+  // expose WrappedComponent, e.g., for testing purposes
+  WithDefaultStyle.WrappedComponent = WrappedComponent
+
+  return hoistStatics(WithDefaultStyle, WrappedComponent)
 }
 
 export default createDefaultStyle

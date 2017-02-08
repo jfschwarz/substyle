@@ -1,6 +1,6 @@
 import { expect } from 'chai'
-import { shallow } from 'enzyme'
-import { createElement } from 'react'
+import { shallow, mount } from 'enzyme'
+import { createElement, Component } from 'react'
 
 import defaultStyle from '../src/defaultStyle'
 import createSubstyle from '../src/createSubstyle'
@@ -124,5 +124,17 @@ describe('`defaultStyle` higher-order component factory', () => {
       },
     })
     expect(wrapper.get(0).type().type).to.equal('section')
+  })
+
+  it.skip('should expose the wrapped component instance via `getWrappedInstance`', () => {
+    class MyClassComponent extends Component {
+      render() {
+        return (
+          createElement('div', { ...this.props.style })
+        )
+      }
+    }
+    const MyEnhancedClassComponent = defaultStyle()(MyClassComponent)
+    mount(createElement(MyEnhancedClassComponent))
   })
 })
