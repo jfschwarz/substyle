@@ -5,11 +5,6 @@ import { identity } from 'lodash'
 
 import createSubstyle from './createSubstyle'
 import { PropTypes, ContextTypes, ENHANCER_CONTEXT_NAME } from './types'
-import type { KeysT, PropsT, ContextT } from './types'
-
-// const isStateless(component: Function): boolean {
-//   return !component.render && !(component.prototype && component.prototype.render);
-// }
 
 const createDefaultStyle = (
   defaultStyle?: Object,
@@ -34,7 +29,6 @@ const createDefaultStyle = (
         {
           style: substyle(modifiers, defaultStyle),
           ref: this.setWrappedInstance,
-          // ...(isStateless && { ref: this.setWrappedInstance })
           ...rest,
         }
       )
