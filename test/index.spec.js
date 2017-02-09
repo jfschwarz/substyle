@@ -10,12 +10,4 @@ describe('default export', () => {
 
     expect(MyEnhancedComponent.displayName).to.equal('withDefaultStyle(MyComp)')
   })
-
-  it('should also serve as a proxy to `defaultStyle`', () => {
-    const hoc = injectSubstyle({ color: 'red' })
-    const MyComp = ({ style }) => createElement('div', { ...style })
-    const MyEnhancedComponent = hoc(MyComp)
-
-    expect(MyEnhancedComponent.displayName).to.equal('withDefaultStyle(MyComp)')
-  })
 })
