@@ -86,9 +86,9 @@ TODO
 
 ## API
 
-The default export of the _substyle_ module is a facade around `defaultStyle`, providing a more versatile API. It's a function that can be be used as a higher-order component for enhancing a React component class by injecting the special ´style´ prop.
+The default export of the _substyle_ module is a higher-order component for enhancing a React component class by injecting the special ´style´ prop.
 
-#### `substyle(Component)` (default export as higher-order component)
+#### `substyle(Component)` (default export)
 
 Returns an enhanced version of `Component` which supports `style`, `className`, and `classNames` props and maps them to a single [special `style` prop]().
 
@@ -96,15 +96,16 @@ Returns an enhanced version of `Component` which supports `style`, `className`, 
 
 - `Component` _(React component)_
 
-The same function can also be used as a factory. This allows to define default styles and modifiers:
 
-#### `substyle([defaultStyles], [mapPropsToModifiers])` (default export as higher-order component factory)
+There is an additional higher-order component creator function that allows to attach default style definitions for the wrapped component:
 
-`Returns a version of the higher-order component that is preconfigured to merge `defaultStyles` with user specified style definitions.
+#### `defaultStyle([defaultStyles], [mapPropsToModifiers])`
+
+`Returns a version of the `substyle` higher-order component which is preconfigured to merge `defaultStyles` with user specified style definitions.
 
 #### Arguments
 
-- `defaultStyle` _(Object)_ If specified,
+- `defaultStyle` _(Object | Function)_ The default style definitions for the component. Also accepts a function mapping component props to an object of default styles.
 
 - `mapPropsToModifiers(): modifiers` _(Function | Object)_ If specified,
 

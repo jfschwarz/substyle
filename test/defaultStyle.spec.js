@@ -46,6 +46,19 @@ describe('`defaultStyle` higher-order component factory', () => {
     })
   })
 
+  it('should accept a function mapping props to default styles as first argument', () => {
+    const MyEnhancedComponent = defaultStyle((props) => ({ color: props.color }))(MyComponent)
+    const wrapper = shallow(createElement(MyEnhancedComponent, {
+      style: { cursor: 'pointer' },
+      color: 'black',
+    }))
+    const styleProp = wrapper.props().style
+    expect(styleProp.style).to.deep.equal({
+      color: 'black',
+      cursor: 'pointer',
+    })
+  })
+
   it('should take a modifier selection function as second argument', () => {
     const MyEnhancedComponent = defaultStyle(
       {
@@ -89,7 +102,7 @@ describe('`defaultStyle` higher-order component factory', () => {
     })
   })
 
-  it('should give precendence to styles supplied by the user, regardless the modifiers specificty', () => {
+  it('should give precendence to styles supplied by the user, regardless the modifiers specificity', () => {
     const MyEnhancedComponent = defaultStyle(
       {
         '&readOnly': {

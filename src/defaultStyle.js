@@ -1,18 +1,14 @@
 // @flow
 import { createElement, Component } from 'react'
 import hoistStatics from 'hoist-non-react-statics'
-import { identity } from 'lodash'
+import { identity, isFunction } from 'lodash'
 
 import createSubstyle from './createSubstyle'
 import { PropTypes, ContextTypes, ENHANCER_CONTEXT_NAME } from './types'
-import type { KeysT, PropsT, ContextT } from './types'
-
-// const isStateless(component: Function): boolean {
-//   return !component.render && !(component.prototype && component.prototype.render);
-// }
+import type { PropsT, KeysT } from './types'
 
 const createDefaultStyle = (
-  defaultStyle?: Object,
+  defaultStyle?: Object | (props: Object) => Object,
   getModifiers?: (props: Object) => KeysT,
 ) => (WrappedComponent: ReactClass) => {
   class WithDefaultStyle extends Component<void, PropsT, void> {
@@ -28,13 +24,13 @@ const createDefaultStyle = (
 
       const substyle = createSubstyle({ style, className, classNames })
       const modifiers = getModifiers && getModifiers(rest)
+      const finalDefaultStyle = isFunction(defaultStyle) ? defaultStyle(rest) : defaultStyle
 
       return createElement(
         this.getWrappedComponent(),
         {
-          style: substyle(modifiers, defaultStyle),
+          style: substyle(modifiers, finalDefaultStyle),
           ref: this.setWrappedInstance,
-          // ...(isStateless && { ref: this.setWrappedInstance })
           ...rest,
         }
       )
