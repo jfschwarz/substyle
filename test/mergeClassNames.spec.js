@@ -125,4 +125,38 @@ describe('mergeClassNames', () => {
       },
     })
   })
+
+  it('should be able to handle string type inputs', () => {
+    expect(mergeClassNames('shortcutClassName', cn1)).to.deep.equal({
+      className: 'shortcutClassName top1',
+      classNames: {
+        nested: {
+          className: 'nested1',
+          classNames: {
+            deep: {
+              className: 'deep1',
+            },
+          },
+        },
+      },
+    })
+
+    expect(mergeClassNames(cn1, 'shortcutClassName')).to.deep.equal({
+      className: 'top1 shortcutClassName',
+      classNames: {
+        nested: {
+          className: 'nested1',
+          classNames: {
+            deep: {
+              className: 'deep1',
+            },
+          },
+        },
+      },
+    })
+
+    expect(mergeClassNames('shortcut1', 'shortcut2')).to.deep.equal({
+      className: 'shortcut1 shortcut2',
+    })
+  })
 })

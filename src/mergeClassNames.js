@@ -5,8 +5,12 @@ import type { ClassNamesT } from './types'
 
 type SelectedClassNamesT = ClassNamesT | string;
 
+const coerceClassNamesObject = (classNames: SelectedClassNamesT) => (
+  isString(classNames) ? { className: classNames } : classNames
+)
+
 const mergeClassNames = (...classNames: Array<SelectedClassNamesT>) => mergeWith(
-  {}, ...classNames,
+  {}, ...classNames.map(coerceClassNamesObject),
   (objValue: any, srcValue: any) => {
     if (!objValue) return srcValue
 
