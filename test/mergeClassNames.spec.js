@@ -34,7 +34,7 @@ describe('mergeClassNames', () => {
     },
   }
 
-  it.only('should return a merged classNames object and not mutate inputs', () => {
+  it('should return a merged classNames object and not mutate inputs', () => {
     const cn1Copy = cloneDeep(cn1)
     const cn2Copy = cloneDeep(cn2)
 
@@ -62,7 +62,6 @@ describe('mergeClassNames', () => {
   })
 
   it('should be able to merge more than two objects', () => {
-    console.log(cn1, cn2);
     const cn3 = {
       className: 'top3',
       classNames: {

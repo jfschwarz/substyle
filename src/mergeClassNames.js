@@ -1,5 +1,5 @@
 // @flow
-import { mergeWith, isString } from 'lodash'
+import { mergeWith, isString, compact } from 'lodash'
 
 import type { ClassNamesT } from './types'
 
@@ -13,6 +13,7 @@ const mergeClassNames = (...classNames: Array<SelectedClassNamesT>) => mergeWith
     const objValueIsString = isString(objValue)
     const srcValueIsString = isString(srcValue)
 
+    // handle shortcut syntax
     if (objValueIsString && srcValueIsString) {
       return `${objValue} ${srcValue}`
     } else if (objValueIsString && !srcValueIsString) {
@@ -27,7 +28,18 @@ const mergeClassNames = (...classNames: Array<SelectedClassNamesT>) => mergeWith
       }
     }
 
-    return undefined  // causes default object merge behavior
+    const { className: objClassName, classNames: objClassNames, ...objRest } = objValue
+    const { className: srcClassName, classNames: srcClassNames, ...srcRest } = srcValue
+
+    const className = compact([objClassName, srcClassName]).join(' ')
+    const mergedClassNames = (objClassNames || srcClassNames) &&
+      mergeClassNames(objClassNames, srcClassNames)
+
+    return {
+      ...(className && { className }),
+      ...(mergedClassNames && { classNames: mergedClassNames }),
+      ...mergeClassNames(objRest, srcRest),
+    }
   }
 )
 
