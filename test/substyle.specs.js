@@ -150,6 +150,21 @@ describe('substyle', () => {
     expect(style).to.have.property('@media (min-width: 320px)')
   })
 
+  it('should include keyframe objects assigned to `animationName` property', () => {
+    const keyframes = {
+      '0%': { transform: 'rotate(0deg)' },
+      '100%': { transform: 'rotate(360deg)' },
+    }
+    const substyle = createSubstyle({
+      style: {
+        animationName: keyframes,
+      },
+    })
+    const { style } = substyle
+    expect(style).to.have.property('animationName')
+    expect(style.animationName).to.equal(keyframes)
+  })
+
   it('should merge nested inline styles in the order of appearance in the object', () => {
     const styleWithDeepNesting = {
       toggle: {
