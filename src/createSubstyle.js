@@ -1,10 +1,10 @@
 // @flow
 import invariant from 'invariant'
 import {
-  keys, values, merge, assign,
+  keys, values, merge, assign, compact,
   isFunction, isPlainObject, isString, isArray,
 } from 'lodash'
-import { filter, map, compose } from 'lodash/fp'
+import { filter, compose } from 'lodash/fp'
 
 import defaultPropsDecorator from './defaultPropsDecorator'
 import { pickNestedStyles, hoistModifierStylesRecursive } from './pickStyles'
@@ -49,8 +49,6 @@ function createSubstyle(
         'Optional second parameter must be a plain object.'
       )
 
-      const baseClassName = className && className.split(' ')[0]
-
       const modifierKeys = filter(isModifier, selectedKeys)
       const elementKeys = filter(isElement, selectedKeys)
 
@@ -63,13 +61,19 @@ function createSubstyle(
         (fromStyle: Object) => hoistModifierStylesRecursive(fromStyle, modifierKeys)
       )
 
+      // use the provided `className` only if there is no sub-element selection
+      const baseClassName = (elementKeys.length === 0) ? className : undefined
+
+      // if `classNames` are present, select the mapped class name
       const selectedClassNames = classNames && mergeClassNames(...collectSelectedStyles(classNames))
+      const selectedClassName = selectedClassNames && selectedClassNames.className
 
-      const toElementClassNames = map((key: string) => {
-        `${baseClassName}__${key}`
-      })
-      const toModifierClassNames = map((key: string) => `${baseClassName}--${key.substring(1)}`)
-
+      // if `classNames` are not present, automatically derive a class name
+      const firstClassName = className && className.split(' ')[0]
+      const derivedClassName = !classNames && [
+        ...modifierKeys.map((key: string) => `${firstClassName}--${key.substring(1)}`),
+        ...elementKeys.map((key: string) => `${firstClassName}__${key}`),
+      ].join(' ')
 
       return createSubstyle({
 
@@ -80,15 +84,12 @@ function createSubstyle(
           ),
         }),
 
-        ...(className && {
-          className: (elementKeys.length === 0 ?
-            [className, ...toModifierClassNames(modifierKeys)] :
-            toElementClassNames(elementKeys)
-          ).join(' '),
+        ...((baseClassName || selectedClassName || derivedClassName) && {
+          className: compact([baseClassName, selectedClassName, derivedClassName]).join(' '),
         }),
 
         ...(classNames && {
-          classNames: selectedClassNames,
+          classNames: selectedClassNames.classNames || {},
         }),
 
       }, propsDecorator)
