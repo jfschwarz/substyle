@@ -9,7 +9,7 @@ import { filter, compose } from 'lodash/fp'
 import defaultPropsDecorator from './defaultPropsDecorator'
 import { pickNestedStyles, hoistModifierStylesRecursive } from './pickStyles'
 import { isModifier, isElement } from './filterKeys'
-import mergeClassNames from './mergeClassNames'
+import { mergeClassNames, coerceClassNames } from './classNames'
 
 import type { PropsT, KeysT } from './types'
 
@@ -65,13 +65,18 @@ function createSubstyle(
       const baseClassName = (elementKeys.length === 0) ? className : undefined
 
       // if `classNames` are present, select the mapped class name
-      const selectedClassNames = classNames && mergeClassNames(...collectSelectedStyles(classNames))
+      const selectedClassNames = classNames && mergeClassNames(
+        ...collectSelectedStyles(coerceClassNames(classNames))
+      )
       const selectedClassName = selectedClassNames && selectedClassNames.className
 
       // if `classNames` are not present, automatically derive a class name
       const firstClassName = className && className.split(' ')[0]
-      const derivedClassName = !classNames && [
-        ...modifierKeys.map((key: string) => `${firstClassName}--${key.substring(1)}`),
+      const derivedClassName = !classNames && firstClassName && [
+        ...(
+          (elementKeys.length === 0) ?
+            modifierKeys.map((key: string) => `${firstClassName}--${key.substring(1)}`) : []
+        ),
         ...elementKeys.map((key: string) => `${firstClassName}__${key}`),
       ].join(' ')
 

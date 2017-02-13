@@ -1,16 +1,16 @@
 // @flow
 import { mergeWith, isString, compact } from 'lodash'
 
-import type { ClassNamesT } from './types'
+import type { ClassNamesT, CoercedClassNamesT } from './types'
 
 type SelectedClassNamesT = ClassNamesT | string;
 
-const coerceClassNamesObject = (classNames: SelectedClassNamesT) => (
+export const coerceClassNames = (classNames: SelectedClassNamesT): CoercedClassNamesT => (
   isString(classNames) ? { className: classNames } : classNames
 )
 
-const mergeClassNames = (...classNames: Array<SelectedClassNamesT>) => mergeWith(
-  {}, ...classNames.map(coerceClassNamesObject),
+export const mergeClassNames = (...classNames: Array<CoercedClassNamesT>) => mergeWith(
+  {}, ...classNames,
   (objValue: any, srcValue: any) => {
     if (!objValue) return srcValue
 
@@ -46,5 +46,3 @@ const mergeClassNames = (...classNames: Array<SelectedClassNamesT>) => mergeWith
     }
   }
 )
-
-export default mergeClassNames

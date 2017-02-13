@@ -18,6 +18,13 @@ export type ClassNamesT = {
   },
 };
 
+export type CoercedClassNamesT = {
+  [string]: {
+    className?: string,
+    classNames?: CoercedClassNamesT,
+  },
+};
+
 const ClassNamesPT = PT.objectOf(
   PT.shape({
     className: PT.string,
