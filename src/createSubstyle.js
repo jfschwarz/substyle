@@ -94,7 +94,7 @@ function createSubstyle(
         }),
 
         ...(classNames && {
-          classNames: selectedClassNames.classNames || {},
+          classNames: selectedClassNames || {},
         }),
 
       }, propsDecorator)

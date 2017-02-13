@@ -14,15 +14,13 @@ const StylePT = PT.oneOfType([PT.func, PT.object])
 export type ClassNamesT = {
   [string]: string | {
     className?: string,
-    classNames?: ClassNamesT,
-  },
+  } & ClassNamesT
 };
 
 export type CoercedClassNamesT = {
   [string]: {
     className?: string,
-    classNames?: CoercedClassNamesT,
-  },
+  } & CoercedClassNamesT
 };
 
 const ClassNamesPT = PT.objectOf(

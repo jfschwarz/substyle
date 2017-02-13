@@ -1,13 +1,30 @@
 // @flow
-import { mergeWith, isString, compact } from 'lodash'
+import { mergeWith, isString, compact, keys } from 'lodash'
 
 import type { ClassNamesT, CoercedClassNamesT } from './types'
 
 type SelectedClassNamesT = ClassNamesT | string;
 
-export const coerceClassNames = (classNames: SelectedClassNamesT): CoercedClassNamesT => (
-  isString(classNames) ? { className: classNames } : classNames
-)
+export const coerceClassNames = (classNames: SelectedClassNamesT): CoercedClassNamesT => {
+  if (isString(classNames)) {
+    return { className: classNames }
+  }
+
+  const classNamesKeys = keys(classNames)
+  const result = {}
+  let someChanged = false
+  for (let i = 0, l = classNamesKeys.length; i < l; i += 1) {
+    const key = classNamesKeys[i]
+    if (key === 'className') {
+      result.className = classNames.className
+    } else {
+      result[key] = coerceClassNames(classNames[key])
+      someChanged = someChanged || result[key] !== classNames[key]
+    }
+  }
+
+  return someChanged ? result : classNames
+}
 
 export const mergeClassNames = (...classNames: Array<CoercedClassNamesT>) => mergeWith(
   {}, ...classNames,

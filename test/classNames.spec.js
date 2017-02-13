@@ -23,10 +23,8 @@ describe('`classNames` mapping', () => {
       classNames: {
         footer: {
           className: 'my-footer',
-          classNames: {
-            column: {
-              className: 'my-column',
-            },
+          column: {
+            className: 'my-column',
           },
         },
       },
@@ -36,7 +34,7 @@ describe('`classNames` mapping', () => {
     expect(className).to.equal('my-column')
   })
 
-  it('should use the standard generated class name schema if no mapping is defined', () => {
+  it('should not generate a derive class name schema if no mapping is defined', () => {
     const substyle = createSubstyle({
       className: 'container',
       classNames: {
@@ -47,7 +45,7 @@ describe('`classNames` mapping', () => {
     })
 
     const { className } = substyle('footer')('column')
-    expect(className).to.equal('my-footer__column')
+    expect(className).to.not.exist
   })
 
   it('should support a shortcut notation for elements with no further children', () => {
