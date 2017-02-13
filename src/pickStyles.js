@@ -4,7 +4,7 @@ import { isModifier } from './filterKeys'
 
 const camelize = (key) => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())
 
-export const pickDirectStyles = (style) => {
+export const pickDirectStyles = (style, objectPropertiesWhitelist = []) => {
   const styleKeys = keys(style)
   const result = {}
   for (let i = 0, l = styleKeys.length; i < l; i += 1) {
@@ -12,7 +12,8 @@ export const pickDirectStyles = (style) => {
     const isDirect = (
       Object.prototype.toString.call(style[key]) !== '[object Object]' ||  // style defs
       key[0] === ':' ||  // pseudo selectors
-      key[0] === '@'  // @media / @keyframes / @supports / @font-face
+      key[0] === '@' ||  // @media / @keyframes / @supports / @font-face
+      objectPropertiesWhitelist.indexOf(key) >= 0  // whitelisted object-type properties
     )
     if (isDirect) {
       result[key] = style[key]
