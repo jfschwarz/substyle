@@ -12,7 +12,7 @@ export type StyleT = SubstyleT | Object;
 const StylePT = PT.oneOfType([PT.func, PT.object])
 
 export type ClassNamesT = {
-  [string]: {
+  [string]: string | {
     className?: string,
     classNames?: ClassNamesT,
   },

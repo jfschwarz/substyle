@@ -4,11 +4,13 @@ import {
   keys, values, merge, assign,
   isFunction, isPlainObject, isString, isArray,
 } from 'lodash'
-import { filter, map } from 'lodash/fp'
+import { filter, map, compose } from 'lodash/fp'
 
 import defaultPropsDecorator from './defaultPropsDecorator'
 import { pickNestedStyles, hoistModifierStylesRecursive } from './pickStyles'
 import { isModifier, isElement } from './filterKeys'
+import mergeClassNames from './mergeClassNames'
+
 import type { PropsT, KeysT } from './types'
 
 
@@ -48,8 +50,6 @@ function createSubstyle(
       )
 
       const baseClassName = className && className.split(' ')[0]
-      const toElementClassNames = map((key: string) => `${baseClassName}__${key}`)
-      const toModifierClassNames = map((key: string) => `${baseClassName}--${key.substring(1)}`)
 
       const modifierKeys = filter(isModifier, selectedKeys)
       const elementKeys = filter(isElement, selectedKeys)
@@ -58,16 +58,25 @@ function createSubstyle(
         (fromStyle: Object) => values(pickNestedStyles(fromStyle, elementKeys)) :
         (fromStyle: Object) => [fromStyle]
 
+      const collectSelectedStyles = compose(
+        collectElementStyles,
+        (fromStyle: Object) => hoistModifierStylesRecursive(fromStyle, modifierKeys)
+      )
+
+      const selectedClassNames = classNames && mergeClassNames(...collectSelectedStyles(classNames))
+
+      const toElementClassNames = map((key: string) => {
+        `${baseClassName}__${key}`
+      })
+      const toModifierClassNames = map((key: string) => `${baseClassName}--${key.substring(1)}`)
+
+
       return createSubstyle({
 
         ...((style || defaultStyle) && {
           style: merge({},
-            ...collectElementStyles(
-              hoistModifierStylesRecursive(defaultStyle, modifierKeys)
-            ),
-            ...collectElementStyles(
-              hoistModifierStylesRecursive(style, modifierKeys)
-            )
+            ...collectSelectedStyles(defaultStyle),
+            ...collectSelectedStyles(style)
           ),
         }),
 
@@ -76,6 +85,10 @@ function createSubstyle(
             [className, ...toModifierClassNames(modifierKeys)] :
             toElementClassNames(elementKeys)
           ).join(' '),
+        }),
+
+        ...(classNames && {
+          classNames: selectedClassNames,
         }),
 
       }, propsDecorator)
