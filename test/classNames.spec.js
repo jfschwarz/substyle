@@ -2,7 +2,7 @@ import { expect } from 'chai'
 
 import createSubstyle from '../src/createSubstyle'
 
-describe.skip('`classNames` mapping', () => {
+describe('`classNames` mapping', () => {
   it('should use the mapped class name when selecting a nested element', () => {
     const substyle = createSubstyle({
       className: 'container',
@@ -15,6 +15,37 @@ describe.skip('`classNames` mapping', () => {
 
     const { className } = substyle('footer')
     expect(className).to.equal('my-footer')
+  })
+
+  it('should correctly map class names for deeply nested elements', () => {
+    const substyle = createSubstyle({
+      className: 'container',
+      classNames: {
+        footer: {
+          className: 'my-footer',
+          column: {
+            className: 'my-column',
+          },
+        },
+      },
+    })
+
+    const { className } = substyle('footer')('column')
+    expect(className).to.equal('my-column')
+  })
+
+  it('should not generate a derive class name schema if no mapping is defined', () => {
+    const substyle = createSubstyle({
+      className: 'container',
+      classNames: {
+        footer: {
+          className: 'my-footer',
+        },
+      },
+    })
+
+    const { className } = substyle('footer')('column')
+    expect(className).to.not.exist
   })
 
   it('should support a shortcut notation for elements with no further children', () => {
