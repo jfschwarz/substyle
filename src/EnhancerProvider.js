@@ -1,5 +1,6 @@
 // @flow
-import { PureComponent, PropTypes, Children } from 'react'
+import { PureComponent, Children } from 'react'
+import PropTypes from 'prop-types'
 import { ENHANCER_CONTEXT_NAME, ContextTypes } from './types'
 
 export default class EnhancerProvider extends PureComponent {
