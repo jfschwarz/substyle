@@ -54,9 +54,9 @@
     "eslint-plugin-mocha": "^4.7.0",
     "jsdom": "^9.10.0",
     "mocha": "^2.4.5",
-    "react": "^15.4.1",
+    "react": "^15.5.4",
     "react-addons-test-utils": "^15.4.1",
-    "react-dom": "^15.4.1",
+    "react-dom": "^15.5.4",
     "react-test-renderer": "^15.5.4",
     "rimraf": "^2.5.1",
     "sinon": "^1.17.6"
