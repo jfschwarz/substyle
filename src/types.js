@@ -1,5 +1,5 @@
 // @flow
-import { PropTypes as PT } from 'react'
+import PT from 'prop-types'
 
 export const ENHANCER_CONTEXT_NAME = '__substyle__Enhancer'
 

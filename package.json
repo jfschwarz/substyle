@@ -33,6 +33,7 @@
     "hoist-non-react-statics": "^1.2.0",
     "invariant": "^2.2.0",
     "lodash": "^4.3.0",
+    "prop-types": "^15.5.8",
     "warning": "^2.1.0"
   },
   "devDependencies": {
@@ -56,6 +57,7 @@
     "react": "^15.4.1",
     "react-addons-test-utils": "^15.4.1",
     "react-dom": "^15.4.1",
+    "react-test-renderer": "^15.5.4",
     "rimraf": "^2.5.1",
     "sinon": "^1.17.6"
   },
