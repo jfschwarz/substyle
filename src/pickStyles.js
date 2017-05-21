@@ -1,4 +1,8 @@
-import { keys, merge, omit, values, filter } from 'lodash'
+import keys from 'lodash/keys' 
+import merge from 'lodash/merge' 
+import omit from 'lodash/omit' 
+import values from 'lodash/values' 
+import filter from 'lodash/filter'
 
 import { isModifier } from './filterKeys'
 

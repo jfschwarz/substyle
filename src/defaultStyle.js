@@ -1,7 +1,8 @@
 // @flow
 import { createElement, Component } from 'react'
 import hoistStatics from 'hoist-non-react-statics'
-import { identity, isFunction } from 'lodash'
+import identity from 'lodash/identity'
+import isFunction from 'lodash/isFunction'
 
 import createSubstyle from './createSubstyle'
 import { PropTypes, ContextTypes, ENHANCER_CONTEXT_NAME } from './types'
