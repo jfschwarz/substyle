@@ -1,10 +1,18 @@
 // @flow
 import invariant from 'invariant'
-import {
-  keys, values, merge, assign, compact,
-  isFunction, isPlainObject, isString, isArray,
-} from 'lodash'
-import { filter, compose } from 'lodash/fp'
+
+import keys from 'lodash/keys'
+import values from 'lodash/values'
+import merge from 'lodash/merge'
+import assign from 'lodash/assign'
+import compact from 'lodash/compact'
+import isFunction from 'lodash/isFunction'
+import isPlainObject from 'lodash/isPlainObject'
+import isString from 'lodash/isString'
+import isArray from 'lodash/isArray'
+
+import filter from 'lodash/fp/filter'
+import compose from 'lodash/fp/compose'
 
 import defaultPropsDecorator from './defaultPropsDecorator'
 import { pickNestedStyles, hoistModifierStylesRecursive } from './pickStyles'

@@ -1,5 +1,8 @@
 // @flow
-import { mergeWith, isString, compact, keys } from 'lodash'
+import mergeWith from 'lodash/mergeWith';
+import isString from 'lodash/isString';
+import compact from 'lodash/compact';
+import keys from 'lodash/keys';
 
 import type { ClassNamesT, CoercedClassNamesT } from './types'
 
