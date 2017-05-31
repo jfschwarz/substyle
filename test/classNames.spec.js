@@ -3,70 +3,57 @@ import { expect } from 'chai'
 import createSubstyle from '../src/createSubstyle'
 
 describe('`classNames` mapping', () => {
-  it('should use the mapped class name when selecting a nested element', () => {
+  it('should use the mapped value from `classNames`', () => {
     const substyle = createSubstyle({
-      className: 'container',
+      className: 'foo',
       classNames: {
-        footer: {
-          className: 'my-footer',
-        },
+        foo: 'my-container',
+        foo__footer: 'my-footer',
+        foo__footer__button: 'my-footer-button',
+        'foo--readOnly': 'my-container-readOnly',
       },
     })
 
-    const { className } = substyle('footer')
-    expect(className).to.equal('my-footer')
+    expect(substyle.className).to.equal('my-container')
+    expect(substyle('footer').className).to.equal('my-footer')
+    expect(substyle('footer')('button').className).to.equal('my-footer-button')
+    expect(substyle('&readOnly').className).to.equal('my-container-readOnly')
   })
 
-  it('should correctly map class names for deeply nested elements', () => {
+  it('should guess the base class name if no `className` prop is set', () => {
     const substyle = createSubstyle({
-      className: 'container',
       classNames: {
-        footer: {
-          className: 'my-footer',
-          column: {
-            className: 'my-column',
-          },
-        },
+        foo: 'my-container',
+        foo__footer: 'my-footer',
+        foo__footer__button: 'my-footer-button',
+        'foo--readOnly': 'my-container-readOnly',
       },
     })
 
-    const { className } = substyle('footer')('column')
-    expect(className).to.equal('my-column')
+    expect(substyle.className).to.equal('my-container')
+    expect(substyle('footer').className).to.equal('my-footer')
+    expect(substyle('footer')('button').className).to.equal('my-footer-button')
+    expect(substyle('&readOnly').className).to.equal('my-container-readOnly')
   })
 
-  it('should not generate a derive class name schema if no mapping is defined', () => {
+  it('should not set derived class names when a `classNames` prop is present', () => {
     const substyle = createSubstyle({
-      className: 'container',
+      className: 'foo',
       classNames: {
-        footer: {
-          className: 'my-footer',
-        },
       },
     })
 
-    const { className } = substyle('footer')('column')
-    expect(className).to.not.exist
+    expect(substyle.className).to.not.exist
+    expect(substyle('bar').className).to.not.exist
   })
 
-  it('should support a shortcut notation for elements with no further children', () => {
-    const substyle = createSubstyle({
-      className: 'container',
-      classNames: {
-        footer: 'my-footer', // same as: { className: 'my-footer' }
-      },
-    })
 
-    const { className } = substyle('footer')
-    expect(className).to.equal('my-footer')
-  })
 
   it('should use the mapped modifier class name in addition to the base className', () => {
     const substyle = createSubstyle({
-      className: 'container',
+      className: 'mycomp',
       classNames: {
-        '&readOnly': {
-          className: 'read-only-container',
-        },
+        'mycomp--readOnly': 'read-only-container',
       },
     })
 
@@ -76,15 +63,15 @@ describe('`classNames` mapping', () => {
 
   it('should support modifier nesting to customize class names for combinations of modifiers', () => {
     const substyle = createSubstyle({
-      className: 'container',
+      className: 'mycomp',
       classNames: {
-        '&readOnly': {
-          '&nestedModifier': 'container-as-modified-readonly',
-        },
+        'mycomp--readOnly': 'container-as-readonly',
+        'mycomp--nestedModifier': 'container-as-modified',
       },
     })
 
     const { className } = substyle(['&readOnly', '&nestedModifier'])
-    expect(className).to.equal('container container-as-modified-readonly')
+    expect(className).to.equal('container container-as-readonly container-as-modified')
   })
+
 })
