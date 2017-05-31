@@ -10,7 +10,7 @@ import defaultPropsDecorator from './defaultPropsDecorator'
 import { pickNestedStyles, hoistModifierStylesRecursive } from './pickStyles'
 import { isModifier, isElement } from './filterKeys'
 
-import type { PropsT, KeysT } from './types'
+import type { PropsT, KeysT, ClassNamesT } from './types'
 
 
 const coerceSelectedKeys = (select?: KeysT) => {
@@ -25,6 +25,13 @@ const coerceSelectedKeys = (select?: KeysT) => {
     )
   }
   return select
+}
+
+const guessBaseClassName = (classNames: ?ClassNamesT): ?string => {
+  // all class names must start with the same prefix: the component's base class name
+  // which will finally go to the container element
+  const firstKey = classNames && keys(classNames)[0]
+  return firstKey && firstKey.split('__')[0].split('--')[0]
 }
 
 const deriveClassNames = (
@@ -59,6 +66,8 @@ function createSubstyle(
 ) {
   const styleIsFunction = isFunction(style)
 
+  const baseClassName = className || guessBaseClassName(classNames)
+
   const substyle = styleIsFunction ? style :
     (select?: KeysT, defaultStyle?: Object) => {
       const selectedKeys = coerceSelectedKeys(select)
@@ -86,7 +95,7 @@ function createSubstyle(
         (fromStyle: Object) => hoistModifierStylesRecursive(fromStyle, modifierKeys)
       )
 
-      const derivedClassNames = deriveClassNames(className, elementKeys, modifierKeys)
+      const derivedClassNames = deriveClassNames(baseClassName, elementKeys, modifierKeys)
 
       return createSubstyle({
 
@@ -113,7 +122,7 @@ function createSubstyle(
   }
   const classNameSplitted = [
     ...(styleProps.className ? styleProps.className.split(' ') : []),
-    ...(className ? className.split(' ') : []),
+    ...(baseClassName ? baseClassName.split(' ') : []),
   ]
   const mappedClassNames = classNames ?
     compact(classNameSplitted.map((singleClassName: string) => classNames[singleClassName])) :

@@ -33,7 +33,7 @@ describe('`classNames` mapping', () => {
     expect(substyle.className).to.equal('my-container')
     expect(substyle('footer').className).to.equal('my-footer')
     expect(substyle('footer')('button').className).to.equal('my-footer-button')
-    expect(substyle('&readOnly').className).to.equal('my-container-readOnly')
+    expect(substyle('&readOnly').className).to.equal('my-container my-container-readOnly')
   })
 
   it('should not set derived class names when a `classNames` prop is present', () => {
