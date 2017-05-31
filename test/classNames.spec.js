@@ -47,7 +47,7 @@ describe('`classNames` mapping', () => {
     expect(substyle('bar').className).to.not.exist
   })
 
-  it('should use the mapped modifier class name in addition to the base className', () => {
+  it('should not set the base className if there is no mapping provided for it', () => {
     const substyle = createSubstyle({
       className: 'mycomp',
       classNames: {
@@ -56,7 +56,7 @@ describe('`classNames` mapping', () => {
     })
 
     const { className } = substyle('&readOnly')
-    expect(className).to.equal('container read-only-container')
+    expect(className).to.equal('read-only-container')
   })
 
   it('should support modifier nesting to customize class names for combinations of modifiers', () => {

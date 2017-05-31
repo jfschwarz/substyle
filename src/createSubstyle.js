@@ -117,7 +117,7 @@ function createSubstyle(
     ...(className ? className.split(' ') : []),
   ]
   const mappedClassNames = classNames ?
-    classNameSplitted.map((singleClassName: string) => classNames[singleClassName]) :
+    compact(classNameSplitted.map((singleClassName: string) => classNames[singleClassName])) :
     classNameSplitted
 
   const propsForSpread = propsDecorator({
