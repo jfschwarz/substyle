@@ -9,7 +9,6 @@ import { filter, compose } from 'lodash/fp'
 import defaultPropsDecorator from './defaultPropsDecorator'
 import { pickNestedStyles, hoistModifierStylesRecursive } from './pickStyles'
 import { isModifier, isElement } from './filterKeys'
-import { mergeClassNames, coerceClassNames } from './classNames'
 
 import type { PropsT, KeysT } from './types'
 
