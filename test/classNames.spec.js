@@ -17,7 +17,7 @@ describe('`classNames` mapping', () => {
     expect(substyle.className).to.equal('my-container')
     expect(substyle('footer').className).to.equal('my-footer')
     expect(substyle('footer')('button').className).to.equal('my-footer-button')
-    expect(substyle('&readOnly').className).to.equal('my-container-readOnly')
+    expect(substyle('&readOnly').className).to.equal('my-container my-container-readOnly')
   })
 
   it('should guess the base class name if no `className` prop is set', () => {
@@ -47,8 +47,6 @@ describe('`classNames` mapping', () => {
     expect(substyle('bar').className).to.not.exist
   })
 
-
-
   it('should use the mapped modifier class name in addition to the base className', () => {
     const substyle = createSubstyle({
       className: 'mycomp',
@@ -65,6 +63,7 @@ describe('`classNames` mapping', () => {
     const substyle = createSubstyle({
       className: 'mycomp',
       classNames: {
+        'mycomp': 'container',
         'mycomp--readOnly': 'container-as-readonly',
         'mycomp--nestedModifier': 'container-as-modified',
       },

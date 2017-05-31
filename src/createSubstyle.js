@@ -28,6 +28,32 @@ const coerceSelectedKeys = (select?: KeysT) => {
   return select
 }
 
+const deriveClassNames = (
+  className: ?string,
+  elementKeys: Array<string>,
+  modifierKeys: Array<string>
+): ?Array<string> => {
+  // do not derive class names, if the user did not specify any class name
+  if (!className) {
+    return undefined
+  }
+
+  // derive class names based using the passed modifier/element keys
+  const firstClassName = className.split(' ')[0]
+  const derivedClassNames = [
+    ...(
+      (elementKeys.length === 0) ?
+        modifierKeys.map((key: string) => `${firstClassName}--${key.substring(1)}`) : []
+    ),
+    ...elementKeys.map((key: string) => `${firstClassName}__${key}`),
+  ]
+
+  // also use the provided `className` if there is no sub-element selection
+  return (elementKeys.length === 0) ?
+    [ className, ...derivedClassNames ] :
+    derivedClassNames
+}
+
 function createSubstyle(
   { style, className, classNames }: PropsT,
   propsDecorator: (props: PropsT) => Object = defaultPropsDecorator,
@@ -61,24 +87,7 @@ function createSubstyle(
         (fromStyle: Object) => hoistModifierStylesRecursive(fromStyle, modifierKeys)
       )
 
-      // use the provided `className` only if there is no sub-element selection
-      const baseClassName = (elementKeys.length === 0) ? className : undefined
-
-      // if `classNames` are present, select the mapped class name
-      const selectedClassNames = classNames && mergeClassNames(
-        ...collectSelectedStyles(coerceClassNames(classNames))
-      )
-      const selectedClassName = selectedClassNames && selectedClassNames.className
-
-      // if `classNames` are not present, automatically derive a class name
-      const firstClassName = className && className.split(' ')[0]
-      const derivedClassName = !classNames && firstClassName && [
-        ...(
-          (elementKeys.length === 0) ?
-            modifierKeys.map((key: string) => `${firstClassName}--${key.substring(1)}`) : []
-        ),
-        ...elementKeys.map((key: string) => `${firstClassName}__${key}`),
-      ].join(' ')
+      const derivedClassNames = deriveClassNames(className, elementKeys, modifierKeys)
 
       return createSubstyle({
 
@@ -89,12 +98,12 @@ function createSubstyle(
           ),
         }),
 
-        ...((baseClassName || selectedClassName || derivedClassName) && {
-          className: compact([baseClassName, selectedClassName, derivedClassName]).join(' '),
+        ...(derivedClassNames && {
+          className: derivedClassNames.join(' '),
         }),
 
         ...(classNames && {
-          classNames: selectedClassNames || {},
+          classNames: classNames,
         }),
 
       }, propsDecorator)
@@ -103,14 +112,18 @@ function createSubstyle(
   const styleProps = {
     ...(styleIsFunction ? style : { style }),
   }
+  const classNameSplitted = [
+    ...(styleProps.className ? styleProps.className.split(' ') : []),
+    ...(className ? className.split(' ') : []),
+  ]
+  const mappedClassNames = classNames ?
+    classNameSplitted.map((singleClassName: string) => classNames[singleClassName]) :
+    classNameSplitted
 
   const propsForSpread = propsDecorator({
     ...styleProps,
-    ...(className && {
-      className: [
-        styleProps.className,
-        className,
-      ].join(' ').trim(),
+    ...(mappedClassNames.length > 0 && {
+      className: mappedClassNames.join(' '),
     }),
   })
 
