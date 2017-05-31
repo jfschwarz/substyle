@@ -56,7 +56,7 @@ const deriveClassNames = (
 
   // also use the provided `className` if there is no sub-element selection
   return (elementKeys.length === 0) ?
-    [ className, ...derivedClassNames ] :
+    [className, ...derivedClassNames] :
     derivedClassNames
 }
 
@@ -110,9 +110,7 @@ function createSubstyle(
           className: derivedClassNames.join(' '),
         }),
 
-        ...(classNames && {
-          classNames: classNames,
-        }),
+        ...(classNames && { classNames }),
 
       }, propsDecorator)
     }

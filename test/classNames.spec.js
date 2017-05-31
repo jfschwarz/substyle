@@ -63,7 +63,7 @@ describe('`classNames` mapping', () => {
     const substyle = createSubstyle({
       className: 'mycomp',
       classNames: {
-        'mycomp': 'container',
+        mycomp: 'container',
         'mycomp--readOnly': 'container-as-readonly',
         'mycomp--nestedModifier': 'container-as-modified',
       },
@@ -72,5 +72,4 @@ describe('`classNames` mapping', () => {
     const { className } = substyle(['&readOnly', '&nestedModifier'])
     expect(className).to.equal('container container-as-readonly container-as-modified')
   })
-
 })
