@@ -12,23 +12,10 @@ export type StyleT = SubstyleT | Object;
 const StylePT = PT.oneOfType([PT.func, PT.object])
 
 export type ClassNamesT = {
-  [string]: string | {
-    className?: string,
-  } & ClassNamesT
+  [string]: string
 };
 
-export type CoercedClassNamesT = {
-  [string]: {
-    className?: string,
-  } & CoercedClassNamesT
-};
-
-const ClassNamesPT = PT.objectOf(
-  PT.shape({
-    className: PT.string,
-    classNames: ClassNamesPT,
-  })
-)
+const ClassNamesPT = PT.objectOf(PT.string)
 
 export type PropsT = {
   style?: StyleT,
