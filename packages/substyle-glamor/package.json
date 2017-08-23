@@ -1,0 +1,14 @@
+{
+  "name": "substyle-glamor",
+  "version": "1.0.0",
+  "description": "use glamor with substyled components",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jan-Felix Schwarz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jfschwarz/substyle/issues"
+  },
+}
