@@ -1,12 +1,14 @@
 {
-	"devDependencies": {
-		"lerna": "^2.0.0",
-	},
+  "devDependencies": {
+    "lerna": "^2.0.0",
+    "prettier": "^1.5.3"
+  },
   "scripts": {
     "postinstall": "lerna bootstrap --stream",
     "build": "lerna run build --stream",
     "clean": "lerna run clean",
     "test": "lerna run test --stream",
-    "lint": "lerna run lint --stream"
+    "lint": "lerna run lint --stream",
+    "format": "prettier --write --no-semi --single-quote --trailing-comma es5 \"{packages/**}/{src,test}/**/*.js\""
   }
 }

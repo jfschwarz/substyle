@@ -1,0 +1,17 @@
+{
+  "editor.tabSize": 2,
+  "files.exclude": {
+    ".git": true,
+    "**/node_modules": true,
+    "**/lib": true
+  },
+  "search.exclude": {
+    ".git": true,
+    "**/node_modules": true,
+    "**/lib": true
+  },
+  "prettier.semi": false,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "es5",
+  "eslint.enable": true
+}
