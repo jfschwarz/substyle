@@ -9,6 +9,6 @@
     "clean": "lerna run clean",
     "test": "lerna run test --stream",
     "lint": "lerna run lint --stream",
-    "format": "prettier --write --no-semi --single-quote --trailing-comma es5 \"{packages/**}/{src,test}/**/*.js\""
+    "format": "prettier --write --no-semi --single-quote --trailing-comma es5 \"packages/**/{src,test}/**/*.js\""
   }
 }

@@ -17,7 +17,9 @@ describe('`classNames` mapping', () => {
     expect(substyle.className).to.equal('my-container')
     expect(substyle('footer').className).to.equal('my-footer')
     expect(substyle('footer')('button').className).to.equal('my-footer-button')
-    expect(substyle('&readOnly').className).to.equal('my-container my-container-readOnly')
+    expect(substyle('&readOnly').className).to.equal(
+      'my-container my-container-readOnly'
+    )
   })
 
   it('should guess the base class name if no `className` prop is set', () => {
@@ -33,14 +35,15 @@ describe('`classNames` mapping', () => {
     expect(substyle.className).to.equal('my-container')
     expect(substyle('footer').className).to.equal('my-footer')
     expect(substyle('footer')('button').className).to.equal('my-footer-button')
-    expect(substyle('&readOnly').className).to.equal('my-container my-container-readOnly')
+    expect(substyle('&readOnly').className).to.equal(
+      'my-container my-container-readOnly'
+    )
   })
 
   it('should not set derived class names when a `classNames` prop is present', () => {
     const substyle = createSubstyle({
       className: 'foo',
-      classNames: {
-      },
+      classNames: {},
     })
 
     expect(substyle.className).to.not.exist
@@ -70,6 +73,8 @@ describe('`classNames` mapping', () => {
     })
 
     const { className } = substyle(['&readOnly', '&nestedModifier'])
-    expect(className).to.equal('container container-as-readonly container-as-modified')
+    expect(className).to.equal(
+      'container container-as-readonly container-as-modified'
+    )
   })
 })
