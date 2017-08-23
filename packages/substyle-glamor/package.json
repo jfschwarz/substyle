@@ -1,14 +1,38 @@
 {
   "name": "substyle-glamor",
-  "version": "1.0.0",
-  "description": "use glamor with substyled components",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Use substyled components with glamor",
   "main": "lib/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "rimraf lib",
+    "build": "babel src --out-dir lib",
+    "test": "NODE_ENV=test mocha",
+    "prepublish": "npm run test && npm run clean && npm run build"
   },
   "author": "Jan-Felix Schwarz",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/jfschwarz/substyle/issues"
   },
+  "dependencies": {
+    "substyle": "6.0.0"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-register": "^6.26.0",
+    "chai": "^3.5.0",
+    "enzyme": "^2.6.0",
+    "glamor": "^2.20.40",
+    "jsdom": "^9.10.0",
+    "mocha": "^3.5.0",
+    "react-addons-test-utils": "^15.4.1",
+    "rimraf": "^2.6.1",
+    "react-test-renderer": "^15.5.4",
+    "sinon": "^3.2.1"
+  },
+  "peerDependencies": {
+    "glamor": "^2.0.0",
+    "react": ">=15.3.2"
+  }
 }
