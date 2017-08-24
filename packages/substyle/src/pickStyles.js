@@ -14,6 +14,7 @@ export const pickDirectStyles = (style, objectPropertiesWhitelist = []) => {
       key[0] === ':' || // pseudo selectors
       key[0] === '@' || // @media / @keyframes / @supports / @font-face
       objectPropertiesWhitelist.indexOf(key) >= 0 // whitelisted object-type properties
+
     if (isDirect) {
       result[key] = style[key]
     }

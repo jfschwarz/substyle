@@ -19,6 +19,21 @@ describe('decorateAsDataAttributes', () => {
     })
     expect(result).to.have.property('className', 'foo bar')
   })
+
+  it('should pick only direct styles', () => {
+    const result = decorateAsDataAttributes({
+      style: {
+        width: 50,
+
+        nested: {
+          color: 'red',
+        },
+      },
+    })
+    const sameResult = decorateAsDataAttributes({ style: { width: 50 } })
+    expect(result).to.not.have.property('style')
+    expect(result).to.to.deep.equal(sameResult)
+  })
 })
 
 describe('decorateAsClasses', () => {
