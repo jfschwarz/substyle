@@ -1,7 +1,6 @@
 {
   "name": "substyle-glamor",
   "version": "0.1.0",
-  "private": true,
   "description": "Use substyled components with glamor",
   "main": "lib/index.js",
   "scripts": {
