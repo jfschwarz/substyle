@@ -2,6 +2,7 @@
 
 Follow these instructions if you want to use a substyled React component in a your web application and [glamor](https://github.com/threepointone/glamor) is your css-in-js library of choice.
 
+#### Why do you need this?
 Substyled components usually carry some internal style definitions. Per default, these style definions will be rendered as `style` attributes of the DOM elements. Inline styles have some limitations, though, e.g. no support for `:hover` rules and media queries. Thus, you should let glamor process the inline styles to make sure you get the full user experience provided by the component.
 
 
