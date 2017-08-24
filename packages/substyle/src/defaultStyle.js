@@ -12,6 +12,8 @@ import {
 } from './types'
 import type { PropsT, KeysT } from './types'
 
+const isStatelessFunction = Component => !Component.prototype.render
+
 const createDefaultStyle = (
   defaultStyle?: Object | ((props: Object) => Object),
   getModifiers?: (props: Object) => KeysT
@@ -36,9 +38,12 @@ const createDefaultStyle = (
         ? defaultStyle(rest)
         : defaultStyle
 
-      return createElement(this.getWrappedComponent(), {
+      const EnhancedWrappedComponent = this.getWrappedComponent()
+      return createElement(EnhancedWrappedComponent, {
         style: substyle(modifiers, finalDefaultStyle),
-        ref: this.setWrappedInstance,
+        ref: isStatelessFunction(EnhancedWrappedComponent)
+          ? undefined
+          : this.setWrappedInstance,
         ...rest,
       })
     }
