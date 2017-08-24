@@ -2,19 +2,19 @@ import { keys, merge, omit, values, filter } from 'lodash'
 
 import { isModifier } from './filterKeys'
 
-const camelize = (key) => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())
+const camelize = key => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())
 
 export const pickDirectStyles = (style, objectPropertiesWhitelist = []) => {
   const styleKeys = keys(style)
   const result = {}
   for (let i = 0, l = styleKeys.length; i < l; i += 1) {
     const key = styleKeys[i]
-    const isDirect = (
-      Object.prototype.toString.call(style[key]) !== '[object Object]' ||  // style defs
-      key[0] === ':' ||  // pseudo selectors
-      key[0] === '@' ||  // @media / @keyframes / @supports / @font-face
-      objectPropertiesWhitelist.indexOf(key) >= 0  // whitelisted object-type properties
-    )
+    const isDirect =
+      Object.prototype.toString.call(style[key]) !== '[object Object]' || // style defs
+      key[0] === ':' || // pseudo selectors
+      key[0] === '@' || // @media / @keyframes / @supports / @font-face
+      objectPropertiesWhitelist.indexOf(key) >= 0 // whitelisted object-type properties
+
     if (isDirect) {
       result[key] = style[key]
     }
@@ -28,7 +28,10 @@ export const pickNestedStyles = (style, keysToPick) => {
   const result = {}
   for (let i = 0, l = styleKeys.length; i < l; i += 1) {
     const key = styleKeys[i]
-    if (keysToPick.indexOf(key) >= 0 || camelizedKeysToPick.indexOf(camelize(key)) >= 0) {
+    if (
+      keysToPick.indexOf(key) >= 0 ||
+      camelizedKeysToPick.indexOf(camelize(key)) >= 0
+    ) {
       result[key] = style[key]
     }
   }
@@ -49,7 +52,10 @@ export const hoistModifierStylesRecursive = (style, modifierKeysToPick) => {
   const modifierKeys = filter(keys(result), isModifier)
   for (let i = 0, l = modifierKeys.length; i < l; i += 1) {
     const key = modifierKeys[i]
-    const subresult = hoistModifierStylesRecursive(result[key], modifierKeysToPick)
+    const subresult = hoistModifierStylesRecursive(
+      result[key],
+      modifierKeysToPick
+    )
     if (modifierKeysToPick.indexOf(key) >= 0) {
       // selected modifier: hoist subresult
       delete result[key]

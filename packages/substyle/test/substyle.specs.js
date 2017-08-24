@@ -1,9 +1,9 @@
 import { expect } from 'chai'
+import { spy } from 'sinon'
 
 import createSubstyle from '../src/createSubstyle'
 
 const myStyle = {
-
   width: '100%',
 
   ':hover': {
@@ -38,7 +38,6 @@ const myStyle = {
       cursor: 'default',
     },
   },
-
 }
 
 describe('substyle', () => {
@@ -52,7 +51,7 @@ describe('substyle', () => {
   })
 
   it('should not return a style when no style has been set in the props', () => {
-    const substyle = createSubstyle({ })
+    const substyle = createSubstyle({})
     const props = substyle('toggle')
     expect(props).to.not.have.property('style')
   })
@@ -60,7 +59,7 @@ describe('substyle', () => {
   it('should hoist style definitions for the active modifiers', () => {
     const substyle = createSubstyle({ style: myStyle })
     const { style } = substyle('&active')
-    expect(style).to.have.property('background', 'blue' ) // hoisted from &active
+    expect(style).to.have.property('background', 'blue') // hoisted from &active
   })
 
   it('should not hoist modifier styles inside of element sub styles', () => {
@@ -97,7 +96,11 @@ describe('substyle', () => {
 
   it('should support passing multiple keys as an object', () => {
     const substyle = createSubstyle({ style: myStyle, className: 'my-class' })
-    const subsubstyle = substyle({ '&active': true, '&inactive': false, '&disabled': true })
+    const subsubstyle = substyle({
+      '&active': true,
+      '&inactive': false,
+      '&disabled': true,
+    })
     const { style, className } = subsubstyle
 
     expect(className).to.equal('my-class my-class--active my-class--disabled')
@@ -112,13 +115,13 @@ describe('substyle', () => {
         width: '50%',
       },
 
-      background: 'blue',    // hoisted from &active
+      background: 'blue', // hoisted from &active
       pointerEvents: 'none', // hoisted from &disabled
     })
 
     const { style: btnStyle } = subsubstyle('btn')
     expect(btnStyle).to.deep.equal({
-      cursor: 'default',   // overridden btn styles hoisted from &disabled
+      cursor: 'default', // overridden btn styles hoisted from &disabled
     })
   })
 
@@ -386,11 +389,51 @@ describe('substyle', () => {
       style: { height: 50, nested: { width: 20 } },
     })
     const substyleWithDefaultStyle = substyle(undefined, defaultStyle)
-    expect({ ...substyleWithDefaultStyle }).to.deep.equal(
-      { style: { height: 50, width: 50 } }
+    expect({ ...substyleWithDefaultStyle }).to.deep.equal({
+      style: { height: 50, width: 50 },
+    })
+    expect({ ...substyleWithDefaultStyle('nested') }).to.deep.equal({
+      style: { height: 10, width: 20 },
+    })
+  })
+
+  it('should take a props decorator function as second arg of the constructor call and apply it on spread props', () => {
+    const myDecorator = spy(props => ({ mapped: 'foobar' }))
+    const substyle = createSubstyle(
+      {
+        style: {
+          height: 50,
+
+          header: {
+            width: 100,
+          },
+        },
+        className: 'foo',
+      },
+      myDecorator
     )
-    expect({ ...substyleWithDefaultStyle('nested') }).to.deep.equal(
-      { style: { height: 10, width: 20 } }
-    )
+    expect(myDecorator.calledOnce).to.be.ok
+    expect(
+      myDecorator.calledWithMatch({
+        style: {
+          height: 50,
+          header: {
+            width: 100,
+          },
+        },
+        className: 'foo',
+      })
+    ).to.be.ok
+    expect({ ...substyle }).to.deep.equal({ mapped: 'foobar' })
+
+    const subsubstyle = substyle('header')
+    expect(myDecorator.calledTwice).to.be.ok
+    expect(
+      myDecorator.calledWithMatch({
+        style: { width: 100 },
+        className: 'foo__header',
+      })
+    ).to.be.ok
+    expect({ ...subsubstyle }).to.deep.equal({ mapped: 'foobar' })
   })
 })
