@@ -176,7 +176,7 @@ describe('`defaultStyle` higher-order component factory', () => {
   it('should support providing a props decorator function via context', () => {
     const MyStyledComponent = defaultStyle()(MyComponent)
     const decorateProps = props => ({
-      mapped: 'foobar',
+      ['data-mapped']: 'foobar',
     })
     const wrapper = mount(createElement(MyStyledComponent), {
       context: {
@@ -186,6 +186,6 @@ describe('`defaultStyle` higher-order component factory', () => {
     const containerProps = wrapper.find('MyComponent').find('div').props()
     expect(containerProps).to.not.have.property('style')
     expect(containerProps).to.not.have.property('className')
-    expect(containerProps).to.have.property('mapped', 'foobar')
+    expect(containerProps).to.have.property('data-mapped', 'foobar')
   })
 })
