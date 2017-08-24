@@ -16,7 +16,7 @@
     "url": "https://github.com/jfschwarz/substyle/issues"
   },
   "dependencies": {
-    "substyle": "6.0.0"
+    "substyle": "^6.0.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
