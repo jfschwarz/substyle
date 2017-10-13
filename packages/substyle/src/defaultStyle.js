@@ -59,7 +59,7 @@ const createDefaultStyle = (
         if (this.enhancedWrappedComponent.propTypes) {
           this.enhancedWrappedComponent.propTypes = {
             ...this.enhancedWrappedComponent.propTypes,
-            style: PropTypes.style
+            style: PropTypes.style,
           }
         }
       }

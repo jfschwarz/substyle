@@ -9,7 +9,7 @@ import createSubstyle from '../src/createSubstyle'
 import {
   ENHANCER_CONTEXT_NAME,
   PROPS_DECORATOR_CONTEXT_NAME,
-  PropTypes
+  PropTypes,
 } from '../src/types'
 
 describe('`defaultStyle` higher-order component factory', () => {
@@ -171,7 +171,9 @@ describe('`defaultStyle` higher-order component factory', () => {
         [ENHANCER_CONTEXT_NAME]: wrapInSection,
       },
     })
-    expect(wrapper.find('WrapperComp').type().propTypes.style).to.equal(PropTypes.style)
+    expect(wrapper.find('WrapperComp').type().propTypes.style).to.equal(
+      PropTypes.style
+    )
   })
 
   it('should expose the wrapped component instance via `getWrappedInstance`', () => {
