@@ -21,14 +21,9 @@
     "babel-cli": "^6.26.0",
     "babel-register": "^6.26.0",
     "chai": "^3.5.0",
-    "enzyme": "^2.9.1",
     "glamor": "^2.20.40",
-    "jsdom": "^9.10.0",
     "mocha": "^3.5.0",
-    "react-addons-test-utils": "^15.4.1",
-    "react-test-renderer": "^15.5.4",
-    "rimraf": "^2.6.1",
-    "sinon": "^3.2.1"
+    "rimraf": "^2.6.1"
   },
   "peerDependencies": {
     "glamor": "^2.0.0",
