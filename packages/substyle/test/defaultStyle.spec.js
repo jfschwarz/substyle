@@ -1,6 +1,7 @@
 import { expect } from 'chai'
 import { shallow, mount } from 'enzyme'
 import { createElement, Component } from 'react'
+import PT from 'prop-types'
 
 import './utils/dom'
 import defaultStyle from '../src/defaultStyle'
@@ -8,6 +9,7 @@ import createSubstyle from '../src/createSubstyle'
 import {
   ENHANCER_CONTEXT_NAME,
   PROPS_DECORATOR_CONTEXT_NAME,
+  PropTypes
 } from '../src/types'
 
 describe('`defaultStyle` higher-order component factory', () => {
@@ -142,7 +144,7 @@ describe('`defaultStyle` higher-order component factory', () => {
     })
   })
 
-  it('should support depency injection via context for additional HoC to wrap the component', () => {
+  it('should support depency injection via context for additional HOC to wrap the component', () => {
     const MyStyledComponent = defaultStyle()(MyComponent)
     const wrapInSection = WrappedComponent => props =>
       createElement('section', {}, createElement(WrappedComponent, props))
@@ -152,6 +154,24 @@ describe('`defaultStyle` higher-order component factory', () => {
       },
     })
     expect(wrapper.get(0).type().type).to.equal('section')
+  })
+
+  it('should fix `style` prop type if injected HOC defines (as Radium does)', () => {
+    const MyStyledComponent = defaultStyle()(MyComponent)
+    const wrapInSection = WrappedComponent => {
+      const WrapperComp = props =>
+        createElement('section', {}, createElement(WrappedComponent, props))
+      WrapperComp.propTypes = {
+        style: PT.array,
+      }
+      return WrapperComp
+    }
+    const wrapper = mount(createElement(MyStyledComponent), {
+      context: {
+        [ENHANCER_CONTEXT_NAME]: wrapInSection,
+      },
+    })
+    expect(wrapper.find('WrapperComp').type().propTypes.style).to.equal(PropTypes.style)
   })
 
   it('should expose the wrapped component instance via `getWrappedInstance`', () => {

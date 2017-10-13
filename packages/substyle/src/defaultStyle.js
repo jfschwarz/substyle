@@ -56,6 +56,12 @@ const createDefaultStyle = (
       if (this.memoizedEnhance !== enhance) {
         this.memoizedEnhance = enhance
         this.enhancedWrappedComponent = enhance(WrappedComponent)
+        if (this.enhancedWrappedComponent.propTypes) {
+          this.enhancedWrappedComponent.propTypes = {
+            ...this.enhancedWrappedComponent.propTypes,
+            style: PropTypes.style
+          }
+        }
       }
 
       return this.enhancedWrappedComponent || WrappedComponent
