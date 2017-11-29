@@ -8,7 +8,7 @@ _substyle_ is a simple utility for building universally stylable React component
 - css modules
 - inline styles (pure and with [Radium](http://formidable.com/open-source/radium/))
 - [Aphrodite](https://github.com/Khan/aphrodite)
-- [React Style](https://github.com/js-next/react-style),
+- [Glamor](https://github.com/threepointone/glamor) & [Glamorous](https://glamorous.rocks),
 - [JSS](https://github.com/jsstyles/jss)
 
 
@@ -63,25 +63,117 @@ That's all there is for making the styles of the container `div` and the `button
 
 ## How to use it
 
-TODO
+### Select style for an element
 
-### Select style for element
+For getting the styling props to pass to an element returned by your component's render functions, call the `style` function with a key that identifies this element.
 
-### Pass selected style to string type elements
+```javascript
+style('footer')
+```
 
-### Pass selected style to component type elements
+In some cases, it is also useful to select multiple styles for the same element. This allows to separate some more specific style definitions from base styles shared with other elments, so that the user would have to provide custom definitions for these base styles only once.
+
+```javascript
+style(['item', 'item-last'])
+```
+
+### Pass selected style to simple elements
+
+The return value of any `style()` call carries different properties depending on the styling approach the user of your component chooses to use. For example, the result could have any form of `{ className: 'myComponent__footer' }`, `{ style: { borderTop: '1px solid silver' } }`, `{ 'data-css-rdsogp': true }`, etc. Use [JSX spread attributes](https://gist.github.com/sebmarkbage/07bbe37bc42b6d4aef81#spread-attributes) to pass these props to the element:
+
+```javascript
+<div {...style('footer')} />
+```
+
+### Pass selected style to elements of other substyle-enhanced components
+
+If your component `A` renders another component `B`, itself consisting of multiple element that need to be stylable from the outside, you have to enhance `B` with the `substyle` higher-order component, too.
+Select styles for the `<B />` element by calling the `style` prop with the key you choose for this element. Instead of spreading the result of this call to the JSX attributes,
+you pass it down to `<B />` as the `style` prop. This ensures that also all nested inline style definitions for elements inside of `<B />` are passed down.
+
+```javascript
+const A = (props) => (
+  <div {...props.style}>
+    <B style={props.style('b')} />
+    <div {...style('footer')} />
+  </div>
+)
+```
 
 ### Define default styling
 
+```javascript
+import { defaultStyle } from 'substyle'
+
+const Popover = ({ style, children }) => (
+  <div {...style}>
+    <button {...style('close')}>x</button>
+    { children }
+  </div>
+)
+
+const styled = defaultStyle({
+  position: 'absolute',
+
+  close: {
+    position: 'absolute',
+    top: 0,
+    right: 0
+  }
+})
+export default style(Popover)
+```
+
 ### Define style modifiers
 
-- based on props, as second arg to defaultStyle
-- based on state, by deriving a modified style (recommend hoisting state, e.g., recompose withState)
+In many cases you can distinguish between different variants of how a component looks like based on props.
+Each of these variants might have slightly different default styles and users must be able to customize styling
+specifically for each variant. This means each variant needs to be represented by a specific class name and inline
+styles
+For each of these variants the default styles might be
+
+Qu the values of some props influence the appearance of the component as they
+
+```javascript
+const styled = defaultStyle({
+  position: 'absolute',
+
+  '&align-top': {
+    top: 0,
+  },
+
+  '&align-bottom': {
+    bottom: 0,
+  }
+}, ({ small, align = 'top'}) => ({
+  '&small': small,
+  [`&align-${align}`]: true,
+}))
+```
+
+If variants of the component are defined for different values of internal component states instead of props, you can select the modifiers also inside the component's render function.
+To do this, call with `style` prop with the modifier keys first to derive a new instance of the `style` prop that you can then call with element keys and spread as JSX attributes.
+
+```javascript
+render() {
+  const modifiedStyle = this.props.style({
+    '&active': this.state.active
+  })
+  return (
+    <div {...modifiedStyle}>
+      <div {...modifiedStyle('header')} />
+      ...
+    </div>
+  )
+}
+```
+
+An alternative, potentially simpler, approach is lifting the component state further up, e.g., using recompose's `withState`, so that the state values are available as props for you to define the props to modifier keys mapping for `defaultStyle`.
 
 ### Organize default styles
 
-- essential styles: co-located with component
-- nice example styles/different themes: extra export, css file, or both
+- essential styles (required so that the component is functional): co-located with component using `defaultStyle`
+- some beautiful example styles/different themes: as extra JavaScript file, css file, or both
 
 
 ## API
