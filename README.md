@@ -8,7 +8,7 @@ _substyle_ is a simple utility for building universally stylable React component
 - css modules
 - inline styles (pure and with [Radium](http://formidable.com/open-source/radium/))
 - [Aphrodite](https://github.com/Khan/aphrodite)
-- [Glamor](https://github.com/threepointone/glamor) & [Glamorous](https://glamorous.rocks),
+- [Glamor](https://github.com/threepointone/glamor) & [Glamorous](https://glamorous.rocks)
 - [JSS](https://github.com/jsstyles/jss)
 
 
