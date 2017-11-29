@@ -182,7 +182,7 @@ The default export of the _substyle_ module is a higher-order component for enha
 
 #### `substyle(Component)` (default export)
 
-Returns an enhanced version of `Component` which supports `style`, `className`, and `classNames` props and maps them to a single [special `style` prop]().
+Returns an enhanced version of `Component` which supports `style`, `className`, and `classNames` props and maps them to a single [special `style` prop](#stylekeys-injected-prop).
 
 #### Arguments
 
