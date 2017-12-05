@@ -1,5 +1,6 @@
 // @flow
 import PT from 'prop-types'
+import * as React from 'react'
 
 export const ENHANCER_CONTEXT_NAME = '__substyle__enhancer'
 export const PROPS_DECORATOR_CONTEXT_NAME = '__substyle__propsDecorator'
@@ -30,10 +31,16 @@ export const PropTypes = {
   classNames: ClassNamesPT,
 }
 
-export type ContextT = {
-  [ENHANCER_CONTEXT_NAME]: ?(WrappedComponent: ReactClass) => ReactClass,
-  [PROPS_DECORATOR_CONTEXT_NAME]: ?(props: PropsT) => Object,
-}
+export type EnhancerFuncT = (
+  WrappedComponent: React.ComponentType<*>
+) => React.ComponentType<*>
+
+export type DecoratorFuncT = (props: PropsT) => Object
+
+export type ContextT = {|
+  __substyle__enhancer?: EnhancerFuncT,
+  __substyle__propsDecorator?: DecoratorFuncT,
+|}
 
 export const ContextTypes = {
   [ENHANCER_CONTEXT_NAME]: PT.func,

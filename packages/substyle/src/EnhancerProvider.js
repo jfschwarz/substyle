@@ -1,13 +1,21 @@
 // @flow
-import { PureComponent, Children } from 'react'
+import * as React from 'react'
 import PropTypes from 'prop-types'
 import {
   ENHANCER_CONTEXT_NAME,
   PROPS_DECORATOR_CONTEXT_NAME,
   ContextTypes,
 } from './types'
+import type { EnhancerFuncT, DecoratorFuncT } from './types'
 
-export default class EnhancerProvider extends PureComponent {
+type PropsT = {
+  enhancer?: EnhancerFuncT,
+  propsDecorator?: DecoratorFuncT,
+
+  children: React.Node,
+}
+
+export default class EnhancerProvider extends React.Component<PropsT, void> {
   getChildContext() {
     return {
       [ENHANCER_CONTEXT_NAME]: this.props.enhancer,
@@ -16,7 +24,7 @@ export default class EnhancerProvider extends PureComponent {
   }
 
   render() {
-    return Children.only(this.props.children)
+    return React.Children.only(this.props.children)
   }
 }
 
