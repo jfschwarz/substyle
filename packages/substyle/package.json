@@ -1,6 +1,6 @@
 {
   "name": "substyle",
-  "version": "6.1.2",
+  "version": "6.1.3",
   "description": "Universal styling for reusable React components",
   "main": "lib/index.js",
   "scripts": {
