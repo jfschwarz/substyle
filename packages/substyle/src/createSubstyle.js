@@ -135,17 +135,17 @@ function createSubstyle(
   const styleProps = {
     ...(styleIsFunction ? style : { style }),
   }
-  const classNameSplitted = [
+  const classNameSplit = [
     ...(styleProps.className ? styleProps.className.split(' ') : []),
     ...(baseClassName ? baseClassName.split(' ') : []),
   ]
   const mappedClassNames = classNames
     ? compact(
-        classNameSplitted.map(
+        classNameSplit.map(
           (singleClassName: string) => classNames[singleClassName]
         )
       )
-    : classNameSplitted
+    : classNameSplit
 
   const propsForSpread = propsDecorator({
     ...styleProps,
