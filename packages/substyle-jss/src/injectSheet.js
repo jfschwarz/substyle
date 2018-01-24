@@ -5,8 +5,11 @@ import injectSheetBase from 'react-jss'
 
 import createPropsDecorator from './createPropsDecorator'
 
-const injectSheet = (stylesOrSheet, options) => {
-  const jssHoc = injectSheetBase(stylesOrSheet, options)
+const injectSheet = (stylesOrSheet, options = {}) => {
+  const jssHoc = injectSheetBase(stylesOrSheet, {
+    ...options,
+    inject: [...(options.inject || []), 'sheet', 'classes'],
+  })
 
   return WrappedComponent => {
     const SubstyleJss = ({ classes, sheet, style, className, ...rest }) => {

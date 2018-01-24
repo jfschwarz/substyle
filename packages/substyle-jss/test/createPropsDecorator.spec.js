@@ -10,7 +10,11 @@ describe('createPropsDecorator', () => {
     addRule: ruleName => {
       counter += 1
       rules[ruleName] = {
-        className: `${ruleName}-${counter}`,
+        options: {
+          classes: {
+            [ruleName]: `${ruleName}-${counter}`,
+          },
+        },
       }
       return rules[ruleName]
     },

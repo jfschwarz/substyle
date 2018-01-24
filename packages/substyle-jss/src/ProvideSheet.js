@@ -10,4 +10,4 @@ const ProvideSheet = ({ sheet, children }) =>
     children
   )
 
-export default injectSheet({})(ProvideSheet)
+export default injectSheet({}, { inject: ['sheet'] })(ProvideSheet)
