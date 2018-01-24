@@ -1,3 +1,4 @@
-import EnhancerProvider from './EnhancerProvider'
+import injectSheet from './injectSheet'
+import ProvideSheet from './ProvideSheet'
 
-export default EnhancerProvider
+export { injectSheet, ProvideSheet }
