@@ -30,6 +30,6 @@
   },
   "peerDependencies": {
     "react": ">=15.3.2",
-    "react-jss": ">=7.0.0"
+    "react-jss": ">=8.0.0"
   }
 }
