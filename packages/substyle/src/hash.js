@@ -2,7 +2,7 @@
 /* eslint-disable */
 
 // murmurhash2 via https://gist.github.com/raycmorgan/588423
-function hashString(str: string) {
+export default function hash(str: string) {
   const m = 0x5bd1e995
   const r = 24
 
@@ -70,7 +70,3 @@ function Umul32(n, m) {
   const res = (nlo * m + (((nhi * m) & 0xffff) << 16)) | 0
   return res
 }
-
-const hash = (obj: Object) => hashString(JSON.stringify(obj)).toString(36)
-
-export default hash

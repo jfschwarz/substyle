@@ -10,7 +10,7 @@ const createPropsDecorator = sheet => {
       return decoratedStylingProps
     }
 
-    const ruleName = hash(style)
+    const ruleName = hash(JSON.stringify(style)).toString(36)
 
     // prepend rule to the sheet if it does not already exist
     const rule =
