@@ -10,19 +10,21 @@ import {
   ENHANCER_CONTEXT_NAME,
   PROPS_DECORATOR_CONTEXT_NAME,
 } from './types'
-import type { PropsT, KeysT } from './types'
+import type { PropsT, KeysT, ShouldUpdateFuncT } from './types'
 
 const isStatelessFunction = Component => !Component.prototype.render
 
 const createDefaultStyle = (
   defaultStyle?: Object | ((props: Object) => Object),
-  getModifiers?: (props: Object) => KeysT
+  getModifiers?: (props: Object) => KeysT,
+  shouldUpdate: ShouldUpdateFuncT = () => true
 ) => (WrappedComponent: ReactClass) => {
   class WithDefaultStyle extends Component<void, PropsT, void> {
     static WrappedComponent: ReactClass
 
     constructor(props, context) {
       super(props, context)
+      this.lastDefaultStyle = null
       this.setWrappedInstance = this.setWrappedInstance.bind(this)
     }
 
@@ -34,9 +36,16 @@ const createDefaultStyle = (
         this.context[PROPS_DECORATOR_CONTEXT_NAME]
       )
       const modifiers = getModifiers && getModifiers(rest)
-      const finalDefaultStyle = isFunction(defaultStyle)
-        ? defaultStyle(rest)
-        : defaultStyle
+
+      let finalDefaultStyle
+      if (isFunction(defaultStyle)) {
+        if (shouldUpdate(rest)) {
+          this.lastDefaultStyle = defaultStyle(rest)
+        }
+        finalDefaultStyle = this.lastDefaultStyle
+      } else {
+        finalDefaultStyle = defaultStyle
+      }
 
       const EnhancedWrappedComponent = this.getWrappedComponent()
       return createElement(EnhancedWrappedComponent, {
