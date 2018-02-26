@@ -1,5 +1,4 @@
-import { defaultPropsDecorator } from 'substyle'
-import hashify from './hashify'
+import { defaultPropsDecorator, hash } from 'substyle'
 import mapPseudoSelectors from './mapPseudoSelectors'
 
 const createPropsDecorator = sheet => {
@@ -11,7 +10,7 @@ const createPropsDecorator = sheet => {
       return decoratedStylingProps
     }
 
-    const ruleName = hashify(style)
+    const ruleName = hash(style)
 
     // prepend rule to the sheet if it does not already exist
     const rule =
