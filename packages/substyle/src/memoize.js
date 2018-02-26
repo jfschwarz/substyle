@@ -2,17 +2,25 @@
 import coerceSelection from './coerceSelection'
 import { SubstyleT } from './types'
 
-const calculateHash = (select?: KeysT, defaultStyle?: Object) =>
-  [coerceSelection(select), JSON.stringify(defaultStyle)].join()
+const EMPTY = {}
 
-// based on code by @philogb and @addyosmani (released under an MIT license)
-// https://addyosmani.com/blog/faster-javascript-memoization/
-const memoize = (substyle: SubstyleT) => (...args) => {
-  substyle.memoize = substyle.memoize || {}
-  const hash = calculateHash(...args)
-  return hash in substyle.memoize
-    ? substyle.memoize[hash]
-    : (substyle.memoize[hash] = substyle.apply(this, args))
+const memoize = (substyle: SubstyleT) => (
+  select?: KeysT,
+  defaultStyle?: Object
+) => {
+  const cacheKey = defaultStyle || EMPTY
+  substyle.memoize = substyle.memoize || new WeakMap()
+  let mapEntry
+  if (!substyle.memoize.has(cacheKey)) {
+    mapEntry = {}
+    substyle.memoize.set(cacheKey, mapEntry)
+  } else {
+    mapEntry = substyle.memoize.get(cacheKey)
+  }
+  const selectHash = coerceSelection(select).join(' ')
+  return selectHash in mapEntry
+    ? mapEntry[selectHash]
+    : (mapEntry[selectHash] = substyle(select, defaultStyle))
 }
 
 export default memoize
