@@ -8,5 +8,4 @@ const resolver = (select?: KeysT, defaultStyle?: Object) =>
     36
   )
 
-export default substyle => (select?: KeysT, defaultStyle?: Object) =>
-  memoize(substyle, resolver)(select, defaultStyle)
+export default substyle => memoize(substyle, resolver)
