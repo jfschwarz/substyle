@@ -1,9 +1,7 @@
 import { expect } from 'chai'
-import { hash } from 'substyle'
 
 import createPropsDecorator from '../src/createPropsDecorator'
-
-const ruleClass = obj => hash(JSON.stringify(obj)).toString(36)
+import hash from '../src/hash'
 
 describe('createPropsDecorator', () => {
   const rules = {}
@@ -27,12 +25,12 @@ describe('createPropsDecorator', () => {
     expect(first).to.not.have.property('style')
     expect(first).to.have.property(
       'className',
-      ruleClass({ backgroundColor: 'red' })
+      hash({ backgroundColor: 'red' })
     )
 
     const second = propsDecorator({ style: { width: 100 } })
     expect(second).to.not.have.property('style')
-    expect(second).to.have.property('className', ruleClass({ width: 100 }))
+    expect(second).to.have.property('className', hash({ width: 100 }))
   })
 
   it('should preserve classNames passed by the user', () => {
@@ -42,7 +40,7 @@ describe('createPropsDecorator', () => {
     })
     expect(result).to.have.property(
       'className',
-      `foo ${ruleClass({ backgroundColor: 'red' })}`
+      `foo ${hash({ backgroundColor: 'red' })}`
     )
   })
 
@@ -50,13 +48,13 @@ describe('createPropsDecorator', () => {
     const first = propsDecorator({ style: { backgroundColor: 'red' } })
     expect(first).to.have.property(
       'className',
-      ruleClass({ backgroundColor: 'red' })
+      hash({ backgroundColor: 'red' })
     )
 
     const second = propsDecorator({ style: { backgroundColor: 'red' } })
     expect(second).to.have.property(
       'className',
-      ruleClass({ backgroundColor: 'red' })
+      hash({ backgroundColor: 'red' })
     ) // same class name as before
   })
 })
