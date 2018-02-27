@@ -1,7 +1,7 @@
 // @flow
 import { createElement, Component } from 'react'
 import hoistStatics from 'hoist-non-react-statics'
-import { identity, isFunction } from 'lodash'
+import { omit, identity, isFunction } from 'lodash'
 
 import createSubstyle from './createSubstyle'
 import {
@@ -24,32 +24,42 @@ const createDefaultStyle = (
 
     constructor(props, context) {
       super(props, context)
-      this.lastDefaultStyle = null
-      this.setWrappedInstance = this.setWrappedInstance.bind(this)
-    }
-
-    render() {
-      const { style, className, classNames, ...rest } = this.props
-
-      const substyle = createSubstyle(
+      const { style, className, classNames, ...rest } = props
+      this.substyle = createSubstyle(
         { style, className, classNames },
         this.context[PROPS_DECORATOR_CONTEXT_NAME]
       )
-      const modifiers = getModifiers && getModifiers(rest)
-
-      let finalDefaultStyle
+      this.setWrappedInstance = this.setWrappedInstance.bind(this)
       if (isFunction(defaultStyle)) {
-        if (shouldUpdate(rest)) {
-          this.lastDefaultStyle = defaultStyle(rest)
-        }
-        finalDefaultStyle = this.lastDefaultStyle
-      } else {
-        finalDefaultStyle = defaultStyle
+        this.defaultStyle = defaultStyle(rest)
+      }
+    }
+
+    componentWillReceiveProps({ style, className, classNames, ...rest }) {
+      if (
+        style !== this.props.style ||
+        className !== this.props.className ||
+        classNames !== this.props.classNames
+      ) {
+        this.substyle = createSubstyle(
+          { style, className, classNames },
+          this.context[PROPS_DECORATOR_CONTEXT_NAME]
+        )
       }
 
+      if (isFunction(defaultStyle)) {
+        if (shouldUpdate(rest)) {
+          this.defaultStyle = defaultStyle(rest)
+        }
+      }
+    }
+
+    render() {
+      const rest = omit(this.props, ['style', 'className', 'classNames'])
       const EnhancedWrappedComponent = this.getWrappedComponent()
+      const modifiers = getModifiers && getModifiers(rest)
       return createElement(EnhancedWrappedComponent, {
-        style: substyle(modifiers, finalDefaultStyle),
+        style: this.substyle(modifiers, this.defaultStyle || defaultStyle),
         ref: isStatelessFunction(EnhancedWrappedComponent)
           ? undefined
           : this.setWrappedInstance,

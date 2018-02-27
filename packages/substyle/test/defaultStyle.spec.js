@@ -210,4 +210,16 @@ describe('`defaultStyle` higher-order component factory', () => {
     expect(containerProps).to.not.have.property('className')
     expect(containerProps).to.have.property('data-mapped', 'foobar')
   })
+
+  it('should preserve previous default styles if shouldUpdate function returns false', () => {
+    const MyStyledComponent = defaultStyle(() => ({}), () => [], () => false)(
+      MyComponent
+    )
+    const wrapper = mount(createElement(MyStyledComponent))
+    const { style } = wrapper.find('MyComponent').props()
+    wrapper.setProps({ update: 'yes' })
+
+    const { style: nextStyle } = wrapper.find('MyComponent').props()
+    expect(nextStyle).to.equal(style)
+  })
 })
