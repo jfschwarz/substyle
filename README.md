@@ -202,7 +202,7 @@ Returns a version of the `substyle` higher-order component which is preconfigure
 
 - `mapPropsToModifiers` _(Function: (props) => string[] | Object)_ If specified, the function will be called with props and must return [modifiers](#define-style-modifiers) as an object with modifiers as keys and boolean values or as an array of modifiers.
 
-- `shouldUpdate(): booolean` _(Function: (nextProps, props) => boolean)_ Only useful, if `defaultStyles` parameter is a function. `shouldUpdate` must return `true` if the result of that function will change for the new `props`. This enables some performance optimizations as it prevents unnecessary merges of default styles with user provided inline styles.
+- `shouldUpdate(): boolean` _(Function: (nextProps, props) => boolean)_ Only useful, if `defaultStyles` parameter is a function. `shouldUpdate` must return `true` if the result of that function will change for the new `props`. This enables some performance optimizations as it prevents unnecessary merges of default styles with user provided inline styles.
 
 
 Enhancing a component with the _substyle_ higher-order function injects a function as the `style` prop. This function has properties assigned to it which are supposed to be passed as props to the root element returned by the component's render function.
