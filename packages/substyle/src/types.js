@@ -37,6 +37,8 @@ export type EnhancerFuncT = (
 
 export type DecoratorFuncT = (props: PropsT) => Object
 
+export type ShouldUpdateFuncT = (nextProps: Object, props: Object) => boolean
+
 export type ContextT = {|
   __substyle__enhancer?: EnhancerFuncT,
   __substyle__propsDecorator?: DecoratorFuncT,

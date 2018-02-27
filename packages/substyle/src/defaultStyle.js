@@ -36,10 +36,16 @@ const createDefaultStyle = (
     }
 
     componentWillReceiveProps({ style, className, classNames, ...rest }) {
+      const {
+        style: prevStyle,
+        className: prevClassName,
+        classNames: prevClassNames,
+        ...prevRest
+      } = this.props
       if (
-        style !== this.props.style ||
-        className !== this.props.className ||
-        classNames !== this.props.classNames
+        style !== prevStyle ||
+        className !== prevClassName ||
+        classNames !== prevClassNames
       ) {
         this.substyle = createSubstyle(
           { style, className, classNames },
@@ -48,7 +54,7 @@ const createDefaultStyle = (
       }
 
       if (isFunction(defaultStyle)) {
-        if (shouldUpdate(rest)) {
+        if (shouldUpdate(rest, prevRest)) {
           this.defaultStyle = defaultStyle(rest)
         }
       }
