@@ -1,18 +1,17 @@
 import { expect } from 'chai'
 
 import createPropsDecorator from '../src/createPropsDecorator'
+import hash from '../src/hash'
 
 describe('createPropsDecorator', () => {
   const rules = {}
-  let counter
   const sheetStub = {
     getRule: ruleName => rules[ruleName],
     addRule: ruleName => {
-      counter += 1
       rules[ruleName] = {
         options: {
           classes: {
-            [ruleName]: `${ruleName}-${counter}`,
+            [ruleName]: `${ruleName}`,
           },
         },
       }
@@ -21,18 +20,17 @@ describe('createPropsDecorator', () => {
   }
   const propsDecorator = createPropsDecorator(sheetStub)
 
-  beforeEach(() => {
-    counter = 0
-  })
-
   it('should generate class names based on the hash of default inline styles object', () => {
     const first = propsDecorator({ style: { backgroundColor: 'red' } })
     expect(first).to.not.have.property('style')
-    expect(first).to.have.property('className', '1wtftbl-1')
+    expect(first).to.have.property(
+      'className',
+      hash({ backgroundColor: 'red' })
+    )
 
     const second = propsDecorator({ style: { width: 100 } })
     expect(second).to.not.have.property('style')
-    expect(second).to.have.property('className', 'umgnlr-2')
+    expect(second).to.have.property('className', hash({ width: 100 }))
   })
 
   it('should preserve classNames passed by the user', () => {
@@ -40,14 +38,23 @@ describe('createPropsDecorator', () => {
       className: 'foo',
       style: { backgroundColor: 'red' },
     })
-    expect(result).to.have.property('className', 'foo 1wtftbl-1')
+    expect(result).to.have.property(
+      'className',
+      `foo ${hash({ backgroundColor: 'red' })}`
+    )
   })
 
   it('should not add multiple rules for the same style object', () => {
     const first = propsDecorator({ style: { backgroundColor: 'red' } })
-    expect(first).to.have.property('className', '1wtftbl-1')
+    expect(first).to.have.property(
+      'className',
+      hash({ backgroundColor: 'red' })
+    )
 
     const second = propsDecorator({ style: { backgroundColor: 'red' } })
-    expect(second).to.have.property('className', '1wtftbl-1') // same class name as before
+    expect(second).to.have.property(
+      'className',
+      hash({ backgroundColor: 'red' })
+    ) // same class name as before
   })
 })

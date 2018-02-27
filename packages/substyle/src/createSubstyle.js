@@ -8,7 +8,6 @@ import {
   compact,
   isFunction,
   isPlainObject,
-  isString,
   isArray,
 } from 'lodash'
 import { filter, compose } from 'lodash/fp'
@@ -16,22 +15,10 @@ import { filter, compose } from 'lodash/fp'
 import defaultPropsDecorator from './defaultPropsDecorator'
 import { pickNestedStyles, hoistModifierStylesRecursive } from './pickStyles'
 import { isModifier, isElement } from './filterKeys'
+import coerceSelection from './coerceSelection'
+import memoize from './memoize'
 
 import type { PropsT, KeysT, ClassNamesT } from './types'
-
-const coerceSelectedKeys = (select?: KeysT) => {
-  if (!select) {
-    return []
-  } else if (isString(select)) {
-    return [select]
-  } else if (isPlainObject(select)) {
-    return keys(select).reduce(
-      (acc: Array<string>, key: string) => acc.concat(select[key] ? [key] : []),
-      []
-    )
-  }
-  return select
-}
 
 const guessBaseClassName = (classNames: ?ClassNamesT): ?string => {
   // all class names must start with the same prefix: the component's base class name
@@ -77,8 +64,8 @@ function createSubstyle(
 
   const substyle = styleIsFunction
     ? style
-    : (select?: KeysT, defaultStyle?: Object) => {
-        const selectedKeys = coerceSelectedKeys(select)
+    : memoize((select?: KeysT, defaultStyle?: Object) => {
+        const selectedKeys = coerceSelection(select)
 
         invariant(
           isArray(selectedKeys),
@@ -130,7 +117,7 @@ function createSubstyle(
           },
           propsDecorator
         )
-      }
+      })
 
   const styleProps = {
     ...(styleIsFunction ? style : { style }),

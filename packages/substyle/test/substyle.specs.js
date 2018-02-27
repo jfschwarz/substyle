@@ -52,7 +52,7 @@ describe('substyle', () => {
 
   it('should not return a style when no style has been set in the props', () => {
     const substyle = createSubstyle({})
-    const props = substyle('toggle')
+    const props = { ...substyle('toggle') }
     expect(props).to.not.have.property('style')
   })
 

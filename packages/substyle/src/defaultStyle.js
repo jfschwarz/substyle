@@ -1,7 +1,7 @@
 // @flow
 import { createElement, Component } from 'react'
 import hoistStatics from 'hoist-non-react-statics'
-import { identity, isFunction } from 'lodash'
+import { omit, identity, isFunction } from 'lodash'
 
 import createSubstyle from './createSubstyle'
 import {
@@ -10,37 +10,62 @@ import {
   ENHANCER_CONTEXT_NAME,
   PROPS_DECORATOR_CONTEXT_NAME,
 } from './types'
-import type { PropsT, KeysT } from './types'
+import type { PropsT, KeysT, ShouldUpdateFuncT } from './types'
 
 const isStatelessFunction = Component => !Component.prototype.render
 
 const createDefaultStyle = (
   defaultStyle?: Object | ((props: Object) => Object),
-  getModifiers?: (props: Object) => KeysT
+  getModifiers?: (props: Object) => KeysT,
+  shouldUpdate: ShouldUpdateFuncT = () => true
 ) => (WrappedComponent: ReactClass) => {
   class WithDefaultStyle extends Component<void, PropsT, void> {
     static WrappedComponent: ReactClass
 
     constructor(props, context) {
       super(props, context)
-      this.setWrappedInstance = this.setWrappedInstance.bind(this)
-    }
-
-    render() {
-      const { style, className, classNames, ...rest } = this.props
-
-      const substyle = createSubstyle(
+      const { style, className, classNames, ...rest } = props
+      this.substyle = createSubstyle(
         { style, className, classNames },
         this.context[PROPS_DECORATOR_CONTEXT_NAME]
       )
-      const modifiers = getModifiers && getModifiers(rest)
-      const finalDefaultStyle = isFunction(defaultStyle)
-        ? defaultStyle(rest)
-        : defaultStyle
+      this.setWrappedInstance = this.setWrappedInstance.bind(this)
+      if (isFunction(defaultStyle)) {
+        this.defaultStyle = defaultStyle(rest)
+      }
+    }
 
+    componentWillReceiveProps({ style, className, classNames, ...rest }) {
+      const {
+        style: prevStyle,
+        className: prevClassName,
+        classNames: prevClassNames,
+        ...prevRest
+      } = this.props
+      if (
+        style !== prevStyle ||
+        className !== prevClassName ||
+        classNames !== prevClassNames
+      ) {
+        this.substyle = createSubstyle(
+          { style, className, classNames },
+          this.context[PROPS_DECORATOR_CONTEXT_NAME]
+        )
+      }
+
+      if (isFunction(defaultStyle)) {
+        if (shouldUpdate(rest, prevRest)) {
+          this.defaultStyle = defaultStyle(rest)
+        }
+      }
+    }
+
+    render() {
+      const rest = omit(this.props, ['style', 'className', 'classNames'])
       const EnhancedWrappedComponent = this.getWrappedComponent()
+      const modifiers = getModifiers && getModifiers(rest)
       return createElement(EnhancedWrappedComponent, {
-        style: substyle(modifiers, finalDefaultStyle),
+        style: this.substyle(modifiers, this.defaultStyle || defaultStyle),
         ref: isStatelessFunction(EnhancedWrappedComponent)
           ? undefined
           : this.setWrappedInstance,

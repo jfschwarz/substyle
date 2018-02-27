@@ -1,4 +1,0 @@
-{
-  "extends": "signavio-test",
-  "plugins": ["chai-expect", "mocha"]
-}

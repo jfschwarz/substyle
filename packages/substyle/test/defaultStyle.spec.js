@@ -2,6 +2,7 @@ import { expect } from 'chai'
 import { shallow, mount } from 'enzyme'
 import { createElement, Component } from 'react'
 import PT from 'prop-types'
+import { spy } from 'sinon'
 
 import './utils/dom'
 import defaultStyle from '../src/defaultStyle'
@@ -209,5 +210,32 @@ describe('`defaultStyle` higher-order component factory', () => {
     expect(containerProps).to.not.have.property('style')
     expect(containerProps).to.not.have.property('className')
     expect(containerProps).to.have.property('data-mapped', 'foobar')
+  })
+
+  it('should allow passing a shouldUpdate function which is called with next and current props', () => {
+    const shouldUpdate = spy()
+    const MyStyledComponent = defaultStyle(() => ({}), () => [], shouldUpdate)(
+      MyComponent
+    )
+    const wrapper = mount(createElement(MyStyledComponent, { foo: 'bar' }))
+    wrapper.setProps({ foo: 'baz' })
+
+    expect(shouldUpdate).to.have.been.calledOnce
+    expect(shouldUpdate.lastCall.args).to.deep.equal([
+      { foo: 'baz' },
+      { foo: 'bar' },
+    ])
+  })
+
+  it('should preserve previous default styles if shouldUpdate function returns false', () => {
+    const MyStyledComponent = defaultStyle(() => ({}), () => [], () => false)(
+      MyComponent
+    )
+    const wrapper = mount(createElement(MyStyledComponent))
+    const { style } = wrapper.find('MyComponent').props()
+    wrapper.setProps({ update: 'yes' })
+
+    const { style: nextStyle } = wrapper.find('MyComponent').props()
+    expect(nextStyle).to.equal(style)
   })
 })
