@@ -128,11 +128,12 @@ export default style(Popover)
 
 In many cases you can distinguish between different variants of how a component looks like based on props.
 Each of these variants might have slightly different default styles and users must be able to customize styling
-specifically for each variant. This means each variant needs to be represented by a specific class name and inline
-styles
-For each of these variants the default styles might be
+specifically for each variant. This means each variant needs to be represented by a specific class name and a specific
+set of inline styles.
 
-Qu the values of some props influence the appearance of the component as they
+While default styles can be provided as a function on props, in most cases it is preferrable to keep default styles as
+a static object with the dynamic styling expressed as variants using a nested inline styles definition for each modifier key.
+Following this best practice, all variant-specific styling will always be customizable also via css.
 
 ```javascript
 const styled = defaultStyle({
@@ -186,20 +187,22 @@ Returns an enhanced version of `Component` which supports `style`, `className`, 
 
 #### Arguments
 
-- `Component` _(React component)_
+- `Component` _(React component)_ The component to enhance. This component will be rendered with special `style` prop. It will *not* receive the original `style`, `className`, and `classNames` passed to the enhanced version of the component.
 
 
 There is an additional higher-order component creator function that allows to attach default style definitions for the wrapped component:
 
-#### `defaultStyle([defaultStyles], [mapPropsToModifiers])`
+#### `defaultStyle([defaultStyles], [mapPropsToModifiers], [shouldUpdate])`
 
-`Returns a version of the `substyle` higher-order component which is preconfigured to merge `defaultStyles` with user specified style definitions.
+Returns a version of the `substyle` higher-order component which is preconfigured to merge `defaultStyles` with user specified style definitions.
 
 #### Arguments
 
-- `defaultStyle` _(Object | Function)_ The default style definitions for the component. Also accepts a function mapping component props to an object of default styles.
+- `defaultStyles` _(Object | Function: (props) => Object)_ The default style definitions for the component. Also accepts a function mapping props to an object of default styles.
 
-- `mapPropsToModifiers(): modifiers` _(Function | Object)_ If specified,
+- `mapPropsToModifiers` _(Function: (props) => string[] | Object)_ If specified, the function will be called with props and must return [modifiers](#define-style-modifiers) as an object with modifiers as keys and boolean values or as an array of modifiers.
+
+- `shouldUpdate(): booolean` _(Function: (nextProps, props) => boolean)_ Only useful, if `defaultStyles` parameter is a function. `shouldUpdate` must return `true` if the result of that function will change for the new `props`. This enables some performance optimizations as it prevents unnecessary merges of default styles with user provided inline styles.
 
 
 Enhancing a component with the _substyle_ higher-order function injects a function as the `style` prop. This function has properties assigned to it which are supposed to be passed as props to the root element returned by the component's render function.
