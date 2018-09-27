@@ -121,7 +121,7 @@ const styled = defaultStyle({
     right: 0
   }
 })
-export default style(Popover)
+export default styled(Popover)
 ```
 
 ### Define style modifiers
