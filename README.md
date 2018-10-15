@@ -92,9 +92,9 @@ Select styles for the `<B />` element by calling the `style` prop with the key y
 you pass it down to `<B />` as the `style` prop. This ensures that also all nested inline style definitions for elements inside of `<B />` are passed down.
 
 ```javascript
-const A = (props) => (
-  <div {...props.style}>
-    <B style={props.style('b')} />
+const A = ({ style }) => (
+  <div {...style}>
+    <B style={style('b')} />
     <div {...style('footer')} />
   </div>
 )
