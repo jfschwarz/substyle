@@ -120,7 +120,7 @@ describe('`defaultStyle` higher-order component factory', () => {
     })
   })
 
-  it('should give precendence to styles supplied by the user, regardless the modifiers specificity', () => {
+  it('should give precedence to styles supplied by the user, regardless the modifiers specificity', () => {
     const MyEnhancedComponent = defaultStyle(
       {
         '&readOnly': {
@@ -145,7 +145,7 @@ describe('`defaultStyle` higher-order component factory', () => {
     })
   })
 
-  it('should support depency injection via context for additional HOC to wrap the component', () => {
+  it('should support dependency injection via context for additional HOC to wrap the component', () => {
     const MyStyledComponent = defaultStyle()(MyComponent)
     const wrapInSection = WrappedComponent => props =>
       createElement('section', {}, createElement(WrappedComponent, props))
@@ -199,14 +199,17 @@ describe('`defaultStyle` higher-order component factory', () => {
   it('should support providing a props decorator function via context', () => {
     const MyStyledComponent = defaultStyle()(MyComponent)
     const decorateProps = props => ({
-      ['data-mapped']: 'foobar',
+      'data-mapped': 'foobar',
     })
     const wrapper = mount(createElement(MyStyledComponent), {
       context: {
         [PROPS_DECORATOR_CONTEXT_NAME]: decorateProps,
       },
     })
-    const containerProps = wrapper.find('MyComponent').find('div').props()
+    const containerProps = wrapper
+      .find('MyComponent')
+      .find('div')
+      .props()
     expect(containerProps).to.not.have.property('style')
     expect(containerProps).to.not.have.property('className')
     expect(containerProps).to.have.property('data-mapped', 'foobar')

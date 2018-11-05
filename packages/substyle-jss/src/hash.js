@@ -1,5 +1,4 @@
 // @flow
-/* eslint-disable */
 
 // murmurhash2 via https://gist.github.com/raycmorgan/588423
 function hashString(str: string) {
@@ -40,6 +39,9 @@ function hashString(str: string) {
       h ^= str.charCodeAt(currentIndex)
       h = Umul32(h, m)
       break
+
+    default:
+      break
   }
 
   h ^= h >>> 13
@@ -71,6 +73,6 @@ function Umul32(n, m) {
   return res
 }
 
-export default function hash(object) {
+export default function hash(object: any) {
   return hashString(JSON.stringify(object)).toString(36)
 }

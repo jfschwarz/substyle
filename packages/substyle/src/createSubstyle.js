@@ -1,15 +1,6 @@
 // @flow
 import invariant from 'invariant'
-import {
-  keys,
-  values,
-  merge,
-  assign,
-  compact,
-  isFunction,
-  isPlainObject,
-  isArray,
-} from 'lodash'
+import { keys, values, merge, assign, compact, isPlainObject } from 'lodash'
 import { filter, compose } from 'lodash/fp'
 
 import defaultPropsDecorator from './defaultPropsDecorator'
@@ -18,7 +9,7 @@ import { isModifier, isElement } from './filterKeys'
 import coerceSelection from './coerceSelection'
 import memoize from './memoize'
 
-import type { PropsT, KeysT, ClassNamesT } from './types'
+import type { PropsT, KeysT, ClassNamesT, DecoratorFuncT } from './types'
 
 const guessBaseClassName = (classNames: ?ClassNamesT): ?string => {
   // all class names must start with the same prefix: the component's base class name
@@ -56,72 +47,73 @@ const deriveClassNames = (
 
 function createSubstyle(
   { style, className, classNames }: PropsT,
-  propsDecorator: (props: PropsT) => Object = defaultPropsDecorator
+  propsDecorator: DecoratorFuncT = defaultPropsDecorator
 ) {
-  const styleIsFunction = isFunction(style)
-
   const baseClassName = className || guessBaseClassName(classNames)
 
-  const substyle = styleIsFunction
-    ? style
-    : memoize((select?: KeysT, defaultStyle?: Object) => {
-        const selectedKeys = coerceSelection(select)
+  const substyle =
+    typeof style === 'function'
+      ? style
+      : memoize((select: KeysT, defaultStyle?: Object) => {
+          const selectedKeys = coerceSelection(select)
 
-        invariant(
-          isArray(selectedKeys),
-          'First parameter must be a string, an array of strings, ' +
-            'a plain object with boolean values, or a falsy value.'
-        )
+          invariant(
+            Array.isArray(selectedKeys),
+            'First parameter must be a string, an array of strings, ' +
+              'a plain object with boolean values, or a falsy value.'
+          )
 
-        invariant(
-          !defaultStyle || isPlainObject(defaultStyle),
-          'Optional second parameter must be a plain object.'
-        )
+          invariant(
+            !defaultStyle || isPlainObject(defaultStyle),
+            'Optional second parameter must be a plain object.'
+          )
 
-        const modifierKeys = filter(isModifier, selectedKeys)
-        const elementKeys = filter(isElement, selectedKeys)
+          const modifierKeys = filter(isModifier, selectedKeys)
+          const elementKeys = filter(isElement, selectedKeys)
 
-        const collectElementStyles =
-          elementKeys.length > 0
-            ? (fromStyle: Object) =>
-                values(pickNestedStyles(fromStyle, elementKeys))
-            : (fromStyle: Object) => [fromStyle]
+          const collectElementStyles =
+            elementKeys.length > 0
+              ? (fromStyle: Object) =>
+                  values(pickNestedStyles(fromStyle, elementKeys))
+              : (fromStyle: Object) => [fromStyle]
 
-        const collectSelectedStyles = compose(
-          collectElementStyles,
-          (fromStyle: Object) =>
-            hoistModifierStylesRecursive(fromStyle, modifierKeys)
-        )
+          const collectSelectedStyles = compose(
+            collectElementStyles,
+            (fromStyle: Object) =>
+              hoistModifierStylesRecursive(fromStyle, modifierKeys)
+          )
 
-        const derivedClassNames = deriveClassNames(
-          baseClassName,
-          elementKeys,
-          modifierKeys
-        )
+          const derivedClassNames = deriveClassNames(
+            baseClassName,
+            elementKeys,
+            modifierKeys
+          )
 
-        return createSubstyle(
-          {
-            ...((style || defaultStyle) && {
-              style: merge(
-                {},
-                ...collectSelectedStyles(defaultStyle),
-                ...collectSelectedStyles(style)
-              ),
-            }),
+          return createSubstyle(
+            {
+              ...((style || defaultStyle) && {
+                style: merge(
+                  {},
+                  ...collectSelectedStyles(defaultStyle),
+                  ...collectSelectedStyles(style)
+                ),
+              }),
 
-            ...(derivedClassNames && {
-              className: derivedClassNames.join(' '),
-            }),
+              ...(derivedClassNames && {
+                className: derivedClassNames.join(' '),
+              }),
 
-            ...(classNames && { classNames }),
-          },
-          propsDecorator
-        )
-      })
+              ...(classNames && { classNames }),
+            },
+            propsDecorator
+          )
+        })
 
+  // $FlowFixMe Flow does not believe that also a function can be spread
   const styleProps = {
-    ...(styleIsFunction ? style : { style }),
+    ...(typeof style === 'function' ? style : { style }),
   }
+
   const classNameSplit = [
     ...(styleProps.className ? styleProps.className.split(' ') : []),
     ...(baseClassName ? baseClassName.split(' ') : []),
@@ -136,9 +128,11 @@ function createSubstyle(
 
   const propsForSpread = propsDecorator({
     ...styleProps,
-    ...(mappedClassNames.length > 0 && {
-      className: mappedClassNames.join(' '),
-    }),
+    ...(mappedClassNames.length > 0
+      ? {
+          className: mappedClassNames.join(' '),
+        }
+      : {}),
   })
 
   // assign `style` and/or `className` props to the return function object

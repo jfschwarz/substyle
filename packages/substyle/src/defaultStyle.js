@@ -1,36 +1,51 @@
 // @flow
-import { createElement, Component } from 'react'
+import {
+  createElement,
+  Component,
+  type ComponentType,
+  type ElementType,
+} from 'react'
 import hoistStatics from 'hoist-non-react-statics'
-import { omit, identity, isFunction } from 'lodash'
+import { omit, identity } from 'lodash'
 
 import createSubstyle from './createSubstyle'
 import {
+  type SubstyleT,
+  type EnhancerFuncT,
   PropTypes,
   ContextTypes,
   ENHANCER_CONTEXT_NAME,
   PROPS_DECORATOR_CONTEXT_NAME,
 } from './types'
-import type { PropsT, KeysT, ShouldUpdateFuncT } from './types'
+import type { PropsT, KeysT, ShouldUpdateFuncT, ContextT } from './types'
 
+// $FlowFixMe
 const isStatelessFunction = Component => !Component.prototype.render
 
 const createDefaultStyle = (
   defaultStyle?: Object | ((props: Object) => Object),
   getModifiers?: (props: Object) => KeysT,
   shouldUpdate: ShouldUpdateFuncT = () => true
-) => (WrappedComponent: ReactClass) => {
-  class WithDefaultStyle extends Component<void, PropsT, void> {
-    static WrappedComponent: ReactClass
+) => (WrappedComponent: ComponentType<*>) => {
+  class WithDefaultStyle extends Component<PropsT, void> {
+    static WrappedComponent: ComponentType<*>
+
+    substyle: SubstyleT
+    defaultStyle: Object
+    memoizedEnhance: EnhancerFuncT
+    enhancedWrappedComponent: ComponentType<*>
+    wrappedInstance: ElementType
 
     constructor(props, context) {
       super(props, context)
       const { style, className, classNames, ...rest } = props
+
       this.substyle = createSubstyle(
         { style, className, classNames },
         this.context[PROPS_DECORATOR_CONTEXT_NAME]
       )
-      this.setWrappedInstance = this.setWrappedInstance.bind(this)
-      if (isFunction(defaultStyle)) {
+
+      if (typeof defaultStyle === 'function') {
         this.defaultStyle = defaultStyle(rest)
       }
     }
@@ -53,7 +68,7 @@ const createDefaultStyle = (
         )
       }
 
-      if (isFunction(defaultStyle)) {
+      if (typeof defaultStyle === 'function') {
         if (shouldUpdate(rest, prevRest)) {
           this.defaultStyle = defaultStyle(rest)
         }
@@ -63,7 +78,7 @@ const createDefaultStyle = (
     render() {
       const rest = omit(this.props, ['style', 'className', 'classNames'])
       const EnhancedWrappedComponent = this.getWrappedComponent()
-      const modifiers = getModifiers && getModifiers(rest)
+      const modifiers = getModifiers ? getModifiers(rest) : []
       return createElement(EnhancedWrappedComponent, {
         style: this.substyle(modifiers, this.defaultStyle || defaultStyle),
         ref: isStatelessFunction(EnhancedWrappedComponent)
@@ -96,7 +111,7 @@ const createDefaultStyle = (
       return this.wrappedInstance
     }
 
-    setWrappedInstance(ref) {
+    setWrappedInstance = ref => {
       this.wrappedInstance = ref
     }
   }
