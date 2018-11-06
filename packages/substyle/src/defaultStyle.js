@@ -6,7 +6,7 @@ import {
   type ElementType,
 } from 'react'
 import hoistStatics from 'hoist-non-react-statics'
-import { omit, identity } from 'lodash'
+import { identity } from 'lodash'
 
 import createSubstyle from './createSubstyle'
 import {
@@ -18,9 +18,6 @@ import {
   PROPS_DECORATOR_CONTEXT_NAME,
 } from './types'
 import type { PropsT, KeysT, ShouldUpdateFuncT, ContextT } from './types'
-
-// $FlowFixMe
-const isStatelessFunction = Component => !Component.prototype.render
 
 const createDefaultStyle = (
   defaultStyle?: Object | ((props: Object) => Object),
@@ -38,7 +35,7 @@ const createDefaultStyle = (
 
     constructor(props, context) {
       super(props, context)
-      const { style, className, classNames, ...rest } = props
+      const { style, className, classNames, innerRef: _, ...rest } = props
 
       this.substyle = createSubstyle(
         { style, className, classNames },
@@ -55,6 +52,7 @@ const createDefaultStyle = (
         style: prevStyle,
         className: prevClassName,
         classNames: prevClassNames,
+        innerRef: _,
         ...prevRest
       } = this.props
       if (
@@ -78,14 +76,18 @@ const createDefaultStyle = (
     }
 
     render() {
-      const rest = omit(this.props, ['style', 'className', 'classNames'])
+      const {
+        innerRef,
+        style: _0,
+        className: _1,
+        classNames: _2,
+        ...rest
+      } = this.props
       const EnhancedWrappedComponent = this.getWrappedComponent()
       const modifiers = getModifiers ? getModifiers(rest) : []
       return createElement(EnhancedWrappedComponent, {
         style: this.substyle(modifiers, this.defaultStyle || defaultStyle),
-        ref: isStatelessFunction(EnhancedWrappedComponent)
-          ? undefined
-          : this.setWrappedInstance,
+        ref: innerRef,
         ...rest,
       })
     }
