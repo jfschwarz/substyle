@@ -50,7 +50,7 @@ const createDefaultStyle = (
       }
     }
 
-    componentWillReceiveProps({ style, className, classNames, ...rest }) {
+    shouldComponentUpdate({ style, className, classNames, ...rest }) {
       const {
         style: prevStyle,
         className: prevClassName,
@@ -73,6 +73,8 @@ const createDefaultStyle = (
           this.defaultStyle = defaultStyle(rest)
         }
       }
+
+      return true
     }
 
     render() {
