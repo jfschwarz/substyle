@@ -1,8 +1,6 @@
-import { expect } from 'chai'
 import { shallow, mount } from 'enzyme'
 import { createElement, Component } from 'react'
 import PT from 'prop-types'
-import { spy } from 'sinon'
 
 import './utils/dom'
 import defaultStyle from '../src/defaultStyle'
@@ -25,8 +23,8 @@ describe('`defaultStyle` higher-order component factory', () => {
     const MyEnhancedComponent = defaultStyle({ color: 'red' })(MyComponent)
     const wrapper = shallow(createElement(MyEnhancedComponent))
     const styleProp = wrapper.props().style
-    expect(styleProp).to.be.a.instanceOf(Function)
-    expect(styleProp.style).to.deep.equal({ color: 'red' })
+    expect(styleProp).toBeInstanceOf(Function)
+    expect(styleProp.style).toEqual({ color: 'red' })
   })
 
   it('should merge styles provided by the component user with default styles', () => {
@@ -37,7 +35,7 @@ describe('`defaultStyle` higher-order component factory', () => {
       })
     )
     const styleProp = wrapper.props().style
-    expect(styleProp.style).to.deep.equal({
+    expect(styleProp.style).toEqual({
       color: 'red',
       cursor: 'pointer',
     })
@@ -53,7 +51,7 @@ describe('`defaultStyle` higher-order component factory', () => {
       })
     )
     const styleProp = wrapper.props().style
-    expect(styleProp.style).to.deep.equal({
+    expect(styleProp.style).toEqual({
       color: 'red',
       cursor: 'pointer',
     })
@@ -70,7 +68,7 @@ describe('`defaultStyle` higher-order component factory', () => {
       })
     )
     const styleProp = wrapper.props().style
-    expect(styleProp.style).to.deep.equal({
+    expect(styleProp.style).toEqual({
       color: 'black',
       cursor: 'pointer',
     })
@@ -93,7 +91,7 @@ describe('`defaultStyle` higher-order component factory', () => {
       createElement(MyEnhancedComponent, { readOnly: true })
     )
     const styleProp = wrapper.props().style
-    expect(styleProp.style).to.deep.equal({
+    expect(styleProp.style).toEqual({
       color: 'red',
       opacity: 0.5,
     })
@@ -114,7 +112,7 @@ describe('`defaultStyle` higher-order component factory', () => {
       })
     )
     const styleProp = wrapper.props().style
-    expect(styleProp.style).to.deep.equal({
+    expect(styleProp.style).toEqual({
       color: 'red',
       opacity: 0.5,
     })
@@ -140,7 +138,7 @@ describe('`defaultStyle` higher-order component factory', () => {
       })
     )
     const styleProp = wrapper.props().style
-    expect(styleProp.style).to.deep.equal({
+    expect(styleProp.style).toEqual({
       opacity: 0.7,
     })
   })
@@ -154,7 +152,7 @@ describe('`defaultStyle` higher-order component factory', () => {
         [ENHANCER_CONTEXT_NAME]: wrapInSection,
       },
     })
-    expect(wrapper.get(0).type().type).to.equal('section')
+    expect(wrapper.get(0).type().type).toBe('section')
   })
 
   it('should fix `style` prop type if injected HOC defines (as Radium does)', () => {
@@ -172,7 +170,7 @@ describe('`defaultStyle` higher-order component factory', () => {
         [ENHANCER_CONTEXT_NAME]: wrapInSection,
       },
     })
-    expect(wrapper.find('WrapperComp').type().propTypes.style).to.equal(
+    expect(wrapper.find('WrapperComp').type().propTypes.style).toBe(
       PropTypes.style
     )
   })
@@ -185,15 +183,15 @@ describe('`defaultStyle` higher-order component factory', () => {
     }
     const MyEnhancedClassComponent = defaultStyle()(MyClassComponent)
     const instance = mount(createElement(MyEnhancedClassComponent)).instance()
-    expect(instance.getWrappedInstance).to.be.a('function')
-    expect(instance.getWrappedInstance()).to.be.an.instanceOf(MyClassComponent)
+    expect(typeof instance.getWrappedInstance).toBe('function')
+    expect(instance.getWrappedInstance()).toBeInstanceOf(MyClassComponent)
 
     const MyFunctionComponent = () => createElement('div')
     const MyEnhancedFunctionComponent = defaultStyle()(MyFunctionComponent)
     const instance2 = mount(
       createElement(MyEnhancedFunctionComponent)
     ).instance()
-    expect(instance2.getWrappedInstance()).to.not.exist
+    expect(instance2.getWrappedInstance()).toBeFalsy()
   })
 
   it('should support providing a props decorator function via context', () => {
@@ -210,24 +208,21 @@ describe('`defaultStyle` higher-order component factory', () => {
       .find('MyComponent')
       .find('div')
       .props()
-    expect(containerProps).to.not.have.property('style')
-    expect(containerProps).to.not.have.property('className')
-    expect(containerProps).to.have.property('data-mapped', 'foobar')
+    expect(containerProps).not.toHaveProperty('style')
+    expect(containerProps).not.toHaveProperty('className')
+    expect(containerProps).toHaveProperty('data-mapped', 'foobar')
   })
 
   it('should allow passing a shouldUpdate function which is called with next and current props', () => {
-    const shouldUpdate = spy()
+    const shouldUpdate = jest.fn()
     const MyStyledComponent = defaultStyle(() => ({}), () => [], shouldUpdate)(
       MyComponent
     )
     const wrapper = mount(createElement(MyStyledComponent, { foo: 'bar' }))
     wrapper.setProps({ foo: 'baz' })
 
-    expect(shouldUpdate).to.have.been.calledOnce
-    expect(shouldUpdate.lastCall.args).to.deep.equal([
-      { foo: 'baz' },
-      { foo: 'bar' },
-    ])
+    expect(shouldUpdate).toHaveBeenCalledTimes(1)
+    expect(shouldUpdate).toHaveBeenCalledWith({ foo: 'baz' }, { foo: 'bar' })
   })
 
   it('should preserve previous default styles if shouldUpdate function returns false', () => {
@@ -239,6 +234,6 @@ describe('`defaultStyle` higher-order component factory', () => {
     wrapper.setProps({ update: 'yes' })
 
     const { style: nextStyle } = wrapper.find('MyComponent').props()
-    expect(nextStyle).to.equal(style)
+    expect(nextStyle).toBe(style)
   })
 })

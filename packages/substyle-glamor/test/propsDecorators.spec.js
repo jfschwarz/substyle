@@ -1,5 +1,3 @@
-import { expect } from 'chai'
-
 import {
   decorateAsDataAttributes,
   decorateAsClasses,
@@ -8,8 +6,8 @@ import {
 describe('decorateAsDataAttributes', () => {
   it('should generate some data-* attribute', () => {
     const result = decorateAsDataAttributes({ style: { width: 50 } })
-    expect(result).to.not.have.property('style')
-    expect(result).to.have.property('data-css-rfq0ee')
+    expect(result).not.toHaveProperty('style')
+    expect(result).toHaveProperty('data-css-rfq0ee')
   })
 
   it('should keep className props unchanged', () => {
@@ -17,7 +15,7 @@ describe('decorateAsDataAttributes', () => {
       style: { width: 50 },
       className: 'foo bar',
     })
-    expect(result).to.have.property('className', 'foo bar')
+    expect(result).toHaveProperty('className', 'foo bar')
   })
 
   it('should pick only direct styles', () => {
@@ -31,16 +29,16 @@ describe('decorateAsDataAttributes', () => {
       },
     })
     const sameResult = decorateAsDataAttributes({ style: { width: 50 } })
-    expect(result).to.not.have.property('style')
-    expect(result).to.to.deep.equal(sameResult)
+    expect(result).not.toHaveProperty('style')
+    expect(result).toEqual(sameResult)
   })
 })
 
 describe('decorateAsClasses', () => {
   it('should generate some data-* attribute', () => {
     const result = decorateAsClasses({ style: { width: 50 } })
-    expect(result).to.not.have.property('style')
-    expect(result).to.have.property('className', 'css-rfq0ee')
+    expect(result).not.toHaveProperty('style')
+    expect(result).toHaveProperty('className', 'css-rfq0ee')
   })
 
   it('should merge generated className with passed className prop', () => {
@@ -48,6 +46,6 @@ describe('decorateAsClasses', () => {
       style: { width: 50 },
       className: 'foo bar',
     })
-    expect(result).to.have.property('className', 'foo bar css-rfq0ee')
+    expect(result).toHaveProperty('className', 'foo bar css-rfq0ee')
   })
 })

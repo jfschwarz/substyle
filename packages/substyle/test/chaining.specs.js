@@ -1,5 +1,3 @@
-import { expect } from 'chai'
-
 import createSubstyle from '../src/createSubstyle'
 
 describe('chaining', () => {
@@ -16,7 +14,7 @@ describe('chaining', () => {
     })
 
     const { style } = substyle('first')('second')
-    expect(style).to.deep.equal({
+    expect(style).toEqual({
       cursor: 'pointer',
     })
   })
@@ -33,13 +31,13 @@ describe('chaining', () => {
     }
     const substyle = createSubstyle({ style: myStyle })
     const { style } = substyle('&outer')('&inner')
-    expect(style).to.deep.equal({
+    expect(style).toEqual({
       position: 'absolute',
       cursor: 'pointer',
       color: 'red',
     })
 
     const { style: sameStyle } = substyle(['&outer', '&inner'])
-    expect(sameStyle).to.deep.equal(style)
+    expect(sameStyle).toEqual(style)
   })
 })

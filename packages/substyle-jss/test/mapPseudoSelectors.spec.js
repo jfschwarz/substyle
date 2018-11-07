@@ -1,5 +1,3 @@
-import { expect } from 'chai'
-
 import mapPseudoSelectors from '../src/mapPseudoSelectors'
 
 describe('mapPseudoSelectors', () => {
@@ -14,7 +12,7 @@ describe('mapPseudoSelectors', () => {
           color: 'green',
         },
       })
-    ).to.deep.equal({
+    ).toEqual({
       color: 'red',
       '&:hover': {
         color: 'blue',
