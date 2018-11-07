@@ -25,6 +25,7 @@
     "clean": "lerna run clean",
     "test": "lerna run test --stream",
     "lint": "eslint \"packages/*/{src,test}/**/*.js\"",
-    "format": "prettier --write --no-semi --single-quote --trailing-comma es5 \"packages/**/{src,test}/**/*.js\""
+    "format": "prettier --write --no-semi --single-quote --trailing-comma es5 \"packages/**/{src,test}/**/*.js\"",
+    "publish-packages": "lerna publish"
   }
 }
