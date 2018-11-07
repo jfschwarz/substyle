@@ -6,6 +6,7 @@ import {
   type ElementType,
 } from 'react'
 import hoistStatics from 'hoist-non-react-statics'
+import warning from 'warning'
 import { identity } from 'lodash'
 
 import createSubstyle from './createSubstyle'
@@ -18,6 +19,10 @@ import {
   PROPS_DECORATOR_CONTEXT_NAME,
 } from './types'
 import type { PropsT, KeysT, ShouldUpdateFuncT, ContextT } from './types'
+
+const isStatelessFunction = (Component: ComponentType<*>): boolean =>
+  // $FlowFixMe
+  Component.prototype && !Component.prototype.render
 
 const createDefaultStyle = (
   defaultStyle?: Object | ((props: Object) => Object),
@@ -87,12 +92,15 @@ const createDefaultStyle = (
       const modifiers = getModifiers ? getModifiers(rest) : []
       return createElement(EnhancedWrappedComponent, {
         style: this.substyle(modifiers, this.defaultStyle || defaultStyle),
-        ref: innerRef,
+        ref: isStatelessFunction(EnhancedWrappedComponent)
+          ? undefined
+          : // $FlowFixMe
+            this.setWrappedInstance,
         ...rest,
       })
     }
 
-    getWrappedComponent() {
+    getWrappedComponent(): ComponentType<*> {
       const {
         [ENHANCER_CONTEXT_NAME]: enhance = identity,
       }: ContextT = this.context
@@ -111,12 +119,23 @@ const createDefaultStyle = (
       return this.enhancedWrappedComponent || WrappedComponent
     }
 
-    getWrappedInstance() {
+    getWrappedInstance(): ElementType {
+      warning(
+        true,
+        '`getWrappedInstance()` is deprecated and will be removed with the next major release. ' +
+          'Instead, use the `innerRef` prop to get a ref to the wrapped instance.'
+      )
       return this.wrappedInstance
     }
 
-    setWrappedInstance = ref => {
+    setWrappedInstance = (ref: ElementType): void => {
       this.wrappedInstance = ref
+      const { innerRef } = this.props
+      if (typeof innerRef === 'function') {
+        innerRef(ref)
+      } else if (innerRef && typeof innerRef !== 'string') {
+        innerRef.current = ref
+      }
     }
   }
 
