@@ -1,6 +1,6 @@
 {
   "name": "substyle-glamor",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Use substyled components with glamor",
   "main": "lib/index.js",
   "scripts": {
@@ -15,13 +15,13 @@
     "url": "https://github.com/jfschwarz/substyle/issues"
   },
   "dependencies": {
-    "substyle": "^6.2.1"
+    "substyle": "^6.3.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-register": "^6.26.0",
-    "jest": "^23.6.0",
     "glamor": "^2.20.40",
+    "jest": "^23.6.0",
     "rimraf": "^2.6.1"
   },
   "peerDependencies": {
