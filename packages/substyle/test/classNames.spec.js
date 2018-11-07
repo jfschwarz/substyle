@@ -1,5 +1,3 @@
-import { expect } from 'chai'
-
 import createSubstyle from '../src/createSubstyle'
 
 describe('`classNames` mapping', () => {
@@ -14,12 +12,10 @@ describe('`classNames` mapping', () => {
       },
     })
 
-    expect(substyle.className).to.equal('my-container')
-    expect(substyle('footer').className).to.equal('my-footer')
-    expect(substyle('footer')('button').className).to.equal('my-footer-button')
-    expect(substyle('&readOnly').className).to.equal(
-      'my-container my-container-readOnly'
-    )
+    expect(substyle.className).toBe('my-container')
+    expect(substyle('footer').className).toBe('my-footer')
+    expect(substyle('footer')('button').className).toBe('my-footer-button')
+    expect(substyle('&readOnly').className).toBe('my-container my-container-readOnly')
   })
 
   it('should guess the base class name if no `className` prop is set', () => {
@@ -32,12 +28,10 @@ describe('`classNames` mapping', () => {
       },
     })
 
-    expect(substyle.className).to.equal('my-container')
-    expect(substyle('footer').className).to.equal('my-footer')
-    expect(substyle('footer')('button').className).to.equal('my-footer-button')
-    expect(substyle('&readOnly').className).to.equal(
-      'my-container my-container-readOnly'
-    )
+    expect(substyle.className).toBe('my-container')
+    expect(substyle('footer').className).toBe('my-footer')
+    expect(substyle('footer')('button').className).toBe('my-footer-button')
+    expect(substyle('&readOnly').className).toBe('my-container my-container-readOnly')
   })
 
   it('should not set derived class names when a `classNames` prop is present', () => {
@@ -46,8 +40,8 @@ describe('`classNames` mapping', () => {
       classNames: {},
     })
 
-    expect(substyle.className).to.not.exist
-    expect(substyle('bar').className).to.not.exist
+    expect(substyle.className).toBeFalsy()
+    expect(substyle('bar').className).toBeFalsy()
   })
 
   it('should not set the base className if there is no mapping provided for it', () => {
@@ -59,7 +53,7 @@ describe('`classNames` mapping', () => {
     })
 
     const { className } = substyle('&readOnly')
-    expect(className).to.equal('read-only-container')
+    expect(className).toBe('read-only-container')
   })
 
   it('should support modifier nesting to customize class names for combinations of modifiers', () => {
@@ -73,8 +67,6 @@ describe('`classNames` mapping', () => {
     })
 
     const { className } = substyle(['&readOnly', '&nestedModifier'])
-    expect(className).to.equal(
-      'container container-as-readonly container-as-modified'
-    )
+    expect(className).toBe('container container-as-readonly container-as-modified')
   })
 })

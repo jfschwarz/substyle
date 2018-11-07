@@ -1,5 +1,3 @@
-import { expect } from 'chai'
-import { spy } from 'sinon'
 import { mount } from 'enzyme'
 import { createElement } from 'react'
 
@@ -13,18 +11,18 @@ describe('<EnhancerProvider />', () => {
   let getChildContext
 
   beforeEach(() => {
-    getChildContext = spy(EnhancerProvider.prototype, 'getChildContext')
+    getChildContext = jest.spyOn(EnhancerProvider.prototype, 'getChildContext')
   })
 
   afterEach(() => {
-    getChildContext.restore()
+    getChildContext.mockRestore()
   })
 
   it('should set up a context providing the passed enhancer function', () => {
     const enhancer = WrappedComponent => WrappedComponent
     mount(createElement(EnhancerProvider, { enhancer }, createElement('div')))
-    expect(getChildContext.called).to.be.true
-    expect(getChildContext.lastCall.returnValue).to.deep.equal({
+    expect(getChildContext).toHaveBeenCalled()
+    expect(getChildContext).toHaveReturnedWith({
       [ENHANCER_CONTEXT_NAME]: enhancer,
       [PROPS_DECORATOR_CONTEXT_NAME]: undefined,
     })
@@ -35,8 +33,8 @@ describe('<EnhancerProvider />', () => {
     mount(
       createElement(EnhancerProvider, { propsDecorator }, createElement('div'))
     )
-    expect(getChildContext.called).to.be.true
-    expect(getChildContext.lastCall.returnValue).to.deep.equal({
+    expect(getChildContext).toHaveBeenCalled()
+    expect(getChildContext).toHaveReturnedWith({
       [ENHANCER_CONTEXT_NAME]: undefined,
       [PROPS_DECORATOR_CONTEXT_NAME]: propsDecorator,
     })

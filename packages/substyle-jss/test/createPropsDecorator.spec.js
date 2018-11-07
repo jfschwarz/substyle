@@ -1,5 +1,3 @@
-import { expect } from 'chai'
-
 import createPropsDecorator from '../src/createPropsDecorator'
 import hash from '../src/hash'
 
@@ -22,15 +20,12 @@ describe('createPropsDecorator', () => {
 
   it('should generate class names based on the hash of default inline styles object', () => {
     const first = propsDecorator({ style: { backgroundColor: 'red' } })
-    expect(first).to.not.have.property('style')
-    expect(first).to.have.property(
-      'className',
-      hash({ backgroundColor: 'red' })
-    )
+    expect(first).not.toHaveProperty('style')
+    expect(first).toHaveProperty('className', hash({ backgroundColor: 'red' }))
 
     const second = propsDecorator({ style: { width: 100 } })
-    expect(second).to.not.have.property('style')
-    expect(second).to.have.property('className', hash({ width: 100 }))
+    expect(second).not.toHaveProperty('style')
+    expect(second).toHaveProperty('className', hash({ width: 100 }))
   })
 
   it('should preserve classNames passed by the user', () => {
@@ -38,23 +33,14 @@ describe('createPropsDecorator', () => {
       className: 'foo',
       style: { backgroundColor: 'red' },
     })
-    expect(result).to.have.property(
-      'className',
-      `foo ${hash({ backgroundColor: 'red' })}`
-    )
+    expect(result).toHaveProperty('className', `foo ${hash({ backgroundColor: 'red' })}`)
   })
 
   it('should not add multiple rules for the same style object', () => {
     const first = propsDecorator({ style: { backgroundColor: 'red' } })
-    expect(first).to.have.property(
-      'className',
-      hash({ backgroundColor: 'red' })
-    )
+    expect(first).toHaveProperty('className', hash({ backgroundColor: 'red' }))
 
     const second = propsDecorator({ style: { backgroundColor: 'red' } })
-    expect(second).to.have.property(
-      'className',
-      hash({ backgroundColor: 'red' })
-    ) // same class name as before
+    expect(second).toHaveProperty('className', hash({ backgroundColor: 'red' })) // same class name as before
   })
 })

@@ -1,5 +1,5 @@
 {
-  "devDependencies": {
+  "dependencies": {
     "babel-core": "^6.18.0",
     "babel-eslint": "^8.2.2",
     "babel-plugin-add-module-exports": "^0.2.1",
@@ -13,7 +13,7 @@
     "eslint-plugin-import": "^2.6.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-react": "^7.1.0",
-    "flow-bin": "^0.66.0",
+    "flow-bin": "^0.85.0",
     "lerna": "^2.0.0",
     "prettier": "^1.5.3",
     "react": "^16.0.0",

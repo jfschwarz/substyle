@@ -1,4 +1,3 @@
-import { expect } from 'chai'
 import { createElement } from 'react'
 
 import injectSubstyle from '../src/index'
@@ -8,6 +7,6 @@ describe('default export', () => {
     const MyComp = ({ style }) => createElement('div', { ...style })
     const MyEnhancedComponent = injectSubstyle(MyComp)
 
-    expect(MyEnhancedComponent.displayName).to.equal('withDefaultStyle(MyComp)')
+    expect(MyEnhancedComponent.displayName).toBe('withDefaultStyle(MyComp)')
   })
 })

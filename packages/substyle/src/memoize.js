@@ -1,11 +1,11 @@
 // @flow
 import coerceSelection from './coerceSelection'
-import { SubstyleT } from './types'
+import type { SubstyleT, KeysT } from './types'
 
 const EMPTY = {}
 
-const memoize = (substyle: SubstyleT) => (
-  select?: KeysT,
+const memoize = (substyle: SubstyleT): SubstyleT => (
+  select: KeysT,
   defaultStyle?: Object
 ) => {
   const cacheKey = defaultStyle || EMPTY
@@ -20,7 +20,7 @@ const memoize = (substyle: SubstyleT) => (
   const selectHash = coerceSelection(select).join(' ')
   return selectHash in mapEntry
     ? mapEntry[selectHash]
-    : (mapEntry[selectHash] = substyle(select, defaultStyle))
+    : (mapEntry[selectHash] = substyle(select || [], defaultStyle))
 }
 
 export default memoize

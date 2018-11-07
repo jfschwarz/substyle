@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rimraf lib",
     "build": "babel src --out-dir lib",
-    "test": "NODE_ENV=test mocha",
+    "test": "jest",
     "prepublish": "npm run test && npm run clean && npm run build"
   },
   "repository": {
@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/jfschwarz/substyle#readme",
   "dependencies": {
-    "hoist-non-react-statics": "^1.2.0",
+    "hoist-non-react-statics": "^3.1.0",
     "invariant": "^2.2.0",
     "lodash": "^4.3.0",
     "prop-types": "^15.5.8",
@@ -41,14 +41,15 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-register": "^6.26.0",
-    "chai": "^3.5.0",
-    "enzyme": "^3.1.0",
-    "enzyme-adapter-react-16": "^1.0.1",
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0",
+    "jest": "^23.6.0",
     "jsdom": "^9.10.0",
     "mocha": "^3.5.0",
-    "react-addons-test-utils": "^15.6.2",
-    "react-test-renderer": "^16.0.0",
     "rimraf": "^2.6.1",
     "sinon": "^3.2.1"
+  },
+  "jest": {
+    "setupTestFrameworkScriptFile": "<rootDir>test/setup.js"
   }
 }

@@ -23,12 +23,17 @@ export type PropsT = {
   style?: StyleT,
   className?: string,
   classNames?: ClassNamesT,
+  innerRef?: React.Ref<*>,
 }
 
 export const PropTypes = {
   style: StylePT,
   className: PT.string,
   classNames: ClassNamesPT,
+  innerRef: PT.oneOfType([
+    PT.func,
+    PT.shape({ current: PT.instanceOf(Element) }),
+  ]),
 }
 
 export type EnhancerFuncT = (

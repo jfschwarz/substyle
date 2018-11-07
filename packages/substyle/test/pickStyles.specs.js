@@ -1,4 +1,3 @@
-import { expect } from 'chai'
 import { hoistModifierStylesRecursive } from '../src/pickStyles'
 
 describe('hoistModifierStylesRecursive', () => {
@@ -12,7 +11,7 @@ describe('hoistModifierStylesRecursive', () => {
     }
 
     const result = hoistModifierStylesRecursive(myStyle, ['&selected'])
-    expect(result).to.deep.equal({
+    expect(result).toEqual({
       '&unselected': {
         top: 1,
       },
@@ -30,7 +29,7 @@ describe('hoistModifierStylesRecursive', () => {
       },
     }
     const result = hoistModifierStylesRecursive(myStyle, ['&selected'])
-    expect(result).to.deep.equal({
+    expect(result).toEqual({
       position: 'absolute',
       cursor: 'pointer',
       '&unselected': {
@@ -53,8 +52,8 @@ describe('hoistModifierStylesRecursive', () => {
       },
     }
     const result = hoistModifierStylesRecursive(myStyle, ['&selected'])
-    expect(result.nested).to.not.equal(nested1)
-    expect(result.nested).to.not.equal(nested2)
-    expect(result.nested).to.not.equal(nested3)
+    expect(result.nested).not.toBe(nested1)
+    expect(result.nested).not.toBe(nested2)
+    expect(result.nested).not.toBe(nested3)
   })
 })
