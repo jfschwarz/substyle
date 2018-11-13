@@ -47,7 +47,7 @@ export const omit = (obj, keys: string[]) => {
   return other;
 }
 
-export const isPlainObject = obj => !(obj instanceof Date) && obj === Object(obj) && !Array.isArray(obj);
+export const isPlainObject = obj => obj === Object(obj) && !(obj instanceof Date) && !Array.isArray(obj);
 
 export const compact = (arr) => {
   return (arr || []).filter(Boolean)
