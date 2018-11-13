@@ -31,7 +31,6 @@
   "dependencies": {
     "hoist-non-react-statics": "^3.1.0",
     "invariant": "^2.2.0",
-    "lodash": "^4.3.0",
     "prop-types": "^15.5.8",
     "warning": "^2.1.0"
   },
