@@ -76,7 +76,7 @@ function createSubstyle(
                   values(pickNestedStyles(fromStyle, elementKeys))
               : (fromStyle: Object) => [fromStyle]
 
-          const collectSelectedStyles = (fromStyle: Object) => {
+          const collectSelectedStyles = (fromStyle: Object = {}) => {
             return collectElementStyles(
               hoistModifierStylesRecursive(fromStyle, modifierKeys)
             )
