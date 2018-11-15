@@ -32,7 +32,9 @@ export const PropTypes = {
   classNames: ClassNamesPT,
   innerRef: PT.oneOfType([
     PT.func,
-    PT.shape({ current: PT.instanceOf(Element) }),
+    PT.shape({
+      current: typeof Element === 'undefined' ? PT.any : PT.instanceOf(Element),
+    }),
   ]),
 }
 
