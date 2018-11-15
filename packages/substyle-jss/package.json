@@ -1,6 +1,6 @@
 {
   "name": "substyle-jss",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Use substyled components with JSS",
   "main": "lib/index.js",
   "scripts": {
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "hoist-non-react-statics": "^2.3.1",
-    "substyle": "^6.3.0"
+    "substyle": "^6.3.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
