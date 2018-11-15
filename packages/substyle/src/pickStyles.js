@@ -1,4 +1,4 @@
-import { keys, merge, omit, values, filter } from 'lodash'
+import { keys, merge, omit, values } from './utils'
 
 import { isModifier } from './filterKeys'
 
@@ -49,7 +49,7 @@ export const hoistModifierStylesRecursive = (style, modifierKeysToPick) => {
   )
 
   // traverse nested styled for ALL modifiers
-  const modifierKeys = filter(keys(result), isModifier)
+  const modifierKeys = keys(result).filter(isModifier)
   for (let i = 0, l = modifierKeys.length; i < l; i += 1) {
     const key = modifierKeys[i]
     const subresult = hoistModifierStylesRecursive(

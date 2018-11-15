@@ -7,7 +7,7 @@ import {
 } from 'react'
 import hoistStatics from 'hoist-non-react-statics'
 import warning from 'warning'
-import { identity } from 'lodash'
+import { identity } from './utils'
 
 import createSubstyle from './createSubstyle'
 import {

@@ -1,4 +1,6 @@
-import { keys } from 'lodash'
+const keys = (obj) => {
+  return obj === Object(obj) ? Object.keys(obj) : []
+}
 
 const mapKey = key => (key[0] === ':' ? `&${key}` : key)
 

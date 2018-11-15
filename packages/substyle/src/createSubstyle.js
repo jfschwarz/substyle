@@ -1,7 +1,6 @@
 // @flow
 import invariant from 'invariant'
-import { keys, values, merge, assign, compact, isPlainObject } from 'lodash'
-import { filter, compose } from 'lodash/fp'
+import { keys, values, merge, assign, compact, isPlainObject } from './utils'
 
 import defaultPropsDecorator from './defaultPropsDecorator'
 import { pickNestedStyles, hoistModifierStylesRecursive } from './pickStyles'
@@ -68,8 +67,8 @@ function createSubstyle(
             'Optional second parameter must be a plain object.'
           )
 
-          const modifierKeys = filter(isModifier, selectedKeys)
-          const elementKeys = filter(isElement, selectedKeys)
+          const modifierKeys = selectedKeys.filter(isModifier)
+          const elementKeys = selectedKeys.filter(isElement)
 
           const collectElementStyles =
             elementKeys.length > 0
@@ -77,11 +76,11 @@ function createSubstyle(
                   values(pickNestedStyles(fromStyle, elementKeys))
               : (fromStyle: Object) => [fromStyle]
 
-          const collectSelectedStyles = compose(
-            collectElementStyles,
-            (fromStyle: Object) =>
+          const collectSelectedStyles = (fromStyle: Object = {}) => {
+            return collectElementStyles(
               hoistModifierStylesRecursive(fromStyle, modifierKeys)
-          )
+            )
+          }
 
           const derivedClassNames = deriveClassNames(
             baseClassName,
