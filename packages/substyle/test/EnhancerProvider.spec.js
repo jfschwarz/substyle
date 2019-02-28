@@ -1,8 +1,8 @@
 import { mount } from 'enzyme'
-import { createElement } from 'react'
+import React, { createElement } from 'react'
 import { spy } from 'sinon'
 
-import EnhancerProvider from '../src/EnhancerProvider'
+import EnhancerProvider, { EnhancerConsumer } from '../src/EnhancerProvider'
 import {
   ENHANCER_CONTEXT_NAME,
   PROPS_DECORATOR_CONTEXT_NAME,
@@ -10,34 +10,45 @@ import {
 
 describe('<EnhancerProvider />', () => {
   let getChildContext
-
-  beforeEach(() => {
-    getChildContext = jest.spyOn(EnhancerProvider.prototype, 'getChildContext')
-  })
-
-  afterEach(() => {
-    getChildContext.mockRestore()
-  })
+  const TestComponent = () => <div />
 
   it('should set up a context providing the passed enhancer function', () => {
     const enhancer = WrappedComponent => WrappedComponent
-    mount(createElement(EnhancerProvider, { enhancer }, createElement('div')))
-    expect(getChildContext).toHaveBeenCalled()
-    expect(getChildContext).toHaveReturnedWith({
-      [ENHANCER_CONTEXT_NAME]: enhancer,
-      [PROPS_DECORATOR_CONTEXT_NAME]: undefined,
-    })
+
+    const Component = () => (
+      <EnhancerProvider enhancer={enhancer}>
+        <EnhancerConsumer>
+          {({ enhancer }) => <TestComponent enhancer={enhancer} />}
+        </EnhancerConsumer>
+      </EnhancerProvider>
+    )
+
+    const component = mount(<Component />)
+
+    expect(component.find(TestComponent).props()).toHaveProperty(
+      'enhancer',
+      enhancer
+    )
   })
 
   it('should set up a context providing the passed propsDecorator function', () => {
     const propsDecorator = props => ({ ...props, foo: 'bar' })
-    mount(
-      createElement(EnhancerProvider, { propsDecorator }, createElement('div'))
+
+    const Component = () => (
+      <EnhancerProvider propsDecorator={propsDecorator}>
+        <EnhancerConsumer>
+          {({ propsDecorator }) => (
+            <TestComponent propsDecorator={propsDecorator} />
+          )}
+        </EnhancerConsumer>
+      </EnhancerProvider>
     )
-    expect(getChildContext).toHaveBeenCalled()
-    expect(getChildContext).toHaveReturnedWith({
-      [ENHANCER_CONTEXT_NAME]: undefined,
-      [PROPS_DECORATOR_CONTEXT_NAME]: propsDecorator,
-    })
+
+    const component = mount(<Component />)
+
+    expect(component.find(TestComponent).props()).toHaveProperty(
+      'propsDecorator',
+      propsDecorator
+    )
   })
 })

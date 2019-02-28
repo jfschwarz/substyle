@@ -1,40 +1,37 @@
 import { mount, shallow } from 'enzyme'
 import PT from 'prop-types'
-import { Component, createElement } from 'react'
+import React, { Component, createElement } from 'react'
 
+import EnhancerProvider from '../src/EnhancerProvider'
 import createSubstyle from '../src/createSubstyle'
 import defaultStyle from '../src/defaultStyle'
-import {
-  ENHANCER_CONTEXT_NAME,
-  PROPS_DECORATOR_CONTEXT_NAME,
-  PropTypes,
-} from '../src/types'
+import { PropTypes } from '../src/types'
 
 describe('`defaultStyle` higher-order component factory', () => {
-  const MyComponent = ({ style, ...rest }) =>
-    createElement(
-      'div',
-      { ...style, ...rest },
-      createElement('span', { ...style('nested') })
-    )
+  const MyComponent = ({ style, ...rest }) => (
+    <div {...style} {...rest}>
+      <span {...style('nested')} />
+    </div>
+  )
+
+  const getStyleProp = wrapper => wrapper.find(MyComponent).prop('style')
 
   it('should inject a substyle instance for the `style` prop', () => {
     const MyEnhancedComponent = defaultStyle({ color: 'red' })(MyComponent)
-    const wrapper = shallow(createElement(MyEnhancedComponent))
-    const styleProp = wrapper.props().style
+    const wrapper = mount(<MyEnhancedComponent />)
+    const styleProp = getStyleProp(wrapper)
+
     expect(styleProp).toBeInstanceOf(Function)
     expect(styleProp.style).toEqual({ color: 'red' })
   })
 
   it('should merge styles provided by the component user with default styles', () => {
     const MyEnhancedComponent = defaultStyle({ color: 'red' })(MyComponent)
-    const wrapper = shallow(
-      createElement(MyEnhancedComponent, {
-        style: { cursor: 'pointer' },
-      })
-    )
-    const styleProp = wrapper.props().style
-    expect(styleProp.style).toEqual({
+    const wrapper = mount(<MyEnhancedComponent style={{ cursor: 'pointer' }} />)
+
+    const styleProp = getStyleProp(wrapper).style
+
+    expect(styleProp).toEqual({
       color: 'red',
       cursor: 'pointer',
     })
@@ -42,14 +39,15 @@ describe('`defaultStyle` higher-order component factory', () => {
 
   it('should also work if a substyle instance is provided as `style`', () => {
     const MyEnhancedComponent = defaultStyle({ color: 'red' })(MyComponent)
-    const wrapper = shallow(
-      createElement(MyEnhancedComponent, {
-        style: createSubstyle({
+    const wrapper = mount(
+      <MyEnhancedComponent
+        style={createSubstyle({
           style: { cursor: 'pointer' },
-        }),
-      })
+        })}
+      />
     )
-    const styleProp = wrapper.props().style
+    const styleProp = getStyleProp(wrapper)
+
     expect(styleProp.style).toEqual({
       color: 'red',
       cursor: 'pointer',
@@ -60,13 +58,12 @@ describe('`defaultStyle` higher-order component factory', () => {
     const MyEnhancedComponent = defaultStyle(props => ({ color: props.color }))(
       MyComponent
     )
-    const wrapper = shallow(
-      createElement(MyEnhancedComponent, {
-        style: { cursor: 'pointer' },
-        color: 'black',
-      })
+
+    const wrapper = mount(
+      <MyEnhancedComponent style={{ cursor: 'pointer' }} color="black" />
     )
-    const styleProp = wrapper.props().style
+    const styleProp = getStyleProp(wrapper)
+
     expect(styleProp.style).toEqual({
       color: 'black',
       cursor: 'pointer',
@@ -86,10 +83,9 @@ describe('`defaultStyle` higher-order component factory', () => {
         '&readOnly': props.readOnly,
       })
     )(MyComponent)
-    const wrapper = shallow(
-      createElement(MyEnhancedComponent, { readOnly: true })
-    )
-    const styleProp = wrapper.props().style
+    const wrapper = mount(<MyEnhancedComponent readOnly />)
+    const styleProp = getStyleProp(wrapper)
+
     expect(styleProp.style).toEqual({
       color: 'red',
       opacity: 0.5,
@@ -100,17 +96,18 @@ describe('`defaultStyle` higher-order component factory', () => {
     const MyEnhancedComponent = defaultStyle({ color: 'red' }, props => ({
       '&readOnly': props.readOnly,
     }))(MyComponent)
-    const wrapper = shallow(
-      createElement(MyEnhancedComponent, {
-        readOnly: true,
-        style: {
+
+    const wrapper = mount(
+      <MyEnhancedComponent
+        readOnly
+        style={{
           '&readOnly': {
             opacity: 0.5,
           },
-        },
-      })
+        }}
+      />
     )
-    const styleProp = wrapper.props().style
+    const styleProp = getStyleProp(wrapper)
     expect(styleProp.style).toEqual({
       color: 'red',
       opacity: 0.5,
@@ -128,15 +125,16 @@ describe('`defaultStyle` higher-order component factory', () => {
         '&readOnly': props.readOnly,
       })
     )(MyComponent)
-    const wrapper = shallow(
-      createElement(MyEnhancedComponent, {
-        readOnly: true,
-        style: {
+
+    const wrapper = mount(
+      <MyEnhancedComponent
+        readOnly
+        style={{
           opacity: 0.7,
-        },
-      })
+        }}
+      />
     )
-    const styleProp = wrapper.props().style
+    const styleProp = getStyleProp(wrapper)
     expect(styleProp.style).toEqual({
       opacity: 0.7,
     })
@@ -144,31 +142,42 @@ describe('`defaultStyle` higher-order component factory', () => {
 
   it('should support dependency injection via context for additional HOC to wrap the component', () => {
     const MyStyledComponent = defaultStyle()(MyComponent)
-    const wrapInSection = WrappedComponent => props =>
-      createElement('section', {}, createElement(WrappedComponent, props))
-    const wrapper = shallow(createElement(MyStyledComponent), {
-      context: {
-        [ENHANCER_CONTEXT_NAME]: wrapInSection,
-      },
-    })
-    expect(wrapper.get(0).type().type).toEqual('section')
+
+    const wrapInSection = WrappedComponent => props => (
+      <section>
+        <WrappedComponent {...props} />
+      </section>
+    )
+
+    const wrapper = mount(
+      <EnhancerProvider enhancer={wrapInSection}>
+        <MyStyledComponent />
+      </EnhancerProvider>
+    )
+
+    expect(wrapper.find('section')).toExist()
+    expect(wrapper.find('section').find(MyComponent)).toExist()
   })
 
   it('should fix `style` prop type if injected HOC defines (as Radium does)', () => {
     const MyStyledComponent = defaultStyle()(MyComponent)
     const wrapInSection = WrappedComponent => {
-      const WrapperComp = props =>
-        createElement('section', {}, createElement(WrappedComponent, props))
+      const WrapperComp = props => (
+        <section>
+          <WrappedComponent {...props} />
+        </section>
+      )
+
       WrapperComp.propTypes = {
         style: PT.array,
       }
       return WrapperComp
     }
-    const wrapper = mount(createElement(MyStyledComponent), {
-      context: {
-        [ENHANCER_CONTEXT_NAME]: wrapInSection,
-      },
-    })
+    const wrapper = mount(
+      <EnhancerProvider enhancer={wrapInSection}>
+        <MyStyledComponent />
+      </EnhancerProvider>
+    )
     expect(wrapper.find('WrapperComp').type().propTypes.style).toEqual(
       PropTypes.style
     )
@@ -198,11 +207,11 @@ describe('`defaultStyle` higher-order component factory', () => {
     const decorateProps = props => ({
       'data-mapped': 'foobar',
     })
-    const wrapper = mount(createElement(MyStyledComponent), {
-      context: {
-        [PROPS_DECORATOR_CONTEXT_NAME]: decorateProps,
-      },
-    })
+    const wrapper = mount(
+      <EnhancerProvider propsDecorator={decorateProps}>
+        <MyStyledComponent />
+      </EnhancerProvider>
+    )
     const containerProps = wrapper
       .find('MyComponent')
       .find('div')

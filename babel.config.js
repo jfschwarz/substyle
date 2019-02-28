@@ -21,6 +21,7 @@ module.exports = {
   plugins: [
     '@babel/transform-runtime',
     '@babel/plugin-transform-flow-strip-types',
+    '@babel/plugin-proposal-class-properties',
 
     'lodash',
   ],

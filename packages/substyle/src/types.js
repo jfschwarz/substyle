@@ -2,9 +2,6 @@
 import PT from 'prop-types'
 import * as React from 'react'
 
-export const ENHANCER_CONTEXT_NAME = '__substyle__enhancer'
-export const PROPS_DECORATOR_CONTEXT_NAME = '__substyle__propsDecorator'
-
 export type KeysT = string | Array<string> | { [string]: boolean }
 
 export type SubstyleT = (select: KeysT, defaultStyle?: Object) => SubstyleT
@@ -45,13 +42,3 @@ export type EnhancerFuncT = (
 export type DecoratorFuncT = (props: PropsT) => Object
 
 export type ShouldUpdateFuncT = (nextProps: Object, props: Object) => boolean
-
-export type ContextT = {|
-  __substyle__enhancer?: EnhancerFuncT,
-  __substyle__propsDecorator?: DecoratorFuncT,
-|}
-
-export const ContextTypes = {
-  [ENHANCER_CONTEXT_NAME]: PT.func,
-  [PROPS_DECORATOR_CONTEXT_NAME]: PT.func,
-}

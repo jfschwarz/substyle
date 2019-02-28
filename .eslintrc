@@ -1,7 +1,4 @@
 {
-<<<<<<< HEAD
-  "extends": "react-app"
-=======
   "extends": "react-app",
   "settings": {
     "react": {
@@ -9,5 +6,4 @@
       "flowVersion": "0.93.0"
     }
   }
->>>>>>> updated dependencies and test setup
 }
