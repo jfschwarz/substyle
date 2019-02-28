@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<testsuites disabled="0" errors="0" failures="0" tests="2" time="0.084">
- <testsuite name="&lt;EnhancerProvider /&gt;" timestamp="2019-02-28T14:21:02" hostname="localhost" time="0.084" errors="0" tests="2" skipped="0" disabled="0" failures="0">
-  <testcase classname="&lt;EnhancerProvider /&gt;" name="should set up a context providing the passed enhancer function" time="0.078" />
-  <testcase classname="&lt;EnhancerProvider /&gt;" name="should set up a context providing the passed propsDecorator function" time="0.005" />
- </testsuite>
-</testsuites>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<testsuites disabled="0" errors="0" failures="0" tests="3" time="0.01">
- <testsuite name="createPropsDecorator" timestamp="2019-02-28T14:52:39" hostname="localhost" time="0.01" errors="0" tests="3" skipped="0" disabled="0" failures="0">
-  <testcase classname="createPropsDecorator" name="should generate class names based on the hash of default inline styles object" time="0.008" />
-  <testcase classname="createPropsDecorator" name="should preserve classNames passed by the user" time="0" />
-  <testcase classname="createPropsDecorator" name="should not add multiple rules for the same style object" time="0.001" />
- </testsuite>
-</testsuites>

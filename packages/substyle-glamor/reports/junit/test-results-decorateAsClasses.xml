@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<testsuites disabled="0" errors="0" failures="0" tests="2" time="0.002">
- <testsuite name="decorateAsClasses" timestamp="2019-02-28T14:38:39" hostname="localhost" time="0.002" errors="0" tests="2" skipped="0" disabled="0" failures="0">
-  <testcase classname="decorateAsClasses" name="should generate some data-* attribute" time="0.001" />
-  <testcase classname="decorateAsClasses" name="should merge generated className with passed className prop" time="0.001" />
- </testsuite>
-</testsuites>

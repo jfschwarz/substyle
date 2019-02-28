@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<testsuites disabled="0" errors="0" failures="0" tests="1" time="0.008">
- <testsuite name="mapPseudoSelectors" timestamp="2019-02-28T14:52:38" hostname="localhost" time="0.008" errors="0" tests="1" skipped="0" disabled="0" failures="0">
-  <testcase classname="mapPseudoSelectors" name="should prepend `&amp;` chars to pseudo selector keys" time="0.007" />
- </testsuite>
-</testsuites>
