@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites disabled="0" errors="0" failures="0" tests="3" time="0.012">
+ <testsuite name="decorateAsDataAttributes" timestamp="2019-02-28T14:38:39" hostname="localhost" time="0.012" errors="0" tests="3" skipped="0" disabled="0" failures="0">
+  <testcase classname="decorateAsDataAttributes" name="should generate some data-* attribute" time="0.008" />
+  <testcase classname="decorateAsDataAttributes" name="should keep className props unchanged" time="0.002" />
+  <testcase classname="decorateAsDataAttributes" name="should pick only direct styles" time="0.001" />
+ </testsuite>
+</testsuites>

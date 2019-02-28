@@ -1,10 +1,9 @@
-import { shallow, mount } from 'enzyme'
-import { createElement, Component } from 'react'
+import { mount, shallow } from 'enzyme'
 import PT from 'prop-types'
+import { Component, createElement } from 'react'
 
-import './utils/dom'
-import defaultStyle from '../src/defaultStyle'
 import createSubstyle from '../src/createSubstyle'
+import defaultStyle from '../src/defaultStyle'
 import {
   ENHANCER_CONTEXT_NAME,
   PROPS_DECORATOR_CONTEXT_NAME,
@@ -152,7 +151,7 @@ describe('`defaultStyle` higher-order component factory', () => {
         [ENHANCER_CONTEXT_NAME]: wrapInSection,
       },
     })
-    expect(wrapper.get(0).type().type).toBe('section')
+    expect(wrapper.get(0).type().type).toEqual('section')
   })
 
   it('should fix `style` prop type if injected HOC defines (as Radium does)', () => {
@@ -170,7 +169,7 @@ describe('`defaultStyle` higher-order component factory', () => {
         [ENHANCER_CONTEXT_NAME]: wrapInSection,
       },
     })
-    expect(wrapper.find('WrapperComp').type().propTypes.style).toBe(
+    expect(wrapper.find('WrapperComp').type().propTypes.style).toEqual(
       PropTypes.style
     )
   })
@@ -183,7 +182,7 @@ describe('`defaultStyle` higher-order component factory', () => {
     }
     const MyEnhancedClassComponent = defaultStyle()(MyClassComponent)
     const instance = mount(createElement(MyEnhancedClassComponent)).instance()
-    expect(typeof instance.getWrappedInstance).toBe('function')
+    expect(typeof instance.getWrappedInstance).toEqual('function')
     expect(instance.getWrappedInstance()).toBeInstanceOf(MyClassComponent)
 
     const MyFunctionComponent = () => createElement('div')
@@ -191,7 +190,7 @@ describe('`defaultStyle` higher-order component factory', () => {
     const instance2 = mount(
       createElement(MyEnhancedFunctionComponent)
     ).instance()
-    expect(instance2.getWrappedInstance()).toBeFalsy()
+    expect(instance2.getWrappedInstance()).not.toBeDefined()
   })
 
   it('should support providing a props decorator function via context', () => {

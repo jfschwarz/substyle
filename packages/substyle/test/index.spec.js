@@ -7,6 +7,6 @@ describe('default export', () => {
     const MyComp = ({ style }) => createElement('div', { ...style })
     const MyEnhancedComponent = injectSubstyle(MyComp)
 
-    expect(MyEnhancedComponent.displayName).toBe('withDefaultStyle(MyComp)')
+    expect(MyEnhancedComponent.displayName).toEqual('withDefaultStyle(MyComp)')
   })
 })

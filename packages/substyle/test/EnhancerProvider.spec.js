@@ -1,5 +1,6 @@
 import { mount } from 'enzyme'
 import { createElement } from 'react'
+import { spy } from 'sinon'
 
 import EnhancerProvider from '../src/EnhancerProvider'
 import {

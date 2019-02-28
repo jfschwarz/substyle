@@ -52,8 +52,8 @@ describe('hoistModifierStylesRecursive', () => {
       },
     }
     const result = hoistModifierStylesRecursive(myStyle, ['&selected'])
-    expect(result.nested).not.toBe(nested1)
-    expect(result.nested).not.toBe(nested2)
-    expect(result.nested).not.toBe(nested3)
+    expect(result.nested).not.toEqual(nested1)
+    expect(result.nested).not.toEqual(nested2)
+    expect(result.nested).not.toEqual(nested3)
   })
 })

@@ -4,19 +4,19 @@ describe('`className` management', () => {
   it('should derive a BEM compliant className for a passed nested element key', () => {
     const substyle = createSubstyle({ className: 'my-class' })
     const { className } = substyle('toggle')
-    expect(className).toBe('my-class__toggle')
+    expect(className).toEqual('my-class__toggle')
   })
 
   it('should derive a BEM compliant className for a passed modifier key', () => {
     const substyle = createSubstyle({ className: 'my-class' })
     const { className } = substyle('&active')
-    expect(className).toBe('my-class my-class--active')
+    expect(className).toEqual('my-class my-class--active')
   })
 
   it('should derive not include modifiers of parents elements in nested class names', () => {
     const substyle = createSubstyle({ className: 'my-class' })
     const { className } = substyle('&active')('nested')
-    expect(className).toBe('my-class__nested')
+    expect(className).toEqual('my-class__nested')
   })
 
   it('should not return a className when no className has been set in the props', () => {
@@ -28,27 +28,27 @@ describe('`className` management', () => {
   it('should not generate additional class names for modifiers if selectedKeys contain element keys', () => {
     const substyle = createSubstyle({ className: 'my-class' })
     const { className } = substyle(['btn', '&disabled'])
-    expect(className).toBe('my-class__btn')
+    expect(className).toEqual('my-class__btn')
   })
 
   it('should return the original className when selectedKeys is not specified or empty', () => {
     const substyle = createSubstyle({ className: 'my-class' })
     const { className } = substyle
-    expect(className).toBe('my-class')
+    expect(className).toEqual('my-class')
 
     const { className: sameClassName } = substyle({ '@active': false })
-    expect(sameClassName).toBe('my-class')
+    expect(sameClassName).toEqual('my-class')
 
     const { className: againTheSameClassName } = substyle([])
-    expect(againTheSameClassName).toBe('my-class')
+    expect(againTheSameClassName).toEqual('my-class')
 
     const { className: stillTheSameClassName } = substyle()
-    expect(stillTheSameClassName).toBe('my-class')
+    expect(stillTheSameClassName).toEqual('my-class')
   })
 
   it('should correctly merge modifiers with existing classNames', () => {
     const substyle = createSubstyle({ className: 'foo foo--bar' })
     const { className } = substyle('&baz')
-    expect(className).toBe('foo foo--bar foo--baz')
+    expect(className).toEqual('foo foo--bar foo--baz')
   })
 })

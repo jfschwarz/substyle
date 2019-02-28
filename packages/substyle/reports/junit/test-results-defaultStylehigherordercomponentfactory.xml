@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites disabled="0" errors="0" failures="0" tests="11" time="0.065">
+ <testsuite name="`defaultStyle` higher-order component factory" timestamp="2019-02-28T14:21:02" hostname="localhost" time="0.065" errors="0" tests="11" skipped="0" disabled="0" failures="0">
+  <testcase classname="`defaultStyle` higher-order component factory" name="should inject a substyle instance for the `style` prop" time="0.013" />
+  <testcase classname="`defaultStyle` higher-order component factory" name="should merge styles provided by the component user with default styles" time="0.002" />
+  <testcase classname="`defaultStyle` higher-order component factory" name="should also work if a substyle instance is provided as `style`" time="0.001" />
+  <testcase classname="`defaultStyle` higher-order component factory" name="should accept a function mapping props to default styles as first argument" time="0.001" />
+  <testcase classname="`defaultStyle` higher-order component factory" name="should take a modifier selection function as second argument" time="0.001" />
+  <testcase classname="`defaultStyle` higher-order component factory" name="should apply the selected modifiers also on the style supplied by the user" time="0.001" />
+  <testcase classname="`defaultStyle` higher-order component factory" name="should give precendence to styles supplied by the user, regardless the modifiers specificity" time="0.001" />
+  <testcase classname="`defaultStyle` higher-order component factory" name="should support depency injection via context for additional HOC to wrap the component" time="0.002" />
+  <testcase classname="`defaultStyle` higher-order component factory" name="should fix `style` prop type if injected HOC defines (as Radium does)" time="0.032" />
+  <testcase classname="`defaultStyle` higher-order component factory" name="should expose the wrapped component instance via `getWrappedInstance`" time="0.004" />
+  <testcase classname="`defaultStyle` higher-order component factory" name="should support providing a props decorator function via context" time="0.006" />
+ </testsuite>
+</testsuites>

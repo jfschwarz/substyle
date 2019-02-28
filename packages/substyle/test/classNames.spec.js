@@ -12,10 +12,12 @@ describe('`classNames` mapping', () => {
       },
     })
 
-    expect(substyle.className).toBe('my-container')
-    expect(substyle('footer').className).toBe('my-footer')
-    expect(substyle('footer')('button').className).toBe('my-footer-button')
-    expect(substyle('&readOnly').className).toBe('my-container my-container-readOnly')
+    expect(substyle.className).toEqual('my-container')
+    expect(substyle('footer').className).toEqual('my-footer')
+    expect(substyle('footer')('button').className).toEqual('my-footer-button')
+    expect(substyle('&readOnly').className).toEqual(
+      'my-container my-container-readOnly'
+    )
   })
 
   it('should guess the base class name if no `className` prop is set', () => {
@@ -28,10 +30,12 @@ describe('`classNames` mapping', () => {
       },
     })
 
-    expect(substyle.className).toBe('my-container')
-    expect(substyle('footer').className).toBe('my-footer')
-    expect(substyle('footer')('button').className).toBe('my-footer-button')
-    expect(substyle('&readOnly').className).toBe('my-container my-container-readOnly')
+    expect(substyle.className).toEqual('my-container')
+    expect(substyle('footer').className).toEqual('my-footer')
+    expect(substyle('footer')('button').className).toEqual('my-footer-button')
+    expect(substyle('&readOnly').className).toEqual(
+      'my-container my-container-readOnly'
+    )
   })
 
   it('should not set derived class names when a `classNames` prop is present', () => {
@@ -40,8 +44,8 @@ describe('`classNames` mapping', () => {
       classNames: {},
     })
 
-    expect(substyle.className).toBeFalsy()
-    expect(substyle('bar').className).toBeFalsy()
+    expect(substyle.className).not.toBeDefined()
+    expect(substyle('bar').className).not.toBeDefined()
   })
 
   it('should not set the base className if there is no mapping provided for it', () => {
@@ -53,7 +57,7 @@ describe('`classNames` mapping', () => {
     })
 
     const { className } = substyle('&readOnly')
-    expect(className).toBe('read-only-container')
+    expect(className).toEqual('read-only-container')
   })
 
   it('should support modifier nesting to customize class names for combinations of modifiers', () => {
@@ -67,6 +71,8 @@ describe('`classNames` mapping', () => {
     })
 
     const { className } = substyle(['&readOnly', '&nestedModifier'])
-    expect(className).toBe('container container-as-readonly container-as-modified')
+    expect(className).toEqual(
+      'container container-as-readonly container-as-modified'
+    )
   })
 })
