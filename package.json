@@ -13,7 +13,8 @@
     "clean": "yarn workspaces run clean",
     "test": "yarn workspaces run test",
     "lint": "eslint \"packages/*/{src,test}/**/*.js\"",
-    "format": "prettier --write \"packages/**/{src,test}/**/*.js\""
+    "format": "prettier --write \"packages/**/{src,test}/**/*.js\"",
+    "publish-packages": "lerna publish"
   },
   "dependencies": {
     "@babel/core": "^7.3.4",
