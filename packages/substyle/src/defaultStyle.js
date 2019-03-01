@@ -1,18 +1,12 @@
 // @flow
 import hoistStatics from 'hoist-non-react-statics'
-import React, {
-  Component,
-  type ComponentType,
-  type ElementType,
-  createElement,
-} from 'react'
+import React, { Component, type ComponentType, type ElementType } from 'react'
 import warning from 'warning'
 
 import { EnhancerConsumer } from './EnhancerProvider'
 import createSubstyle from './createSubstyle'
 import { type EnhancerFuncT, PropTypes, type SubstyleT } from './types'
 import type { KeysT, PropsT, ShouldUpdateFuncT } from './types'
-import { identity } from './utils'
 
 const isStatelessFunction = (Component: ComponentType<*>): boolean =>
   // $FlowFixMe
@@ -113,6 +107,7 @@ const createDefaultStyle = (
         this.memoizedEnhance = enhance
         this.enhancedWrappedComponent = enhance(WrappedComponent)
 
+        // eslint-disable-next-line react/forbid-foreign-prop-types
         if (this.enhancedWrappedComponent.propTypes) {
           this.enhancedWrappedComponent.propTypes = {
             ...this.enhancedWrappedComponent.propTypes,

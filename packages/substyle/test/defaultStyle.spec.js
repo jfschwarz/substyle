@@ -1,4 +1,4 @@
-import { mount, shallow } from 'enzyme'
+import { mount } from 'enzyme'
 import PT from 'prop-types'
 import React, { Component, createElement } from 'react'
 
@@ -178,6 +178,7 @@ describe('`defaultStyle` higher-order component factory', () => {
         <MyStyledComponent />
       </EnhancerProvider>
     )
+    // eslint-disable-next-line react/forbid-foreign-prop-types
     expect(wrapper.find('WrapperComp').type().propTypes.style).toEqual(
       PropTypes.style
     )

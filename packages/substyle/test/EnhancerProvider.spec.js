@@ -1,15 +1,9 @@
 import { mount } from 'enzyme'
-import React, { createElement } from 'react'
-import { spy } from 'sinon'
+import React from 'react'
 
 import EnhancerProvider, { EnhancerConsumer } from '../src/EnhancerProvider'
-import {
-  ENHANCER_CONTEXT_NAME,
-  PROPS_DECORATOR_CONTEXT_NAME,
-} from '../src/types'
 
 describe('<EnhancerProvider />', () => {
-  let getChildContext
   const TestComponent = () => <div />
 
   it('should set up a context providing the passed enhancer function', () => {
