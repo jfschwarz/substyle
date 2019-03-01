@@ -1,24 +1,18 @@
 // @flow
-import {
-  createElement,
+import hoistStatics from 'hoist-non-react-statics'
+import React, {
   Component,
   type ComponentType,
   type ElementType,
+  createElement,
 } from 'react'
-import hoistStatics from 'hoist-non-react-statics'
 import warning from 'warning'
-import { identity } from './utils'
 
+import { EnhancerConsumer } from './EnhancerProvider'
 import createSubstyle from './createSubstyle'
-import {
-  type SubstyleT,
-  type EnhancerFuncT,
-  PropTypes,
-  ContextTypes,
-  ENHANCER_CONTEXT_NAME,
-  PROPS_DECORATOR_CONTEXT_NAME,
-} from './types'
-import type { PropsT, KeysT, ShouldUpdateFuncT, ContextT } from './types'
+import { type EnhancerFuncT, PropTypes, type SubstyleT } from './types'
+import type { KeysT, PropsT, ShouldUpdateFuncT } from './types'
+import { identity } from './utils'
 
 const isStatelessFunction = (Component: ComponentType<*>): boolean =>
   // $FlowFixMe
@@ -38,14 +32,9 @@ const createDefaultStyle = (
     enhancedWrappedComponent: ComponentType<*>
     wrappedInstance: ElementType
 
-    constructor(props, context) {
-      super(props, context)
-      const { style, className, classNames, innerRef: _, ...rest } = props
-
-      this.substyle = createSubstyle(
-        { style, className, classNames },
-        this.context[PROPS_DECORATOR_CONTEXT_NAME]
-      )
+    constructor(props) {
+      super(props)
+      const { innerRef: _, ...rest } = props
 
       if (typeof defaultStyle === 'function') {
         this.defaultStyle = defaultStyle(rest)
@@ -53,23 +42,7 @@ const createDefaultStyle = (
     }
 
     shouldComponentUpdate({ style, className, classNames, ...rest }) {
-      const {
-        style: prevStyle,
-        className: prevClassName,
-        classNames: prevClassNames,
-        innerRef: _,
-        ...prevRest
-      } = this.props
-      if (
-        style !== prevStyle ||
-        className !== prevClassName ||
-        classNames !== prevClassNames
-      ) {
-        this.substyle = createSubstyle(
-          { style, className, classNames },
-          this.context[PROPS_DECORATOR_CONTEXT_NAME]
-        )
-      }
+      const { innerRef: _, ...prevRest } = this.props
 
       if (typeof defaultStyle === 'function') {
         if (shouldUpdate(rest, prevRest)) {
@@ -81,33 +54,65 @@ const createDefaultStyle = (
     }
 
     render() {
-      const {
-        innerRef,
-        style: _0,
-        className: _1,
-        classNames: _2,
-        ...rest
-      } = this.props
-      const EnhancedWrappedComponent = this.getWrappedComponent()
+      const { innerRef, style, className, classNames, ...rest } = this.props
       const modifiers = getModifiers ? getModifiers(rest) : []
-      return createElement(EnhancedWrappedComponent, {
-        style: this.substyle(modifiers, this.defaultStyle || defaultStyle),
-        ref: isStatelessFunction(EnhancedWrappedComponent)
-          ? undefined
-          : // $FlowFixMe
-            this.setWrappedInstance,
-        ...rest,
-      })
+
+      return (
+        <EnhancerConsumer>
+          {({ enhancer, propsDecorator }) => {
+            const EnhancedWrappedComponent = this.getWrappedComponent(enhancer)
+            const substyle = this.getSubstyle(
+              { style, className, classNames },
+              propsDecorator
+            )
+
+            return (
+              <EnhancedWrappedComponent
+                style={substyle(modifiers, this.defaultStyle || defaultStyle)}
+                ref={
+                  isStatelessFunction(EnhancedWrappedComponent)
+                    ? undefined
+                    : // $FlowFixMe
+                      this.setWrappedInstance
+                }
+                {...rest}
+              />
+            )
+          }}
+        </EnhancerConsumer>
+      )
     }
 
-    getWrappedComponent(): ComponentType<*> {
+    getSubstyle({ style, className, classNames }, propsDecorator) {
       const {
-        [ENHANCER_CONTEXT_NAME]: enhance = identity,
-      }: ContextT = this.context
+        style: prevStyle,
+        className: prevClassName,
+        classNames: prevClassNames,
+      } = this.lastProps || {}
 
+      if (
+        this.memoizedSubstyle &&
+        prevStyle === style &&
+        prevClassName === className &&
+        prevClassNames === classNames
+      ) {
+        return this.memoizedSubstyle
+      }
+
+      this.memoizedSubstyle = createSubstyle(
+        { style, className, classNames },
+        propsDecorator
+      )
+      this.lastProps = { style, className, classNames }
+
+      return this.memoizedSubstyle
+    }
+
+    getWrappedComponent(enhance): ComponentType<*> {
       if (this.memoizedEnhance !== enhance) {
         this.memoizedEnhance = enhance
         this.enhancedWrappedComponent = enhance(WrappedComponent)
+
         if (this.enhancedWrappedComponent.propTypes) {
           this.enhancedWrappedComponent.propTypes = {
             ...this.enhancedWrappedComponent.propTypes,
@@ -148,8 +153,6 @@ const createDefaultStyle = (
     ...WrappedComponent.propTypes,
     ...PropTypes,
   }
-
-  WithDefaultStyle.contextTypes = ContextTypes
 
   // expose WrappedComponent, e.g., for testing purposes
   WithDefaultStyle.WrappedComponent = WrappedComponent

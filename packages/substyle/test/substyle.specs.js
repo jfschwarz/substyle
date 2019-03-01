@@ -83,7 +83,7 @@ describe('substyle', () => {
     })
     const { style, className } = substyle(['toggle', 'btn'])
 
-    expect(className).toBe('my-class__toggle my-class__btn')
+    expect(className).toEqual('my-class__toggle my-class__btn')
     expect(style).toEqual({
       display: 'block',
       width: 50,
@@ -100,7 +100,7 @@ describe('substyle', () => {
     })
     const { style, className } = subsubstyle
 
-    expect(className).toBe('my-class my-class--active my-class--disabled')
+    expect(className).toEqual('my-class my-class--active my-class--disabled')
     expect(style).toEqual({
       width: '100%',
 

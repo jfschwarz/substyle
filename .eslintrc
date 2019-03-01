@@ -1,3 +1,9 @@
 {
-  "extends": "react-app"
+  "extends": "react-app",
+  "settings": {
+    "react": {
+      "version": "detect",
+      "flowVersion": "0.93.0"
+    }
+  }
 }

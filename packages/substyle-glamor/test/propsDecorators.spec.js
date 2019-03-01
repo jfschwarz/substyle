@@ -1,6 +1,6 @@
 import {
-  decorateAsDataAttributes,
   decorateAsClasses,
+  decorateAsDataAttributes,
 } from '../src/propsDecorators'
 
 describe('decorateAsDataAttributes', () => {

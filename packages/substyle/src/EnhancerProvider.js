@@ -1,31 +1,31 @@
 // @flow
-import * as React from 'react'
 import PropTypes from 'prop-types'
-import {
-  ENHANCER_CONTEXT_NAME,
-  PROPS_DECORATOR_CONTEXT_NAME,
-  ContextTypes,
-} from './types'
-import type { EnhancerFuncT, DecoratorFuncT } from './types'
+import React, { type Context, type Node, createContext } from 'react'
+
+import type { DecoratorFuncT, EnhancerFuncT } from './types'
+import { identity } from './utils'
+
+type EnhancerContextT = {
+  enhancer: EnhancerFuncT,
+  propsDecorator: DecoratorFuncT,
+}
 
 type PropsT = {
   enhancer?: EnhancerFuncT,
   propsDecorator?: DecoratorFuncT,
 
-  children: React.Node,
+  children: Node,
 }
 
-export default class EnhancerProvider extends React.Component<PropsT, void> {
-  getChildContext() {
-    return {
-      [ENHANCER_CONTEXT_NAME]: this.props.enhancer,
-      [PROPS_DECORATOR_CONTEXT_NAME]: this.props.propsDecorator,
-    }
-  }
+const { Provider, Consumer }: Context<EnhancerContextT> = createContext({
+  enhancer: identity,
+  propsDecorator: identity,
+})
 
-  render() {
-    return React.Children.only(this.props.children)
-  }
+export const EnhancerConsumer = Consumer
+
+function EnhancerProvider({ enhancer, propsDecorator, children }: PropsT) {
+  return <Provider value={{ enhancer, propsDecorator }}>{children}</Provider>
 }
 
 EnhancerProvider.propTypes = {
@@ -34,6 +34,4 @@ EnhancerProvider.propTypes = {
   children: PropTypes.element.isRequired,
 }
 
-EnhancerProvider.childContextTypes = ContextTypes
-
-EnhancerProvider.displayName = 'EnhancerProvider'
+export default EnhancerProvider

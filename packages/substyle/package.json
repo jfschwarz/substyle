@@ -5,9 +5,10 @@
   "main": "lib/index.js",
   "scripts": {
     "clean": "rimraf lib",
-    "build": "babel src --out-dir lib",
+    "build": "babel --root-mode upward src --out-dir lib",
+    "prebuild": "yarn run clean",
     "test": "jest",
-    "prepublish": "npm run test && npm run clean && npm run build"
+    "prepublishOnly": "yarn test && yarn build"
   },
   "repository": {
     "type": "git",
@@ -29,22 +30,21 @@
   },
   "homepage": "https://github.com/jfschwarz/substyle#readme",
   "dependencies": {
+    "@babel/runtime": "^7.3.4",
     "hoist-non-react-statics": "^3.1.0",
-    "invariant": "^2.2.0",
+    "invariant": "^2.2.4",
     "prop-types": "^15.5.8",
     "warning": "^2.1.0"
   },
   "peerDependencies": {
-    "react": ">=15.3.2"
+    "react": ">=16.8.3"
   },
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-register": "^6.26.0",
-    "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.6.0",
-    "jest": "^23.6.0",
-    "jsdom": "^9.10.0",
-    "mocha": "^3.5.0",
+    "@babel/cli": "^7.2.3",
+    "jest": "24.1.0",
+    "enzyme-adapter-react-16": "^1.10.0",
+    "react-addons-test-utils": "^15.6.2",
+    "react-test-renderer": "^16.0.0",
     "rimraf": "^2.6.1",
     "sinon": "^3.2.1"
   },
