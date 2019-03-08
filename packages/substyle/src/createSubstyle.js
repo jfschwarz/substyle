@@ -1,14 +1,19 @@
 // @flow
 import invariant from 'invariant'
-import { keys, values, merge, assign, compact, isPlainObject } from './utils'
 
-import defaultPropsDecorator from './defaultPropsDecorator'
-import { pickNestedStyles, hoistModifierStylesRecursive } from './pickStyles'
-import { isModifier, isElement } from './filterKeys'
 import coerceSelection from './coerceSelection'
+import defaultPropsDecorator from './defaultPropsDecorator'
+import { isElement, isModifier } from './filterKeys'
 import memoize from './memoize'
-
-import type { PropsT, KeysT, ClassNamesT, DecoratorFuncT } from './types'
+import { hoistModifierStylesRecursive, pickNestedStyles } from './pickStyles'
+import type {
+  ClassNamesT,
+  DecoratorFuncT,
+  KeysT,
+  PropsT,
+  SubstyleT,
+} from './types'
+import { assign, compact, isPlainObject, keys, merge, values } from './utils'
 
 const guessBaseClassName = (classNames: ?ClassNamesT): ?string => {
   // all class names must start with the same prefix: the component's base class name
@@ -47,7 +52,7 @@ const deriveClassNames = (
 function createSubstyle(
   { style, className, classNames }: PropsT,
   propsDecorator: DecoratorFuncT = defaultPropsDecorator
-) {
+): SubstyleT {
   const baseClassName = className || guessBaseClassName(classNames)
 
   const substyle =

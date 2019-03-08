@@ -24,7 +24,11 @@ const { Provider, Consumer }: Context<EnhancerContextT> = createContext({
 
 export const EnhancerConsumer = Consumer
 
-function EnhancerProvider({ enhancer, propsDecorator, children }: PropsT) {
+function EnhancerProvider({
+  enhancer = identity,
+  propsDecorator = identity,
+  children,
+}: PropsT) {
   return <Provider value={{ enhancer, propsDecorator }}>{children}</Provider>
 }
 

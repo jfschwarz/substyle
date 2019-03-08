@@ -12,6 +12,8 @@
     "build": "yarn workspaces run build",
     "clean": "yarn workspaces run clean",
     "test": "yarn workspaces run test",
+    "copy-types": "yarn workspaces run copy-types",
+    "pretype-check": "yarn copy-types",
     "type-check": "flow check",
     "lint": "eslint \"packages/*/{src,test}/**/*.js\"",
     "format": "prettier --write \"packages/**/{src,test}/**/*.js\"",

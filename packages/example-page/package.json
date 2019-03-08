@@ -8,7 +8,8 @@
   "private": false,
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "echo OK"
+    "build": "echo OK",
+    "copy-types": "echo OK"
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",

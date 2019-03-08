@@ -4,4 +4,8 @@ import { render } from 'react-dom'
 
 import App from './App'
 
-render(<App />, document.getElementById('application'))
+const container = document.getElementById('application')
+
+if (container) {
+  render(<App />, container)
+}

@@ -10,9 +10,11 @@
     "prebuild": "yarn run clean",
     "build": "yarn build:es5 && yarn build:es6",
     "build:es5": "babel --root-mode upward src --out-dir lib",
-    "postbuild:es5": "flow-copy-source src lib",
     "build:es6": "BABEL_ENV=es6 babel --root-mode upward src --out-dir es6",
-    "postbuild:es6": "flow-copy-source src es6",
+    "postbuild": "yarn copy-types",
+    "copy-types": "yarn copy-types:es5 && yarn copy-types:es6",
+    "copy-types:es5": "flow-copy-source src lib",
+    "copy-types:es6": "flow-copy-source src es6",
     "test": "jest",
     "prepublishOnly": "yarn test && yarn build"
   },
