@@ -1,0 +1,32 @@
+{
+  "name": "example-page",
+  "version": "1.0.0",
+  "description": "Example page highlighting the different flavours of substyle",
+  "main": "src/index.js",
+  "author": "Philipp Giese",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "webpack-dev-server",
+    "build": "echo OK"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "babel-loader": "^8.0.5",
+    "html-webpack-harddisk-plugin": "1.0.1",
+    "html-webpack-plugin": "4.0.0-beta.5",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.1"
+  },
+  "dependencies": {
+    "glamor": "^2.20.40",
+    "radium": "^0.25.1",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "react-jss": "^8.6.1",
+    "substyle": "^7.0.0",
+    "substyle-glamor": "^2.0.0",
+    "substyle-jss": "^2.0.0"
+  }
+}

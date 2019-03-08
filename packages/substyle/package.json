@@ -43,7 +43,6 @@
     "@babel/cli": "^7.2.3",
     "enzyme-adapter-react-16": "^1.10.0",
     "jest": "24.1.0",
-    "react-addons-test-utils": "^15.6.2",
     "react-test-renderer": "^16.0.0",
     "rimraf": "^2.6.1",
     "sinon": "^3.2.1"
