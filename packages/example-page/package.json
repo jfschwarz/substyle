@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "author": "Philipp Giese",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "scripts": {
     "start": "webpack-dev-server",
     "build": "echo OK",
