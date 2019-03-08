@@ -12,6 +12,7 @@
     "build": "yarn workspaces run build",
     "clean": "yarn workspaces run clean",
     "test": "yarn workspaces run test",
+    "type-check": "flow check",
     "lint": "eslint \"packages/*/{src,test}/**/*.js\"",
     "format": "prettier --write \"packages/**/{src,test}/**/*.js\"",
     "publish-packages": "lerna publish"
