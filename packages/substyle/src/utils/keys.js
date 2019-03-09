@@ -1,5 +1,5 @@
 // @flow
-function keys<T>(obj: T): Array<$Keys<T>> {
+function keys<+T: Object>(obj: T): Array<$Keys<T>> {
   return obj === Object(obj) ? Object.keys(obj) : []
 }
 

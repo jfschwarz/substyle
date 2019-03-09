@@ -1,7 +1,11 @@
 // @flow
+import { type StyleDefinitionT } from '../types'
 import { keys } from '../utils'
 
-const pickDirectStyles = (style, objectPropertiesWhitelist = []) => {
+const pickDirectStyles = (
+  style: StyleDefinitionT,
+  objectPropertiesWhitelist: Array<string> = []
+): StyleDefinitionT => {
   const styleKeys = keys(style)
   const result = {}
   for (let i = 0, l = styleKeys.length; i < l; i += 1) {

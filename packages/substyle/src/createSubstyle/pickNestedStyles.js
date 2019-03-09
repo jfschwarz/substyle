@@ -1,7 +1,11 @@
 // @flow
+import { type StyleDefinitionT } from '../types'
 import { camelize, keys } from '../utils'
 
-const pickNestedStyles = (style, keysToPick) => {
+const pickNestedStyles = (
+  style: StyleDefinitionT,
+  keysToPick: Array<string>
+): StyleDefinitionT => {
   const camelizedKeysToPick = keysToPick.map(camelize)
   const styleKeys = keys(style)
   const result = {}

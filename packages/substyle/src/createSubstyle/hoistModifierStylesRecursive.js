@@ -1,10 +1,14 @@
 // @flow
+import { type StyleDefinitionT } from '../types'
 import { isModifier, keys, merge, omit, values } from '../utils'
 import pickNestedStyles from './pickNestedStyles'
 
 // breadth-first hoisting of selected modifier style subtrees
 // does not traverse into element, :pseudo-selector or @directive subtrees
-export const hoistModifierStylesRecursive = (style, modifierKeysToPick) => {
+const hoistModifierStylesRecursive = (
+  style: StyleDefinitionT,
+  modifierKeysToPick: Array<string>
+): StyleDefinitionT => {
   // hoist styles for selected modifiers on current level
   let result = merge(
     {},
@@ -32,3 +36,5 @@ export const hoistModifierStylesRecursive = (style, modifierKeysToPick) => {
 
   return result
 }
+
+export default hoistModifierStylesRecursive

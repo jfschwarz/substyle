@@ -1,5 +1,5 @@
 // @flow
-function values<T>(obj: T): Array<$Values<T>> {
+function values<+T: Object>(obj: T): Array<$Values<T>> {
   return obj === Object(obj) ? Object.values(obj) : []
 }
 
