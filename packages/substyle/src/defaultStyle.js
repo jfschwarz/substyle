@@ -5,8 +5,14 @@ import warning from 'warning'
 
 import { EnhancerConsumer } from './EnhancerProvider'
 import createSubstyle from './createSubstyle'
-import { type EnhancerFuncT, PropTypes, type SubstyleT } from './types'
-import type { KeysT, PropsT, ShouldUpdateFuncT } from './types'
+import { PropTypes } from './propTypes'
+import {
+  type EnhancerFuncT,
+  type KeysT,
+  type PropsT,
+  type ShouldUpdateFuncT,
+  type SubstyleT,
+} from './types'
 
 const isStatelessFunction = (Component: ComponentType<*>): boolean =>
   // $FlowFixMe
@@ -19,6 +25,9 @@ const createDefaultStyle = (
 ) => (WrappedComponent: ComponentType<*>) => {
   class WithDefaultStyle extends Component<PropsT, void> {
     static WrappedComponent: ComponentType<*>
+
+    lastProps: PropsT
+    memoizedSubstyle: ?SubstyleT
 
     substyle: SubstyleT
     defaultStyle: Object
@@ -106,14 +115,6 @@ const createDefaultStyle = (
       if (this.memoizedEnhance !== enhance) {
         this.memoizedEnhance = enhance
         this.enhancedWrappedComponent = enhance(WrappedComponent)
-
-        // eslint-disable-next-line react/forbid-foreign-prop-types
-        if (this.enhancedWrappedComponent.propTypes) {
-          this.enhancedWrappedComponent.propTypes = {
-            ...this.enhancedWrappedComponent.propTypes,
-            style: PropTypes.style,
-          }
-        }
       }
 
       return this.enhancedWrappedComponent || WrappedComponent
@@ -140,14 +141,11 @@ const createDefaultStyle = (
   }
 
   const wrappedComponentName =
-    WrappedComponent.displayName || WrappedComponent.name
+    WrappedComponent.displayName || WrappedComponent.name || 'Unknown'
   WithDefaultStyle.displayName = `withDefaultStyle(${wrappedComponentName})`
 
   // define prop types based on WrappedComponent's prop types
-  WithDefaultStyle.propTypes = {
-    ...WrappedComponent.propTypes,
-    ...PropTypes,
-  }
+  WithDefaultStyle.propTypes = PropTypes
 
   // expose WrappedComponent, e.g., for testing purposes
   WithDefaultStyle.WrappedComponent = WrappedComponent

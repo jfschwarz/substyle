@@ -3,10 +3,18 @@
   "version": "2.0.0",
   "description": "Use substyled components with glamor",
   "main": "lib/index.js",
+  "module": "es6/index.js",
+  "sideEffects": false,
   "scripts": {
-    "clean": "rimraf lib",
-    "build": "babel --root-mode upward src --out-dir lib",
+    "clean": "rimraf lib es6",
     "prebuild": "yarn run clean",
+    "build": "yarn build:es5 && yarn build:es6",
+    "build:es5": "babel --root-mode upward src --out-dir lib",
+    "build:es6": "BABEL_ENV=es6 babel --root-mode upward src --out-dir es6",
+    "postbuild": "yarn copy-types",
+    "copy-types": "yarn copy-types:es5 && yarn copy-types:es6",
+    "copy-types:es5": "flow-copy-source src lib",
+    "copy-types:es6": "flow-copy-source src es6",
     "test": "jest",
     "prepublishOnly": "yarn test && yarn build"
   },
@@ -21,6 +29,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
+    "flow-copy-source": "^2.0.3",
     "glamor": "^2.20.40",
     "jest": "24.1.0",
     "rimraf": "^2.6.1"

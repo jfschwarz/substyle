@@ -1,11 +1,11 @@
-const { NODE_ENV } = process.env
+const { NODE_ENV, BABEL_ENV } = process.env
 
 module.exports = {
   presets: [
     [
       '@babel/env',
       {
-        modules: NODE_ENV === 'test' ? 'auto' : false,
+        modules: NODE_ENV === 'test' || BABEL_ENV !== 'es6' ? 'auto' : false,
         targets: {
           browsers: [
             'chrome >= 50',
