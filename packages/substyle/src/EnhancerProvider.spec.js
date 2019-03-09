@@ -1,7 +1,7 @@
 import { mount } from 'enzyme'
 import React from 'react'
 
-import EnhancerProvider, { EnhancerConsumer } from '../src/EnhancerProvider'
+import EnhancerProvider, { EnhancerConsumer } from './EnhancerProvider'
 
 describe('<EnhancerProvider />', () => {
   const TestComponent = () => <div />

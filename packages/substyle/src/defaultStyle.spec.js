@@ -2,10 +2,10 @@ import { mount } from 'enzyme'
 import PT from 'prop-types'
 import React, { Component, createElement } from 'react'
 
-import EnhancerProvider from '../src/EnhancerProvider'
-import createSubstyle from '../src/createSubstyle'
-import defaultStyle from '../src/defaultStyle'
-import { PropTypes } from '../src/types'
+import EnhancerProvider from './EnhancerProvider'
+import createSubstyle from './createSubstyle'
+import defaultStyle from './defaultStyle'
+import { PropTypes } from './types'
 
 describe('`defaultStyle` higher-order component factory', () => {
   const MyComponent = ({ style, ...rest }) => (

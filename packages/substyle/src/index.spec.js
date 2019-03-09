@@ -1,6 +1,6 @@
 import { createElement } from 'react'
 
-import injectSubstyle from '../src/index'
+import injectSubstyle from './index'
 
 describe('default export', () => {
   it('should be usable as a higher-order component', () => {

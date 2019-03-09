@@ -1,4 +1,4 @@
-import { hoistModifierStylesRecursive } from '../src/pickStyles'
+import { hoistModifierStylesRecursive } from './pickStyles'
 
 describe('hoistModifierStylesRecursive', () => {
   it('should hoist styles from modifiers even if those are nested under unselected modifer keys', () => {
