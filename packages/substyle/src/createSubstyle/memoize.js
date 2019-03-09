@@ -1,12 +1,12 @@
 // @flow
+import type { KeysT, StyleDefinitionT, SubstyleT } from '../types'
 import coerceSelection from './coerceSelection'
-import type { KeysT, SubstyleT } from './types'
 
 const EMPTY = {}
 
 const memoize = (substyle: SubstyleT): SubstyleT => (
   select: KeysT,
-  defaultStyle?: Object
+  defaultStyle?: StyleDefinitionT
 ) => {
   const cacheKey = defaultStyle || EMPTY
   substyle.memoize = substyle.memoize || new WeakMap()

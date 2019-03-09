@@ -1,19 +1,21 @@
 // @flow
 import invariant from 'invariant'
 
-import { assign, compact, isPlainObject, keys, merge, values } from '../utils'
-import coerceSelection from './coerceSelection'
-import defaultPropsDecorator from './defaultPropsDecorator'
-import { isElement, isModifier } from './filterKeys'
-import memoize from './memoize'
-import { hoistModifierStylesRecursive, pickNestedStyles } from './pickStyles'
 import type {
   ClassNamesT,
   DecoratorFuncT,
   KeysT,
   PropsT,
+  StyleDefinitionT,
   SubstyleT,
-} from './types'
+} from '../types'
+import { assign, compact, isPlainObject, keys, merge, values } from '../utils'
+import coerceSelection from './coerceSelection'
+import defaultPropsDecorator from './defaultPropsDecorator'
+import { isElement, isModifier } from './filterKeys'
+import hoistModifierStylesRecursive from './hoistModifierStylesRecursive'
+import memoize from './memoize'
+import pickNestedStyles from './pickDirectStyles'
 
 function createSubstyle(
   { style, className, classNames }: PropsT,
@@ -24,7 +26,7 @@ function createSubstyle(
   const substyle =
     typeof style === 'function'
       ? style
-      : memoize((select: KeysT, defaultStyle?: Object) => {
+      : memoize((select: KeysT, defaultStyle?: StyleDefinitionT) => {
           const selectedKeys = coerceSelection(select)
 
           invariant(
@@ -43,15 +45,14 @@ function createSubstyle(
 
           const collectElementStyles =
             elementKeys.length > 0
-              ? (fromStyle: Object) =>
+              ? (fromStyle: StyleDefinitionT) =>
                   values(pickNestedStyles(fromStyle, elementKeys))
-              : (fromStyle: Object) => [fromStyle]
+              : (fromStyle: StyleDefinitionT) => [fromStyle]
 
-          const collectSelectedStyles = (fromStyle: Object = {}) => {
-            return collectElementStyles(
+          const collectSelectedStyles = (fromStyle: StyleDefinitionT = {}) =>
+            collectElementStyles(
               hoistModifierStylesRecursive(fromStyle, modifierKeys)
             )
-          }
 
           const derivedClassNames = deriveClassNames(
             baseClassName,
@@ -79,7 +80,6 @@ function createSubstyle(
           )
         })
 
-  // $FlowFixMe Flow does not believe that also a function can be spread
   const styleProps = {
     ...(typeof style === 'function' ? style : { style }),
   }

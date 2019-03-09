@@ -1,6 +1,6 @@
 // @flow
-import { pickDirectStyles } from './pickStyles'
-import type { DecoratorFuncT } from './types'
+import type { DecoratorFuncT } from '../types'
+import pickDirectStyles from './pickDirectStyles'
 
 // many css-in-js libs process keyframes objects as the value for `animationName`
 const defaultObjectPropsWhitelist = ['animationName']

@@ -1,4 +1,4 @@
-import createSubstyle from './createSubstyle'
+import createSubstyle from '.'
 
 describe('createSubstyle', () => {
   describe('chaining', () => {

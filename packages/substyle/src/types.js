@@ -3,9 +3,16 @@ import { type ComponentType, type Ref } from 'react'
 
 export type KeysT = string | Array<string> | { [string]: boolean }
 
-export type SubstyleT = (select: KeysT, defaultStyle?: Object) => SubstyleT
+export type StyleDefinitionT = {
+  [key: string]: string | number | StyleDefinitionT,
+}
 
-export type StyleT = SubstyleT | Object
+export type SubstyleT = (
+  select: KeysT,
+  defaultStyle?: StyleDefinitionT
+) => SubstyleT
+
+export type StyleT = SubstyleT | StyleDefinitionT
 
 export type ClassNamesT = {
   [string]: string,
