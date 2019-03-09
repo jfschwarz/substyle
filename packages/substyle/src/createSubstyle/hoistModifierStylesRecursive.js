@@ -1,6 +1,5 @@
 // @flow
-import { keys, merge, omit, values } from '../utils'
-import { isModifier } from './filterKeys'
+import { isModifier, keys, merge, omit, values } from '../utils'
 import pickNestedStyles from './pickNestedStyles'
 
 // breadth-first hoisting of selected modifier style subtrees

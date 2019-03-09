@@ -7,6 +7,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
+    "clean": "rimraf build",
     "start": "webpack-dev-server",
     "build": "echo OK",
     "copy-types": "echo OK"
@@ -16,6 +17,7 @@
     "babel-loader": "^8.0.5",
     "html-webpack-harddisk-plugin": "1.0.1",
     "html-webpack-plugin": "4.0.0-beta.5",
+    "rimraf": "^2.6.3",
     "webpack": "^4.29.6",
     "webpack-cli": "^3.2.3",
     "webpack-dev-server": "^3.2.1"

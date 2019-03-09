@@ -9,10 +9,18 @@ import type {
   StyleDefinitionT,
   SubstyleT,
 } from '../types'
-import { assign, compact, isPlainObject, keys, merge, values } from '../utils'
+import {
+  assign,
+  compact,
+  isElement,
+  isModifier,
+  isPlainObject,
+  keys,
+  merge,
+  values,
+} from '../utils'
 import coerceSelection from './coerceSelection'
 import defaultPropsDecorator from './defaultPropsDecorator'
-import { isElement, isModifier } from './filterKeys'
 import hoistModifierStylesRecursive from './hoistModifierStylesRecursive'
 import memoize from './memoize'
 import pickNestedStyles from './pickDirectStyles'
