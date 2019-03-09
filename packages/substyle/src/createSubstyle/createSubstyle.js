@@ -1,6 +1,7 @@
 // @flow
 import invariant from 'invariant'
 
+import { assign, compact, isPlainObject, keys, merge, values } from '../utils'
 import coerceSelection from './coerceSelection'
 import defaultPropsDecorator from './defaultPropsDecorator'
 import { isElement, isModifier } from './filterKeys'
@@ -13,41 +14,6 @@ import type {
   PropsT,
   SubstyleT,
 } from './types'
-import { assign, compact, isPlainObject, keys, merge, values } from './utils'
-
-const guessBaseClassName = (classNames: ?ClassNamesT): ?string => {
-  // all class names must start with the same prefix: the component's base class name
-  // which will finally go to the container element
-  const firstKey = classNames && keys(classNames)[0]
-  return firstKey && firstKey.split('__')[0].split('--')[0]
-}
-
-const deriveClassNames = (
-  className: ?string,
-  elementKeys: Array<string>,
-  modifierKeys: Array<string>
-): ?Array<string> => {
-  // do not derive class names, if the user did not specify any class name
-  if (!className) {
-    return undefined
-  }
-
-  // derive class names based using the passed modifier/element keys
-  const firstClassName = className.split(' ')[0]
-  const derivedClassNames = [
-    ...(elementKeys.length === 0
-      ? modifierKeys.map(
-          (key: string) => `${firstClassName}--${key.substring(1)}`
-        )
-      : []),
-    ...elementKeys.map((key: string) => `${firstClassName}__${key}`),
-  ]
-
-  // also use the provided `className` if there is no sub-element selection
-  return elementKeys.length === 0
-    ? [className, ...derivedClassNames]
-    : derivedClassNames
-}
 
 function createSubstyle(
   { style, className, classNames }: PropsT,
@@ -142,6 +108,40 @@ function createSubstyle(
   // assign `style` and/or `className` props to the return function object
   assign(substyle, propsForSpread)
   return substyle
+}
+
+const guessBaseClassName = (classNames: ?ClassNamesT): ?string => {
+  // all class names must start with the same prefix: the component's base class name
+  // which will finally go to the container element
+  const firstKey = classNames && keys(classNames)[0]
+  return firstKey && firstKey.split('__')[0].split('--')[0]
+}
+
+const deriveClassNames = (
+  className: ?string,
+  elementKeys: Array<string>,
+  modifierKeys: Array<string>
+): ?Array<string> => {
+  // do not derive class names, if the user did not specify any class name
+  if (!className) {
+    return undefined
+  }
+
+  // derive class names based using the passed modifier/element keys
+  const firstClassName = className.split(' ')[0]
+  const derivedClassNames = [
+    ...(elementKeys.length === 0
+      ? modifierKeys.map(
+          (key: string) => `${firstClassName}--${key.substring(1)}`
+        )
+      : []),
+    ...elementKeys.map((key: string) => `${firstClassName}__${key}`),
+  ]
+
+  // also use the provided `className` if there is no sub-element selection
+  return elementKeys.length === 0
+    ? [className, ...derivedClassNames]
+    : derivedClassNames
 }
 
 export default createSubstyle

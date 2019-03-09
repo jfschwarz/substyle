@@ -1,5 +1,5 @@
 // @flow
-import { keys } from './utils'
+import { keys } from '../utils'
 import type { KeysT } from './types'
 
 const coerceSelection = (select?: KeysT): Array<string> => {

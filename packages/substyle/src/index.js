@@ -1,11 +1,13 @@
 // @flow
-import createSubstyle from './createSubstyle'
 import defaultStyle from './defaultStyle'
-import EnhancerProvider from './EnhancerProvider'
-import defaultPropsDecorator from './defaultPropsDecorator'
 import type { SubstyleT as Substyle } from './types'
 
-export { createSubstyle, EnhancerProvider, defaultStyle, defaultPropsDecorator }
+export {
+  default as createSubstyle,
+  defaultPropsDecorator,
+} from './createSubstyle'
+export { default as defaultStyle } from './defaultStyle'
+export { default as EnhancerProvider } from './EnhancerProvider'
 
 export default defaultStyle()
 export type { Substyle }

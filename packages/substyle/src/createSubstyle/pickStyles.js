@@ -1,5 +1,4 @@
-import { keys, merge, omit, values } from './utils'
-
+import { keys, merge, omit, values } from '../utils'
 import { isModifier } from './filterKeys'
 
 const camelize = key => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())

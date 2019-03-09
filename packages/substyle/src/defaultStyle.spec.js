@@ -5,7 +5,7 @@ import React, { Component, createElement } from 'react'
 import EnhancerProvider from './EnhancerProvider'
 import createSubstyle from './createSubstyle'
 import defaultStyle from './defaultStyle'
-import { PropTypes } from './types'
+import { PropTypes } from './propTypes'
 
 describe('`defaultStyle` higher-order component factory', () => {
   const MyComponent = ({ style, ...rest }) => (
