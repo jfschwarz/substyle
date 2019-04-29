@@ -33,7 +33,10 @@ describe('createPropsDecorator', () => {
       className: 'foo',
       style: { backgroundColor: 'red' },
     })
-    expect(result).toHaveProperty('className', `foo ${hash({ backgroundColor: 'red' })}`)
+    expect(result).toHaveProperty(
+      'className',
+      `foo ${hash({ backgroundColor: 'red' })}`
+    )
   })
 
   it('should not add multiple rules for the same style object', () => {
