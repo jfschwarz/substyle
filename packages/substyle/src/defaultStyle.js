@@ -134,7 +134,11 @@ const createDefaultStyle = (
       const { innerRef } = this.props
       if (typeof innerRef === 'function') {
         innerRef(ref)
-      } else if (innerRef && typeof innerRef !== 'string') {
+      } else if (
+        innerRef &&
+        typeof innerRef !== 'string' &&
+        typeof innerRef !== 'number'
+      ) {
         innerRef.current = ref
       }
     }
