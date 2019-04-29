@@ -16,6 +16,7 @@
     "copy-types:es5": "flow-copy-source src lib",
     "copy-types:es6": "flow-copy-source src es6",
     "test": "jest",
+    "lint": "eslint --max-warnings 0 src",
     "prepublishOnly": "yarn test && yarn build"
   },
   "repository": {
@@ -50,6 +51,7 @@
   "devDependencies": {
     "@babel/cli": "^7.2.3",
     "enzyme-adapter-react-16": "^1.10.0",
+    "eslint": "^5.14.1",
     "flow-copy-source": "^2.0.3",
     "jest": "24.1.0",
     "react-test-renderer": "^16.0.0",
