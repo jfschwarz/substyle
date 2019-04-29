@@ -178,7 +178,7 @@ jobs:
 
       - run:
           name: Flow type check
-          command: yarn flow --max-workers 1
+          command: yarn flow --check --max-workers 1
 
   format_code:
     <<: *container_config
