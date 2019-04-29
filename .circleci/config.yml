@@ -126,7 +126,7 @@ jobs:
   test_substyle:
     <<: *container_config
 
-    working_directory: ~/repo/substyle
+    working_directory: ~/repo/packages/substyle
 
     <<: *run_tests
 
