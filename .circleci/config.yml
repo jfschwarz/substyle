@@ -1,0 +1,240 @@
+version: 2.1
+
+references:
+  workspace_root: &workspace_root ~/repo
+
+  container_config: &container_config
+    docker:
+      - image: circleci/node:latest
+
+  container_config_browser: &container_config_browser
+    docker:
+      - image: circleci/node:latest-browsers
+
+  restore_deps: &restore_deps
+    restore_cache:
+      keys:
+        - dependencies-{{ .Branch }}-{{ .Revision }}-{{ checksum "../../yarn.lock" }}
+        - dependencies-{{ .Branch }}-{{ checksum "../../yarn.lock" }}
+        - dependencies-{{ .Branch }}
+        - dependencies
+
+  restore_deps_global: &restore_deps_global
+    restore_cache:
+      keys:
+        - dependencies-{{ .Branch }}-{{ .Revision }}-{{ checksum "yarn.lock" }}
+        - dependencies-{{ .Branch }}-{{ checksum "yarn.lock" }}
+        - dependencies-{{ .Branch }}
+        - dependencies
+
+  attach_build: &attach_build
+    attach_workspace:
+      at: *workspace_root
+
+  publish_test_results: &publish_test_results
+    store_test_results:
+      path: reports/junit
+
+  store_test_results: &store_test_results
+    store_artifacts:
+      path: reports/junit/junitresults.xml
+      prefix: tests
+
+  store_coverage_results: &store_coverage_results
+    run:
+      name: Upload coverage report
+      command: yarn codecov
+      working_directory: *workspace_root
+
+  run_tests: &run_tests
+    steps:
+      - checkout:
+          path: *workspace_root
+
+      - *restore_deps
+      - *attach_build
+
+      - run:
+          name: Run tests
+          command: yarn test --coverage --runInBand --no-colors
+
+      - *publish_test_results
+      - *store_test_results
+      - *store_coverage_results
+
+  run_linter: &run_linter
+    steps:
+      - checkout:
+          path: *workspace_root
+
+      - *restore_deps
+
+      - run:
+          name: Run linter
+          command: yarn lint
+
+  setup_git: &setup_git
+    run:
+      name: Set git name & email
+      command: |
+        git config --global user.name "Workflow Bot" && git config --global user.email "wolf.pack@signavio.com"
+
+jobs:
+  install:
+    <<: *container_config
+
+    working_directory: *workspace_root
+
+    steps:
+      - checkout
+
+      - *restore_deps_global
+
+      - run:
+          name: Install dependencies
+          command: yarn install
+
+      - save_cache:
+          key: dependencies-{{ .Branch }}-{{ .Revision }}-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+            - packages/substyle/node_modules
+            - packages/substyle-glamor/node_modules
+            - packages/substyle-jss/node_modules
+
+  build:
+    <<: *container_config
+
+    working_directory: *workspace_root
+
+    steps:
+      - checkout
+
+      - *restore_deps_global
+
+      - run:
+          name: Transpile packages
+          command: yarn build
+
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - packages/substyle/lib
+            - packages/substyle-glamor/lib
+            - packages/substyle-jss/lib
+
+  test_substyle:
+    <<: *container_config
+
+    working_directory: ~/repo/substyle
+
+    <<: *run_tests
+
+  lint_substyle:
+    <<: *container_config
+
+    working_directory: ~/repo/packages/substyle
+
+    <<: *run_linter
+
+  test_substyle_glamor:
+    <<: *container_config
+
+    working_directory: ~/repo/packages/substyle-glamor
+
+    <<: *run_tests
+
+  lint_substyle_glamor:
+    <<: *container_config
+
+    working_directory: ~/repo/packages/substyle-glamor
+
+    <<: *run_linter
+
+  test_substyle_jss:
+    <<: *container_config
+
+    working_directory: ~/repo/packages/substyle-jss
+
+    <<: *run_tests
+
+  lint_substyle_jss:
+    <<: *container_config
+
+    working_directory: ~/repo/packages/substyle-jss
+
+    <<: *run_linter
+
+  type_check:
+    <<: *container_config
+
+    working_directory: *workspace_root
+
+    steps:
+      - checkout
+
+      - *restore_deps_global
+      - *attach_build
+
+      - run:
+          name: Flow type check
+          command: yarn flow --max-workers 1
+
+  format_code:
+    <<: *container_config
+
+    working_directory: *workspace_root
+
+    steps:
+      - checkout
+      - *restore_deps_global
+
+      - run:
+          name: Prettier
+          command: yarn prettier --list-different --no-semi --single-quote --trailing-comma es5 "{.,packages/**}/{src,specs,test}/**/*.js"
+
+workflows:
+  version: 2.1
+
+  build_and_test:
+    jobs:
+      - install
+
+      - build:
+          requires:
+            - install
+
+      # --- CODE FORMAT ---- #
+      - format_code:
+          requires:
+            - install
+
+      # ---- TYPE CHECK ---- #
+
+      - type_check:
+          requires:
+            - build
+
+      # ---- LINTERS ----- #
+
+      - lint_substyle:
+          requires:
+            - install
+      - lint_substyle_glamor:
+          requires:
+            - install
+      - lint_substyle_jss:
+          requires:
+            - install
+
+      # ---- TESTS ----- #
+
+      - test_substyle:
+          requires:
+            - build
+      - test_substyle_glamor:
+          requires:
+            - build
+      - test_substyle_jss:
+          requires:
+            - build
