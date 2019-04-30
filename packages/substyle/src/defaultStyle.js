@@ -1,4 +1,5 @@
 // @flow
+/* eslint-disable react/forbid-foreign-prop-types */
 import hoistStatics from 'hoist-non-react-statics'
 import React, { Component, type ComponentType, type ElementType } from 'react'
 import warning from 'warning'
@@ -117,8 +118,9 @@ const createDefaultStyle = (
         this.enhancedWrappedComponent = enhance(WrappedComponent)
       }
 
-      // eslint-disable-next-line react/forbid-foreign-prop-types
+      // $FlowFixMe
       if (this.enhancedWrappedComponent.propTypes) {
+        // $FlowFixMe
         this.enhancedWrappedComponent.propTypes = {
           ...this.enhancedWrappedComponent.propTypes,
           style: PropTypes.style,
@@ -139,6 +141,7 @@ const createDefaultStyle = (
 
     setWrappedInstance = (ref: ElementType): void => {
       this.wrappedInstance = ref
+
       const { innerRef } = this.props
       if (typeof innerRef === 'function') {
         innerRef(ref)
@@ -158,6 +161,7 @@ const createDefaultStyle = (
 
   // define prop types based on WrappedComponent's prop types
   WithDefaultStyle.propTypes = {
+    // $FlowFixMe
     ...WrappedComponent.propTypes,
     ...PropTypes,
   }
