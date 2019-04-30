@@ -101,6 +101,7 @@ jobs:
             - packages/substyle/node_modules
             - packages/substyle-glamor/node_modules
             - packages/substyle-jss/node_modules
+            - packages/example-page/node_modules
 
   build:
     <<: *container_config
@@ -191,7 +192,7 @@ jobs:
 
       - run:
           name: Prettier
-          command: yarn prettier --list-different --no-semi --single-quote --trailing-comma es5 "{.,packages/**}/{src,specs,test}/**/*.js"
+          command: yarn prettier --list-different "{.,packages/**}/{src,specs,test}/**/*.js"
 
 workflows:
   version: 2.1
