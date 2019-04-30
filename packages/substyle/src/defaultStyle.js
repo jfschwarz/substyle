@@ -1,11 +1,12 @@
 // @flow
+/* eslint-disable react/forbid-foreign-prop-types */
 import hoistStatics from 'hoist-non-react-statics'
 import React, { Component, type ComponentType, type ElementType } from 'react'
 import warning from 'warning'
 
 import { EnhancerConsumer } from './EnhancerProvider'
 import createSubstyle from './createSubstyle'
-import { PropTypes } from './propTypes'
+import PropTypes from './propTypes'
 import {
   type EnhancerFuncT,
   type KeysT,
@@ -117,6 +118,15 @@ const createDefaultStyle = (
         this.enhancedWrappedComponent = enhance(WrappedComponent)
       }
 
+      // $FlowFixMe
+      if (this.enhancedWrappedComponent.propTypes) {
+        // $FlowFixMe
+        this.enhancedWrappedComponent.propTypes = {
+          ...this.enhancedWrappedComponent.propTypes,
+          style: PropTypes.style,
+        }
+      }
+
       return this.enhancedWrappedComponent || WrappedComponent
     }
 
@@ -131,10 +141,15 @@ const createDefaultStyle = (
 
     setWrappedInstance = (ref: ElementType): void => {
       this.wrappedInstance = ref
+
       const { innerRef } = this.props
       if (typeof innerRef === 'function') {
         innerRef(ref)
-      } else if (innerRef && typeof innerRef !== 'string') {
+      } else if (
+        innerRef &&
+        typeof innerRef !== 'string' &&
+        typeof innerRef !== 'number'
+      ) {
         innerRef.current = ref
       }
     }
@@ -145,7 +160,11 @@ const createDefaultStyle = (
   WithDefaultStyle.displayName = `withDefaultStyle(${wrappedComponentName})`
 
   // define prop types based on WrappedComponent's prop types
-  WithDefaultStyle.propTypes = PropTypes
+  WithDefaultStyle.propTypes = {
+    // $FlowFixMe
+    ...WrappedComponent.propTypes,
+    ...PropTypes,
+  }
 
   // expose WrappedComponent, e.g., for testing purposes
   WithDefaultStyle.WrappedComponent = WrappedComponent

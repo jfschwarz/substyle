@@ -5,7 +5,7 @@ import React, { Component, createElement } from 'react'
 import EnhancerProvider from '../src/EnhancerProvider'
 import createSubstyle from '../src/createSubstyle'
 import defaultStyle from '../src/defaultStyle'
-import { PropTypes } from '../src/types'
+import PropTypes from '../src/propTypes'
 
 describe('`defaultStyle` higher-order component factory', () => {
   const MyComponent = ({ style, ...rest }) => (
@@ -159,7 +159,7 @@ describe('`defaultStyle` higher-order component factory', () => {
     expect(wrapper.find('section').find(MyComponent)).toExist()
   })
 
-  it('should fix `style` prop type if injected HOC defines (as Radium does)', () => {
+  it('should fix `style` prop type if injected HOC defines one (as Radium does)', () => {
     const MyStyledComponent = defaultStyle()(MyComponent)
     const wrapInSection = WrappedComponent => {
       const WrapperComp = props => (
