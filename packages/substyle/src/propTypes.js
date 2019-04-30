@@ -5,7 +5,7 @@ const StylePT = PT.oneOfType([PT.func, PT.object])
 
 const ClassNamesPT = PT.objectOf(PT.string)
 
-export const PropTypes = {
+export default {
   style: StylePT,
   className: PT.string,
   classNames: ClassNamesPT,

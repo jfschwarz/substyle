@@ -5,7 +5,7 @@ import warning from 'warning'
 
 import { EnhancerConsumer } from './EnhancerProvider'
 import createSubstyle from './createSubstyle'
-import { PropTypes } from './propTypes'
+import PropTypes from './propTypes'
 import {
   type EnhancerFuncT,
   type KeysT,
@@ -117,6 +117,14 @@ const createDefaultStyle = (
         this.enhancedWrappedComponent = enhance(WrappedComponent)
       }
 
+      // eslint-disable-next-line react/forbid-foreign-prop-types
+      if (this.enhancedWrappedComponent.propTypes) {
+        this.enhancedWrappedComponent.propTypes = {
+          ...this.enhancedWrappedComponent.propTypes,
+          style: PropTypes.style,
+        }
+      }
+
       return this.enhancedWrappedComponent || WrappedComponent
     }
 
@@ -149,7 +157,10 @@ const createDefaultStyle = (
   WithDefaultStyle.displayName = `withDefaultStyle(${wrappedComponentName})`
 
   // define prop types based on WrappedComponent's prop types
-  WithDefaultStyle.propTypes = PropTypes
+  WithDefaultStyle.propTypes = {
+    ...WrappedComponent.propTypes,
+    ...PropTypes,
+  }
 
   // expose WrappedComponent, e.g., for testing purposes
   WithDefaultStyle.WrappedComponent = WrappedComponent
