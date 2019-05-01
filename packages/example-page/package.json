@@ -1,6 +1,6 @@
 {
   "name": "example-page",
-  "version": "1.1.0-alpha.0",
+  "version": "1.1.0",
   "description": "Example page highlighting the different flavours of substyle",
   "main": "src/index.js",
   "author": "Philipp Giese",
@@ -29,8 +29,8 @@
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-jss": "^8.6.1",
-    "substyle": "^7.1.0-alpha.0",
-    "substyle-glamor": "^2.1.0-alpha.0",
-    "substyle-jss": "^2.1.0-alpha.0"
+    "substyle": "^7.1.0",
+    "substyle-glamor": "^2.1.0",
+    "substyle-jss": "^2.1.0"
   }
 }
