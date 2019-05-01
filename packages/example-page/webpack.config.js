@@ -5,6 +5,7 @@ const HTMLWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin')
 
 module.exports = {
   mode: 'development',
+  devtool: 'source-map',
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'build'),
