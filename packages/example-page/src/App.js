@@ -41,7 +41,7 @@ function SubstyleExample() {
         <tbody>
           <tr>
             <td>
-              <label for="titleSize">Title size</label>
+              <label htmlFor="titleSize">Title size</label>
             </td>
             <td>
               <select
@@ -57,7 +57,7 @@ function SubstyleExample() {
           </tr>
           <tr>
             <td>
-              <label for="contentColor">Content text color</label>
+              <label htmlFor="contentColor">Content text color</label>
             </td>
             <td>
               <select
