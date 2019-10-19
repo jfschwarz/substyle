@@ -36,10 +36,10 @@ export const identity = value => {
 }
 
 export const omit = (obj, keys: string[]) => {
-  const { ...other } = { ...obj }
+  const other = Object.assign({}, obj)
   if (keys) {
-    for (const key of keys) {
-      delete other[key]
+    for (let i = 0; i < keys.length; i++) {
+      delete other[keys[i]]
     }
   }
   return other
