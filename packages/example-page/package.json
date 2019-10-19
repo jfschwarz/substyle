@@ -9,6 +9,7 @@
   "scripts": {
     "start": "webpack-dev-server",
     "build": "echo OK",
+    "test": "echo OK",
     "copy-types": "echo OK",
     "lint": "eslint --max-warnings 0 src"
   },
