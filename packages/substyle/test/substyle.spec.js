@@ -409,28 +409,25 @@ describe('substyle', () => {
       },
       myDecorator
     )
-    expect(myDecorator.calledOnce).toBeTruthy()
-    expect(
-      myDecorator.calledWithMatch({
-        style: {
-          height: 50,
-          header: {
-            width: 100,
-          },
+
+    expect(myDecorator).toHaveBeenCalledTimes(1)
+    expect(myDecorator).toHaveBeenLastCalledWith({
+      style: {
+        height: 50,
+        header: {
+          width: 100,
         },
-        className: 'foo',
-      })
-    ).toBeTruthy()
+      },
+      className: 'foo',
+    })
     expect({ ...substyle }).toEqual({ mapped: 'foobar' })
 
     const subsubstyle = substyle('header')
-    expect(myDecorator.calledTwice).toBeTruthy()
-    expect(
-      myDecorator.calledWithMatch({
-        style: { width: 100 },
-        className: 'foo__header',
-      })
-    ).toBeTruthy()
+    expect(myDecorator).toHaveBeenCalledTimes(2)
+    expect(myDecorator).toHaveBeenLastCalledWith({
+      style: { width: 100 },
+      className: 'foo__header',
+    })
     expect({ ...subsubstyle }).toEqual({ mapped: 'foobar' })
   })
 })
