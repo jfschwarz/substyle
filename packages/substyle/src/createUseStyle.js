@@ -16,21 +16,24 @@ const createUseStyle = (
     const propsDecorator = undefined //useContext()
     // const adapterHook = useContext() // for JSS adapter
 
-    const dependsOn = [
-      style,
-      className,
-      classNames,
-      ...(getModifiers ? coerceSelection(getModifiers(rest)) : []),
-      ...(typeof defaultStyle === 'function' ? getDependsOn(rest) : []),
-      propsDecorator,
-    ]
-
     const substyle = useMemo(
       () => createSubstyle({ style, className, classNames }, propsDecorator),
-      dependsOn
+      [style, className, classNames, propsDecorator]
     )
 
-    return substyle
+    const modifiers = getModifiers ? coerceSelection(getModifiers(rest)) : []
+    return useMemo(
+      () =>
+        substyle(
+          modifiers,
+          typeof defaultStyle === 'function' ? defaultStyle(rest) : defaultStyle
+        ),
+      [
+        substyle,
+        ...modifiers,
+        ...(typeof defaultStyle === 'function' ? getDependsOn(rest) : []),
+      ]
+    )
   }
 
   return useStyle

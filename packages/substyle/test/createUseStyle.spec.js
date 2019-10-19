@@ -5,6 +5,15 @@ import createSubstyle from '../src/createSubstyle'
 
 describe('createUseStyle', () => {
   const useStyle = createUseStyle()
+  const Content = props => {
+    const style = useStyle(props)
+    return (
+      <section {...style}>
+        <h1 {...style('title')}>{props.title}</h1>
+      </section>
+    )
+  }
+
   const useMyStyle = createUseStyle(
     {
       background: 'white',
@@ -25,16 +34,6 @@ describe('createUseStyle', () => {
     },
     ({ readOnly }) => ({ '&readOnly': readOnly })
   )
-
-  const Content = props => {
-    const style = useStyle(props)
-    return (
-      <section {...style}>
-        <h1 {...style('title')}>{props.title}</h1>
-      </section>
-    )
-  }
-
   const Container = props => {
     const style = useMyStyle(props)
     return (
@@ -62,8 +61,8 @@ describe('createUseStyle', () => {
     })
 
     expect(wrapper.find('.foo__content')).toExist()
-    expect(wrapper.find('.foo__content_title')).toExist()
-    expect(wrapper.find('.foo__content_title').prop('style')).toEqual({
+    expect(wrapper.find('.foo__content__title')).toExist()
+    expect(wrapper.find('.foo__content__title').prop('style')).toEqual({
       fontStyle: 'bold',
     })
   })
