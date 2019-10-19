@@ -14,6 +14,18 @@ describe('createUseStyle', () => {
     )
   }
 
+  const createContainer = useStyle => {
+    const Container = props => {
+      const style = useStyle(props)
+      return (
+        <div {...style}>
+          <Content style={style('content')} />
+          <div {...style('footer')} />
+        </div>
+      )
+    }
+    return Container
+  }
   const useMyStyle = createUseStyle(
     {
       background: 'white',
@@ -34,15 +46,7 @@ describe('createUseStyle', () => {
     },
     ({ readOnly }) => ({ '&readOnly': readOnly })
   )
-  const Container = props => {
-    const style = useMyStyle(props)
-    return (
-      <div {...style}>
-        <Content style={style('content')} />
-        <div {...style('footer')} />
-      </div>
-    )
-  }
+  const Container = createContainer(useMyStyle)
 
   it('should correctly apply default styles and derive class names', () => {
     const wrapper = mount(<Container className="foo" />)
@@ -101,91 +105,110 @@ describe('createUseStyle', () => {
     })
   })
 
-  // it('should accept a function mapping props to default styles as first argument', () => {
-  //   const MyEnhancedComponent = defaultStyle(props => ({ color: props.color }))(
-  //     MyComponent
-  //   )
+  it('should accept a function mapping props to default styles as first argument', () => {
+    const Container = createContainer(
+      createUseStyle(props => ({ color: props.color }))
+    )
+    const wrapper = mount(
+      <Container style={{ cursor: 'pointer' }} color="black" />
+    )
 
-  //   const wrapper = mount(
-  //     <MyEnhancedComponent style={{ cursor: 'pointer' }} color="black" />
-  //   )
-  //   const styleProp = getStyleProp(wrapper)
+    expect(
+      wrapper
+        .find('div')
+        .at(0)
+        .prop('style')
+    ).toEqual({
+      color: 'black',
+      cursor: 'pointer',
+    })
+  })
 
-  //   expect(styleProp.style).toEqual({
-  //     color: 'black',
-  //     cursor: 'pointer',
-  //   })
-  // })
+  it('should take a modifier selection function as second argument', () => {
+    const Container = createContainer(
+      createUseStyle(
+        {
+          color: 'red',
 
-  // it('should take a modifier selection function as second argument', () => {
-  //   const MyEnhancedComponent = defaultStyle(
-  //     {
-  //       color: 'red',
+          '&readOnly': {
+            opacity: 0.5,
+          },
+        },
+        props => ({
+          '&readOnly': props.readOnly,
+        })
+      )
+    )
+    const wrapper = mount(<Container readOnly />)
+    expect(
+      wrapper
+        .find('div')
+        .at(0)
+        .prop('style')
+    ).toEqual({
+      color: 'red',
+      opacity: 0.5,
+    })
+  })
 
-  //       '&readOnly': {
-  //         opacity: 0.5,
-  //       },
-  //     },
-  //     props => ({
-  //       '&readOnly': props.readOnly,
-  //     })
-  //   )(MyComponent)
-  //   const wrapper = mount(<MyEnhancedComponent readOnly />)
-  //   const styleProp = getStyleProp(wrapper)
+  it('should apply the selected modifiers also on the style supplied by the user', () => {
+    const Container = createContainer(
+      createUseStyle({ color: 'red' }, props => ({
+        '&readOnly': props.readOnly,
+      }))
+    )
+    const wrapper = mount(
+      <Container
+        readOnly
+        style={{
+          '&readOnly': {
+            opacity: 0.5,
+          },
+        }}
+      />
+    )
 
-  //   expect(styleProp.style).toEqual({
-  //     color: 'red',
-  //     opacity: 0.5,
-  //   })
-  // })
+    expect(
+      wrapper
+        .find('div')
+        .at(0)
+        .prop('style')
+    ).toEqual({
+      color: 'red',
+      opacity: 0.5,
+    })
+  })
 
-  // it('should apply the selected modifiers also on the style supplied by the user', () => {
-  //   const MyEnhancedComponent = defaultStyle({ color: 'red' }, props => ({
-  //     '&readOnly': props.readOnly,
-  //   }))(MyComponent)
-
-  //   const wrapper = mount(
-  //     <MyEnhancedComponent
-  //       readOnly
-  //       style={{
-  //         '&readOnly': {
-  //           opacity: 0.5,
-  //         },
-  //       }}
-  //     />
-  //   )
-  //   const styleProp = getStyleProp(wrapper)
-  //   expect(styleProp.style).toEqual({
-  //     color: 'red',
-  //     opacity: 0.5,
-  //   })
-  // })
-
-  // it('should give precedence to styles supplied by the user, regardless the modifiers specificity', () => {
-  //   const MyEnhancedComponent = defaultStyle(
-  //     {
-  //       '&readOnly': {
-  //         opacity: 0.5,
-  //       },
-  //     },
-  //     props => ({
-  //       '&readOnly': props.readOnly,
-  //     })
-  //   )(MyComponent)
-
-  //   const wrapper = mount(
-  //     <MyEnhancedComponent
-  //       readOnly
-  //       style={{
-  //         opacity: 0.7,
-  //       }}
-  //     />
-  //   )
-  //   const styleProp = getStyleProp(wrapper)
-  //   expect(styleProp.style).toEqual({
-  //     opacity: 0.7,
-  //   })
-  // })
+  it('should give precedence to styles supplied by the user, regardless the modifiers specificity', () => {
+    const Container = createContainer(
+      createUseStyle(
+        {
+          '&readOnly': {
+            opacity: 0.5,
+          },
+        },
+        props => ({
+          '&readOnly': props.readOnly,
+        })
+      )
+    )
+    const wrapper = mount(
+      <Container
+        readOnly
+        style={{
+          opacity: 0.7,
+        }}
+      />
+    )
+    expect(
+      wrapper
+        .find('div')
+        .at(0)
+        .prop('style')
+    ).toEqual({
+      opacity: 0.7,
+    })
+  })
 
   it('should support providing a props decorator function via context', () => {})
 })
