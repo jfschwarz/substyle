@@ -6,11 +6,10 @@ _substyle_ is a simple utility for building universally stylable React component
 
 - css ([BEM](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/) class names)
 - css modules
-- inline styles (pure and with [Radium](http://formidable.com/open-source/radium/))
+- inline styles
 - [Aphrodite](https://github.com/Khan/aphrodite)
 - [Glamor](https://github.com/threepointone/glamor) & [Glamorous](https://glamorous.rocks)
 - [JSS](https://github.com/jsstyles/jss)
-
 
 ## Installation
 
@@ -28,7 +27,7 @@ import substyle from 'substyle'
 const Popover = ({ style, children }) => (
   <div {...style}>
     <button {...style('close')}>x</button>
-    { children }
+    {children}
   </div>
 )
 
@@ -108,7 +107,7 @@ import { defaultStyle } from 'substyle'
 const Popover = ({ style, children }) => (
   <div {...style}>
     <button {...style('close')}>x</button>
-    { children }
+    {children}
   </div>
 )
 
@@ -118,8 +117,8 @@ const styled = defaultStyle({
   close: {
     position: 'absolute',
     top: 0,
-    right: 0
-  }
+    right: 0,
+  },
 })
 export default styled(Popover)
 ```
@@ -136,20 +135,23 @@ a static object with the dynamic styling expressed as variants using a nested in
 Following this best practice, all variant-specific styling will always be customizable also via css.
 
 ```javascript
-const styled = defaultStyle({
-  position: 'absolute',
+const styled = defaultStyle(
+  {
+    position: 'absolute',
 
-  '&align-top': {
-    top: 0,
+    '&align-top': {
+      top: 0,
+    },
+
+    '&align-bottom': {
+      bottom: 0,
+    },
   },
-
-  '&align-bottom': {
-    bottom: 0,
-  }
-}, ({ small, align = 'top'}) => ({
-  '&small': small,
-  [`&align-${align}`]: true,
-}))
+  ({ small, align = 'top' }) => ({
+    '&small': small,
+    [`&align-${align}`]: true,
+  })
+)
 ```
 
 If variants of the component are defined for different values of internal component states instead of props, you can select the modifiers also inside the component's render function.
@@ -176,7 +178,6 @@ An alternative, potentially simpler, approach is lifting the component state fur
 - essential styles (required so that the component is functional): co-located with component using `defaultStyle`
 - some beautiful example styles/different themes: as extra JavaScript file, css file, or both
 
-
 ## API
 
 The default export of the _substyle_ module is a higher-order component for enhancing a React component class by injecting the special ´style´ prop.
@@ -187,8 +188,7 @@ Returns an enhanced version of `Component` which supports `style`, `className`, 
 
 #### Arguments
 
-- `Component` _(React component)_ The component to enhance. This component will be rendered with special `style` prop. It will *not* receive the original `style`, `className`, and `classNames` passed to the enhanced version of the component.
-
+- `Component` _(React component)_ The component to enhance. This component will be rendered with special `style` prop. It will _not_ receive the original `style`, `className`, and `classNames` passed to the enhanced version of the component.
 
 There is an additional higher-order component creator function that allows to attach default style definitions for the wrapped component:
 
@@ -203,7 +203,6 @@ Returns a version of the `substyle` higher-order component which is preconfigure
 - `mapPropsToModifiers` _(Function: (props) => string[] | Object)_ If specified, the function will be called with props and must return [modifiers](#define-style-modifiers) as an object with modifiers as keys and boolean values or as an array of modifiers.
 
 - `shouldUpdate(): boolean` _(Function: (nextProps, props) => boolean)_ Only useful, if `defaultStyles` parameter is a function. `shouldUpdate` must return `true` if the result of that function will change for the new `props`. This enables some performance optimizations as it prevents unnecessary merges of default styles with user provided inline styles.
-
 
 Enhancing a component with the _substyle_ higher-order function injects a function as the `style` prop. This function has properties assigned to it which are supposed to be passed as props to the root element returned by the component's render function.
 

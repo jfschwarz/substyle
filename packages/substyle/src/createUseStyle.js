@@ -3,6 +3,8 @@ import { useContext, useMemo } from 'react'
 import { type KeysT, type PropsT, type SubstyleT } from './types'
 import createSubstyle from './createSubstyle'
 import coerceSelection from './coerceSelection'
+import { PropsDecoratorContext } from './PropsDecoratorProvider'
+import defaultPropsDecorator from './defaultPropsDecorator'
 
 type DependsOnFuncT = (props: Object) => any[]
 
@@ -13,7 +15,7 @@ const createUseStyle = (
 ) => {
   const useStyle = (props: PropsT) => {
     const { style, className, classNames, ...rest } = props
-    const propsDecorator = undefined //useContext()
+    const propsDecorator = useContext(PropsDecoratorContext)
     // const adapterHook = useContext() // for JSS adapter
 
     const substyle = useMemo(
@@ -31,7 +33,7 @@ const createUseStyle = (
       [
         substyle,
         ...modifiers,
-        ...(typeof defaultStyle === 'function' ? getDependsOn(rest) : []),
+        ...((typeof defaultStyle === 'function' && getDependsOn(rest)) || []),
       ]
     )
   }

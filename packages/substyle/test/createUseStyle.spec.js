@@ -2,6 +2,8 @@ import React from 'react'
 import { mount } from 'enzyme'
 import createUseStyle from '../src/createUseStyle'
 import createSubstyle from '../src/createSubstyle'
+import PropsDecoratorProvider from '../src/PropsDecoratorProvider'
+import HookProvider from '../src/HookProvider'
 
 describe('createUseStyle', () => {
   const useStyle = createUseStyle()
@@ -210,5 +212,49 @@ describe('createUseStyle', () => {
     })
   })
 
-  it('should support providing a props decorator function via context', () => {})
+  it('should allow passing a getDependsOn function that is called with the props', () => {
+    const getDependsOn = jest.fn()
+    const Container = createContainer(
+      createUseStyle(() => ({}), () => [], getDependsOn)
+    )
+    const wrapper = mount(<Container foo="bar" />)
+    wrapper.setProps({ foo: 'baz' })
+
+    expect(getDependsOn).toHaveBeenCalledTimes(2)
+    expect(getDependsOn).toHaveBeenCalledWith({ foo: 'bar' })
+    expect(getDependsOn).toHaveBeenCalledWith({ foo: 'baz' })
+  })
+
+  it('should preserve previous default styles if none of the values returned by getDependsOn changes', () => {
+    const getDependsOn = () => false
+    const useStyle = createUseStyle(() => ({}), () => [], getDependsOn)
+
+    let style
+    const Component = props => {
+      style = useStyle(props)
+      return null
+    }
+    const wrapper = mount(<Component />)
+    const styleOnFirstRender = style
+    wrapper.setProps({ update: 'yes' })
+    const styleOnSecondRender = style
+
+    expect(styleOnFirstRender).toBe(styleOnSecondRender)
+  })
+
+  fit('should support providing a props decorator function via context', () => {
+    const decorateProps = props => ({
+      'data-mapped': 'foobar',
+    })
+    const wrapper = mount(
+      <PropsDecoratorProvider value={decorateProps}>
+        <Container />
+      </PropsDecoratorProvider>
+    )
+
+    const props = wrapper.find('section').props()
+    expect(props).not.toHaveProperty('style')
+    expect(props).not.toHaveProperty('className')
+    expect(props).toHaveProperty('data-mapped', 'foobar')
+  })
 })
