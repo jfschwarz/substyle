@@ -17,6 +17,7 @@
     "type-check": "flow check",
     "lint": "eslint \"packages/*/{src,test}/**/*.js\"",
     "format": "prettier --write \"packages/**/{src,test}/**/*.js\"",
+    "postinstall": "lerna bootstrap",
     "publish-packages": "lerna publish"
   },
   "dependencies": {

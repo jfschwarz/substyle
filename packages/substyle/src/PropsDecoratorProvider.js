@@ -6,6 +6,5 @@ import type { DecoratorFuncT } from './types'
 export const PropsDecoratorContext = createContext<DecoratorFuncT>(
   defaultPropsDecorator
 )
-const PropsDecoratorProvider = PropsDecoratorContext.Provider
 
-export default PropsDecoratorProvider
+export default PropsDecoratorContext.Provider

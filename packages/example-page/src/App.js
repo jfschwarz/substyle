@@ -1,9 +1,7 @@
 // @flow
 import pretty from 'pretty'
-import Radium from 'radium'
 import React, { useState } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
-import { EnhancerProvider } from 'substyle'
 import { StylesAsClasses, StylesAsDataAttributes } from 'substyle-glamor'
 import { ProvideSheet } from 'substyle-jss'
 
@@ -73,12 +71,6 @@ function SubstyleExample() {
         </tbody>
       </table>
 
-      <h2>Output</h2>
-
-      <div style={{ margin: 20, padding: 20, border: '1px solid black' }}>
-        <EnhancerProvider style={defaultStyle}>{component}</EnhancerProvider>
-      </div>
-
       <h2>Results</h2>
 
       <table>
@@ -90,70 +82,46 @@ function SubstyleExample() {
         </thead>
         <tbody>
           <tr>
-            <td>Class names</td>
+            <td>Default (inline styles & class names)</td>
             <td>
-              <CodeExample>
-                {pretty(
-                  renderToStaticMarkup(
-                    <EnhancerProvider>
-                      <ExampleComponent
-                        style={defaultStyle}
-                        className="example"
-                      />
-                    </EnhancerProvider>
-                  )
-                )}
-              </CodeExample>
+              <ExampleComponent style={defaultStyle} className="example" />
             </td>
-          </tr>
-          <tr>
-            <td>Radium</td>
             <td>
               <CodeExample>
-                {pretty(
-                  renderToStaticMarkup(
-                    <EnhancerProvider enhancer={Radium}>
-                      {component}
-                    </EnhancerProvider>
-                  )
-                )}
+                <ExampleComponent style={defaultStyle} className="example" />
               </CodeExample>
             </td>
           </tr>
           <tr>
             <td>Glamor (through data attribute)</td>
             <td>
+              <StylesAsDataAttributes>{component}</StylesAsDataAttributes>
+            </td>
+            <td>
               <CodeExample>
-                {pretty(
-                  renderToStaticMarkup(
-                    <StylesAsDataAttributes>{component}</StylesAsDataAttributes>
-                  )
-                )}
+                <StylesAsDataAttributes>{component}</StylesAsDataAttributes>
               </CodeExample>
             </td>
           </tr>
           <tr>
             <td>Glamor (through class names)</td>
             <td>
+              <StylesAsClasses>{component}</StylesAsClasses>
+            </td>
+            <td>
               <CodeExample>
-                {pretty(
-                  renderToStaticMarkup(
-                    <StylesAsClasses>{component}</StylesAsClasses>
-                  )
-                )}
+                <StylesAsClasses>{component}</StylesAsClasses>
               </CodeExample>
             </td>
           </tr>
-          <tr>
+          {/* <tr>
             <td>JSS</td>
             <td>
               <CodeExample>
-                {pretty(
-                  renderToStaticMarkup(<ProvideSheet>{component}</ProvideSheet>)
-                )}
+                <ProvideSheet>{component}</ProvideSheet>
               </CodeExample>
             </td>
-          </tr>
+          </tr> */}
         </tbody>
       </table>
     </div>
@@ -161,7 +129,7 @@ function SubstyleExample() {
 }
 
 const CodeExample = ({ children }) => (
-  <pre style={{ margin: 10 }}>{children}</pre>
+  <pre style={{ margin: 10 }}>{pretty(renderToStaticMarkup(children))}</pre>
 )
 
 export default SubstyleExample

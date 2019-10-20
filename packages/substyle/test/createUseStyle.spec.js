@@ -242,7 +242,7 @@ describe('createUseStyle', () => {
     expect(styleOnFirstRender).toBe(styleOnSecondRender)
   })
 
-  fit('should support providing a props decorator function via context', () => {
+  it('should support providing a props decorator function via context', () => {
     const decorateProps = props => ({
       'data-mapped': 'foobar',
     })
