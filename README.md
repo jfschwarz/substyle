@@ -207,6 +207,8 @@ Returns a version of the `substyle` higher-order component which is preconfigure
 
 - `getDependsOn()` _(Function: (nextProps, props) => boolean)_ This prop is useful to optimize performance if the `defaultStyles` parameter is defined as a function. `getDependsOn` will be called with props and must return an array of dependencies. If any of the values in this array changes compared to the previous render, the default styles will be recalculated, otherwise the memoized styles from the last render will be used.
 
+> **Note:** If it is not for theming purposes, you should generally avoid defining the `defaultStyles` as a function on props. Styles depending dynamically on props should rather be defined as inline styles directly. The [`inline` util function](#inlineinlineStylesBefore-style-inlineStylesAfter) comes in handy for doing so.
+
 ### `style([keys])` (hook return value)
 
 Calling `style(key)` returns a new `style` instance with the nested style definitions for the element identified by `key`. Spread the result into the props passed to the addressed React DOM element.
@@ -224,3 +226,18 @@ When addressing an element of a composite component, the result must not be spre
 #### Arguments
 
 - `key` _(string | Array | Object)_ Specifies the key under which to find the nested style definitions. If the component is used with a `className` prop, a new class name will be derived for the element by appending the key to the base class name.
+
+### `inline([inlineStylesBefore], style, [inlineStylesAfter])`
+
+This utility function helps to assign inline styles to a DOM element while merging them correctly with the substyle styling props for this element. This is useful for styles that are highly dynamic depending on props.
+
+```javascript
+import { inline } from 'substyle'
+;<div {...inline(style('element'), { height: props.height })} />
+```
+
+#### Arguments
+
+- `inlineStylesBefore` _(Object)_ Inline styles that might be overriden by user-provided inline styles
+- `style` _(Function)_ The style function instance addressing the element
+- `inlineStylesAfter` _(Object)_ Inline styles that will override any user-provided inline styles
