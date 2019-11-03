@@ -1,12 +1,16 @@
-import { createElement } from 'react'
-
-import injectSubstyle from '../src/index'
+import React from 'react'
+import { mount } from 'enzyme'
+import useStyle from '../src/index'
 
 describe('default export', () => {
-  it('should be usable as a higher-order component', () => {
-    const MyComp = ({ style }) => createElement('div', { ...style })
-    const MyEnhancedComponent = injectSubstyle(MyComp)
+  it('should be usable as a hook', () => {
+    const MyComp = props => {
+      const style = useStyle(props)
+      return <div {...style} />
+    }
 
-    expect(MyEnhancedComponent.displayName).toEqual('withDefaultStyle(MyComp)')
+    const wrapper = mount(<MyComp className="foo" />)
+
+    expect(wrapper.find('div')).toHaveProp('className', 'foo')
   })
 })
