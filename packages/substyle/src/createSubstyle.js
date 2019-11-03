@@ -113,7 +113,6 @@ function createSubstyle(
           )
         })
 
-  // $FlowFixMe Flow does not believe that also a function can be spread
   const styleProps = {
     ...(typeof style === 'function' ? style : { style }),
   }

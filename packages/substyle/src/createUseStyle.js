@@ -1,10 +1,9 @@
 // @flow
 import { useContext, useMemo } from 'react'
-import { type KeysT, type PropsT, type SubstyleT } from './types'
+import { type KeysT, type PropsT } from './types'
 import createSubstyle from './createSubstyle'
 import coerceSelection from './coerceSelection'
 import { PropsDecoratorContext } from './PropsDecoratorProvider'
-import defaultPropsDecorator from './defaultPropsDecorator'
 
 type DependsOnFuncT = (props: Object) => any[]
 
@@ -16,7 +15,6 @@ const createUseStyle = (
   const useStyle = (props: PropsT) => {
     const { style, className, classNames, ...rest } = props
     const propsDecorator = useContext(PropsDecoratorContext)
-    // const adapterHook = useContext() // for JSS adapter
 
     const substyle = useMemo(
       () => createSubstyle({ style, className, classNames }, propsDecorator),

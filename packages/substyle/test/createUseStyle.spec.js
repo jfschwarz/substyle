@@ -3,7 +3,6 @@ import { mount } from 'enzyme'
 import createUseStyle from '../src/createUseStyle'
 import createSubstyle from '../src/createSubstyle'
 import PropsDecoratorProvider from '../src/PropsDecoratorProvider'
-import HookProvider from '../src/HookProvider'
 
 describe('createUseStyle', () => {
   const useStyle = createUseStyle()
