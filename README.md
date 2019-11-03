@@ -2,7 +2,7 @@
 
 There are a lot of competing styling approaches for React applications, from good old css and css modules to inline styles and css-in-js solutions. How can authors of component libraries make sure that component styles can be seamlessly integrated and customized in any application?
 
-_substyle_ is a simple utility for building universally stylable React components. By using _substyle_ your components will support styling through:
+_substyle_ is a simple utility for building universally styleable React components. By using _substyle_ your components will support styling through:
 
 - css ([BEM](http://csswizardry.com/2013/01/mindbemding-getting-your-head-round-bem-syntax/) class names)
 - css modules
@@ -22,16 +22,17 @@ npm install --save substyle
 Let's create a simple `Popover` component using _substyle_:
 
 ```javascript
-import substyle from 'substyle'
+import { useStyle } from 'substyle'
 
-const Popover = ({ style, children }) => (
-  <div {...style}>
-    <button {...style('close')}>x</button>
-    {children}
-  </div>
-)
-
-export default substyle(Popover)
+const Popover = props => {
+  const style = useStyle(props)
+  return (
+    <div {...style}>
+      <button {...style('close')}>x</button>
+      {props.children}
+    </div>
+  )
+}
 ```
 
 That's all there is for making the styles of the container `div` and the `button` element customizable by users of the `Popover` component.
@@ -70,7 +71,7 @@ For getting the styling props to pass to an element returned by your component's
 style('footer')
 ```
 
-In some cases, it is also useful to select multiple styles for the same element. This allows to separate some more specific style definitions from base styles shared with other elments, so that the user would have to provide custom definitions for these base styles only once.
+In some cases, it is also useful to select multiple styles for the same element. This allows to separate some more specific style definitions from base styles shared with other elements, so that the user would have to provide custom definitions for these base styles only once.
 
 ```javascript
 style(['item', 'item-last'])
@@ -86,32 +87,28 @@ The return value of any `style()` call carries different properties depending on
 
 ### Pass selected style to elements of other substyle-enhanced components
 
-If your component `A` renders another component `B`, itself consisting of multiple element that need to be stylable from the outside, you have to enhance `B` with the `substyle` higher-order component, too.
+If your component `A` renders another component `B`, itself consisting of multiple element that need to be styleable from the outside, you have to make `B` call the `useStyle` hook, too.
 Select styles for the `<B />` element by calling the `style` prop with the key you choose for this element. Instead of spreading the result of this call to the JSX attributes,
 you pass it down to `<B />` as the `style` prop. This ensures that also all nested inline style definitions for elements inside of `<B />` are passed down.
 
 ```javascript
-const A = ({ style }) => (
-  <div {...style}>
-    <B style={style('b')} />
-    <div {...style('footer')} />
-  </div>
-)
+const A = props => {
+  const style = useStyle(props)
+  return (
+    <div {...style}>
+      <B style={style('b')} />
+      <div {...style('footer')} />
+    </div>
+  )
+}
 ```
 
 ### Define default styling
 
 ```javascript
-import { defaultStyle } from 'substyle'
+import { createUseStyle } from 'substyle'
 
-const Popover = ({ style, children }) => (
-  <div {...style}>
-    <button {...style('close')}>x</button>
-    {children}
-  </div>
-)
-
-const styled = defaultStyle({
+const useStyle = createUseStyle({
   position: 'absolute',
 
   close: {
@@ -120,22 +117,29 @@ const styled = defaultStyle({
     right: 0,
   },
 })
-export default styled(Popover)
+
+const Popover = props => {
+  const style = useStyle(props)
+  return (
+    <div {...style}>
+      <button {...style('close')}>x</button>
+      {props.children}
+    </div>
+  )
+}
 ```
 
 ### Define style modifiers
 
 In many cases you can distinguish between different variants of how a component looks like based on props.
-Each of these variants might have slightly different default styles and users must be able to customize styling
-specifically for each variant. This means each variant needs to be represented by a specific class name and a specific
-set of inline styles.
+Each of these variants might have slightly different default styles and users must be able to customize styling specifically for each variant.
+This means each variant needs to be represented by a specific class name and a specific set of inline styles.
 
-While default styles can be provided as a function on props, in most cases it is preferrable to keep default styles as
-a static object with the dynamic styling expressed as variants using a nested inline styles definition for each modifier key.
+While default styles can be provided as a function on props, in most cases it is preferable to keep default styles as a static object with the dynamic styling expressed as variants using a nested inline styles definition for each modifier key.
 Following this best practice, all variant-specific styling will always be customizable also via css.
 
 ```javascript
-const styled = defaultStyle(
+const useStyle = createUseStyle(
   {
     position: 'absolute',
 
@@ -154,67 +158,68 @@ const styled = defaultStyle(
 )
 ```
 
-If variants of the component are defined for different values of internal component states instead of props, you can select the modifiers also inside the component's render function.
-To do this, call with `style` prop with the modifier keys first to derive a new instance of the `style` prop that you can then call with element keys and spread as JSX attributes.
+If variants of the component are defined for different values of internal component states, you can merge state values with props in the `useStyle` hook call:
 
 ```javascript
-render() {
-  const modifiedStyle = this.props.style({
-    '&active': this.state.active
+const MyComponent = props => {
+  const [active, setActive] = useState(false)
+  const style = useStyle({
+    ...props,
+    active,
   })
   return (
-    <div {...modifiedStyle}>
-      <div {...modifiedStyle('header')} />
-      ...
+    <div {...style}>
+      <div {...style('header')} />
+      {props.children}
     </div>
   )
 }
 ```
 
-An alternative, potentially simpler, approach is lifting the component state further up, e.g., using recompose's `withState`, so that the state values are available as props for you to define the props to modifier keys mapping for `defaultStyle`.
-
 ### Organize default styles
 
-- essential styles (required so that the component is functional): co-located with component using `defaultStyle`
+- essential styles (required so that the component is functional): co-located with component using `createUseStyle`
 - some beautiful example styles/different themes: as extra JavaScript file, css file, or both
 
 ## API
 
 The default export of the _substyle_ module is a higher-order component for enhancing a React component class by injecting the special ´style´ prop.
 
-#### `substyle(Component)` (default export)
+#### `useStyle(props)` (default export)
 
-Returns an enhanced version of `Component` which supports `style`, `className`, and `classNames` props and maps them to a single [special `style` prop](#stylekeys-injected-prop).
+Returns the [`style` function](#stylekeys-hook-return-value) that is configured as per the passed `style`, `className`, and `classNames` props.
 
 #### Arguments
 
-- `Component` _(React component)_ The component to enhance. This component will be rendered with special `style` prop. It will _not_ receive the original `style`, `className`, and `classNames` passed to the enhanced version of the component.
+- `props` _(Object)_ The props of the component
 
-There is an additional higher-order component creator function that allows to attach default style definitions for the wrapped component:
+There is an additional creator function for the hook that allows to define some default style definitions:
 
-#### `defaultStyle([defaultStyles], [mapPropsToModifiers], [shouldUpdate])`
+#### `createUseStyle([defaultStyles], [mapPropsToModifiers], [getDependsOn])`
 
 Returns a version of the `substyle` higher-order component which is preconfigured to merge `defaultStyles` with user specified style definitions.
 
 #### Arguments
 
-- `defaultStyles` _(Object | Function: (props) => Object)_ The default style definitions for the component. Also accepts a function mapping props to an object of default styles.
+- `defaultStyles` _(Object | Function: (props) => Object)_ The default style definitions for the component. It can also be defined as a function mapping props to an object of default styles.
 
 - `mapPropsToModifiers` _(Function: (props) => string[] | Object)_ If specified, the function will be called with props and must return [modifiers](#define-style-modifiers) as an object with modifiers as keys and boolean values or as an array of modifiers.
 
-- `shouldUpdate(): boolean` _(Function: (nextProps, props) => boolean)_ Only useful, if `defaultStyles` parameter is a function. `shouldUpdate` must return `true` if the result of that function will change for the new `props`. This enables some performance optimizations as it prevents unnecessary merges of default styles with user provided inline styles.
+- `getDependsOn()` _(Function: (nextProps, props) => boolean)_ This prop is useful to optimize performance if the `defaultStyles` parameter is defined as a function. `getDependsOn` will be called with props and must return an array of dependencies. If any of the values in this array changes compared to the previous render, the default styles will be recalculated, otherwise the memoized styles from the last render will be used.
 
-Enhancing a component with the _substyle_ higher-order function injects a function as the `style` prop. This function has properties assigned to it which are supposed to be passed as props to the root element returned by the component's render function.
+### `style([keys])` (hook return value)
 
-### `style([keys])` (injected prop)
+Calling `style(key)` returns a new `style` instance with the nested style definitions for the element identified by `key`. Spread the result into the props passed to the addressed React DOM element.
 
-Returns a new `style` instance with the nested style definitions for the passed `key`. The return value can be passed as `style` prop to an element of a substyle-enabled component or spread into the props of a DOM element.
+- The `style` property on the `style` function instance (`style.style`) contains only the direct styles to be applied to the addressed element.
+- The `className` property on any instance of the `style` function (`style.className`) carries the derived css class to be assigned to the addressed element.
+- Depending on the specific substyle adapter the user of your component can optionally use, there might be additional properties assigned to the `style` function instance, such as `style.data-css-ex63lys` for example. So instead of picking and passing properties one by one, you should generally spread the `style` function into the props of an element.
 
-It might seem a bit weird at first to use the spread operator on a function, but a function is also just a JavaScript object which supports setting, getting--and spreading--properties.
+> **Note:** It might appear a bit unconventional to apply the spread operator on a function, but actually a function is also just a JavaScript object than can carry properties.
 
-The `style` property on any instance of the `style` function (`style.style`) contains only the direct styles
+When addressing an element of a composite component, the result must not be spread but passed to that element as the `style` prop. This requires that the element's component uses the `useStyle` hook as well.
 
-_style_ supports chaining, since the return value of _style_ is another instance of the same function.
+> **Note:** _style_ supports chaining, since the return value of _style_ is another instance of the same function.
 
 #### Arguments
 

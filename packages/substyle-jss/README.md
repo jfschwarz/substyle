@@ -24,7 +24,7 @@ yarn add substyle-jss
 
 To let JSS process the internal style definitions of a substyled React component pass the result of `viaJss()` as the `style` prop to that component:
 
-```jsx
+```javascript
 import { viaJss } from 'substyle-jss'
 ;<SubstyledComponent style={viaJss()} />
 ```
@@ -33,7 +33,7 @@ import { viaJss } from 'substyle-jss'
 
 If you are rendering a larger number of different substyled components, it might become tedious to add the `style={viaJss()}` prop to all of them. Then you can render the `StylesViaJss` component somewhere close to the root element of your app. All substyled components will then automatically pass their internal style information to JSS for adding them to the sheet.
 
-```jsx
+```javascript
 import { StylesViaJss } from 'substyle-jss'
 ;<StylesViaJss>
   <SubstyledComponent />
@@ -44,7 +44,7 @@ import { StylesViaJss } from 'substyle-jss'
 
 You can pass an object of custom style definitions for all elements rendered by the substyled component. Custom styles are merged with the default styles and then processed written to the stylesheet via JSS.
 
-```jsx
+```javascript
 import { viaJss } from 'substyle-jss'
 ;<SubstyledComponent
   style={viaJss({
@@ -57,7 +57,7 @@ import { viaJss } from 'substyle-jss'
 
 If you are using the `StylesViaJss` wrapping component, you can pass the object of custom style definitions directly via the `style` prop:
 
-```jsx
+```javascript
 import { StylesViaJss } from 'substyle-jss'
 ;<StylesViaJss>
   <SubstyledComponent
