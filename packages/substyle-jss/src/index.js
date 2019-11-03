@@ -1,4 +1,16 @@
-import injectSheet from './injectSheet'
-import ProvideSheet from './ProvideSheet'
+import React, { useMemo } from 'react'
+import { createSubstyle, PropsDecoratorProvider } from 'substyle'
+import createPropsDecorator from './createPropsDecorator'
 
-export { injectSheet, ProvideSheet }
+export const viaJss = (style, jss) =>
+  createSubstyle({ style }, createPropsDecorator(jss))
+
+export const StylesViaJss = ({ jss, children }) => {
+  const propsDecorator = useMemo(() => createPropsDecorator(jss), [jss])
+
+  return (
+    <PropsDecoratorProvider value={propsDecorator}>
+      {children}
+    </PropsDecoratorProvider>
+  )
+}

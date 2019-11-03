@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@babel/runtime": "7.3.4",
+    "css-jss": "^10.0.0",
     "hoist-non-react-statics": "^2.3.1",
     "substyle": "^7.1.1"
   },
@@ -35,11 +36,9 @@
     "flow-copy-source": "^2.0.3",
     "jest": "24.1.0",
     "jss": "^9.5.1",
-    "react-jss": "^8.2.1",
     "rimraf": "^2.6.1"
   },
   "peerDependencies": {
-    "react": ">=16.8.3",
-    "react-jss": ">=8.0.0"
+    "react": ">=16.8.3"
   }
 }

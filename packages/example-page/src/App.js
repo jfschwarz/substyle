@@ -3,7 +3,7 @@ import pretty from 'pretty'
 import React, { useState } from 'react'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { StylesAsClasses, StylesAsDataAttributes } from 'substyle-glamor'
-import { ProvideSheet } from 'substyle-jss'
+import { StylesViaJss } from 'substyle-jss'
 
 import ExampleComponent from './ExampleComponent'
 
@@ -34,7 +34,6 @@ function SubstyleExample() {
       <h1>Substyle example page</h1>
 
       <h2>Defaults</h2>
-
       <table>
         <tbody>
           <tr>
@@ -77,23 +76,20 @@ function SubstyleExample() {
         <thead>
           <tr>
             <th>Enhancer</th>
+            <th>Result</th>
             <th>Generated HTML</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td>Default (inline styles & class names)</td>
+            <td>Default (inline styles)</td>
+            <td>{component}</td>
             <td>
-              <ExampleComponent style={defaultStyle} className="example" />
-            </td>
-            <td>
-              <CodeExample>
-                <ExampleComponent style={defaultStyle} className="example" />
-              </CodeExample>
+              <CodeExample>{component}</CodeExample>
             </td>
           </tr>
           <tr>
-            <td>Glamor (through data attribute)</td>
+            <td>Glamor (through data-* attributes)</td>
             <td>
               <StylesAsDataAttributes>{component}</StylesAsDataAttributes>
             </td>
@@ -114,14 +110,17 @@ function SubstyleExample() {
               </CodeExample>
             </td>
           </tr>
-          {/* <tr>
+          <tr>
             <td>JSS</td>
             <td>
+              <StylesViaJss>{component}</StylesViaJss>
+            </td>
+            <td>
               <CodeExample>
-                <ProvideSheet>{component}</ProvideSheet>
+                <StylesViaJss>{component}</StylesViaJss>
               </CodeExample>
             </td>
-          </tr> */}
+          </tr>
         </tbody>
       </table>
     </div>
