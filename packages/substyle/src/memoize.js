@@ -1,6 +1,5 @@
-// @flow
 import coerceSelection from './coerceSelection'
-import type { SubstyleT, KeysT } from './types'
+import type { KeysT, SubstyleT } from './types'
 
 const EMPTY = {}
 
