@@ -1,6 +1,6 @@
 {
   "name": "substyle-glamor",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Use substyled components with glamor",
   "main": "lib/index.js",
   "module": "es6/index.js",
@@ -25,7 +25,7 @@
   },
   "dependencies": {
     "@babel/runtime": "7.3.4",
-    "substyle": "^7.1.1"
+    "substyle": "^7.1.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
