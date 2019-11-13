@@ -72,6 +72,7 @@ const createDefaultStyle = (
 
             return (
               <EnhancedWrappedComponent
+                {...rest}
                 style={substyle(modifiers, this.defaultStyle || defaultStyle)}
                 ref={
                   isStatelessFunction(EnhancedWrappedComponent)
@@ -79,7 +80,6 @@ const createDefaultStyle = (
                     : // $FlowFixMe
                       this.setWrappedInstance
                 }
-                {...rest}
               />
             )
           }}
