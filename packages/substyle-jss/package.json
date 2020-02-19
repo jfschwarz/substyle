@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "codecov": "3.3.0",
+    "codecov": "3.6.5",
     "eslint": "^5.14.1",
     "flow-copy-source": "^2.0.3",
     "jest": "24.1.0",
