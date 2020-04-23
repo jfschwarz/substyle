@@ -1,4 +1,3 @@
-// @flow
 import { pickDirectStyles } from './pickStyles'
 import type { DecoratorFuncT } from './types'
 

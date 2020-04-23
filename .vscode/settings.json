@@ -4,7 +4,10 @@
   "files.exclude": {
     ".git": true,
     "**/node_modules": true,
-    "**/lib": true
+    "**/lib": true,
+    "**/es6": true,
+    "**/reports": true,
+    "**/build": true
   },
   "search.exclude": {
     ".git": true,
