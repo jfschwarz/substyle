@@ -1,7 +1,7 @@
 import createPropsDecorator from '../src/createPropsDecorator'
 
 jest.mock('css-jss', () => ({
-  create: () => styles =>
+  create: () => (styles) =>
     Buffer.from(JSON.stringify(styles)).toString('base64'),
 }))
 

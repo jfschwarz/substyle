@@ -6,7 +6,7 @@ import PropsDecoratorProvider from '../src/PropsDecoratorProvider'
 
 describe('createUseStyle', () => {
   const useStyle = createUseStyle()
-  const Content = props => {
+  const Content = (props) => {
     const style = useStyle(props)
     return (
       <section {...style}>
@@ -15,8 +15,8 @@ describe('createUseStyle', () => {
     )
   }
 
-  const createContainer = useStyle => {
-    const Container = props => {
+  const createContainer = (useStyle) => {
+    const Container = (props) => {
       const style = useStyle(props)
       return (
         <div {...style}>
@@ -51,12 +51,7 @@ describe('createUseStyle', () => {
 
   it('should correctly apply default styles and derive class names', () => {
     const wrapper = mount(<Container className="foo" />)
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toEqual({
+    expect(wrapper.find('div').at(0).prop('style')).toEqual({
       background: 'white',
     })
 
@@ -75,12 +70,7 @@ describe('createUseStyle', () => {
   it('should merge styles provided by the user with default styles', () => {
     const wrapper = mount(<Container style={{ cursor: 'pointer' }} />)
 
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toEqual({
+    expect(wrapper.find('div').at(0).prop('style')).toEqual({
       background: 'white',
       cursor: 'pointer',
     })
@@ -95,12 +85,7 @@ describe('createUseStyle', () => {
       />
     )
 
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toEqual({
+    expect(wrapper.find('div').at(0).prop('style')).toEqual({
       background: 'white',
       cursor: 'pointer',
     })
@@ -108,18 +93,13 @@ describe('createUseStyle', () => {
 
   it('should accept a function mapping props to default styles as first argument', () => {
     const Container = createContainer(
-      createUseStyle(props => ({ color: props.color }))
+      createUseStyle((props) => ({ color: props.color }))
     )
     const wrapper = mount(
       <Container style={{ cursor: 'pointer' }} color="black" />
     )
 
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toEqual({
+    expect(wrapper.find('div').at(0).prop('style')).toEqual({
       color: 'black',
       cursor: 'pointer',
     })
@@ -135,18 +115,13 @@ describe('createUseStyle', () => {
             opacity: 0.5,
           },
         },
-        props => ({
+        (props) => ({
           '&readOnly': props.readOnly,
         })
       )
     )
     const wrapper = mount(<Container readOnly />)
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toEqual({
+    expect(wrapper.find('div').at(0).prop('style')).toEqual({
       color: 'red',
       opacity: 0.5,
     })
@@ -154,7 +129,7 @@ describe('createUseStyle', () => {
 
   it('should apply the selected modifiers also on the style supplied by the user', () => {
     const Container = createContainer(
-      createUseStyle({ color: 'red' }, props => ({
+      createUseStyle({ color: 'red' }, (props) => ({
         '&readOnly': props.readOnly,
       }))
     )
@@ -169,12 +144,7 @@ describe('createUseStyle', () => {
       />
     )
 
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toEqual({
+    expect(wrapper.find('div').at(0).prop('style')).toEqual({
       color: 'red',
       opacity: 0.5,
     })
@@ -188,7 +158,7 @@ describe('createUseStyle', () => {
             opacity: 0.5,
           },
         },
-        props => ({
+        (props) => ({
           '&readOnly': props.readOnly,
         })
       )
@@ -201,12 +171,7 @@ describe('createUseStyle', () => {
         }}
       />
     )
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toEqual({
+    expect(wrapper.find('div').at(0).prop('style')).toEqual({
       opacity: 0.7,
     })
   })
@@ -214,7 +179,11 @@ describe('createUseStyle', () => {
   it('should allow passing a getDependsOn function that is called with the props', () => {
     const getDependsOn = jest.fn()
     const Container = createContainer(
-      createUseStyle(() => ({}), () => [], getDependsOn)
+      createUseStyle(
+        () => ({}),
+        () => [],
+        getDependsOn
+      )
     )
     const wrapper = mount(<Container foo="bar" />)
     wrapper.setProps({ foo: 'baz' })
@@ -226,10 +195,14 @@ describe('createUseStyle', () => {
 
   it('should preserve previous default styles if none of the values returned by getDependsOn changes', () => {
     const getDependsOn = () => false
-    const useStyle = createUseStyle(() => ({}), () => [], getDependsOn)
+    const useStyle = createUseStyle(
+      () => ({}),
+      () => [],
+      getDependsOn
+    )
 
     let style
-    const Component = props => {
+    const Component = (props) => {
       style = useStyle(props)
       return null
     }
@@ -242,7 +215,7 @@ describe('createUseStyle', () => {
   })
 
   it('should support providing a props decorator function via context', () => {
-    const decorateProps = props => ({
+    const decorateProps = (props) => ({
       'data-mapped': 'foobar',
     })
     const wrapper = mount(

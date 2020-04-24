@@ -5,7 +5,7 @@ import { createUseStyle } from 'substyle'
 
 describe('StylesViaJss', () => {
   const useStyle = createUseStyle({ color: 'red' })
-  const MyComp = props => {
+  const MyComp = (props) => {
     const style = useStyle(props)
     return <div {...style} />
   }

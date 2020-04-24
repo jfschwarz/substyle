@@ -395,7 +395,7 @@ describe('substyle', () => {
   })
 
   it('should take a props decorator function as second arg of the constructor call and apply it on spread props', () => {
-    const myDecorator = jest.fn(props => ({ mapped: 'foobar' }))
+    const myDecorator = jest.fn((props) => ({ mapped: 'foobar' }))
     const substyle = createSubstyle(
       {
         style: {

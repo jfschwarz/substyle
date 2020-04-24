@@ -10,7 +10,7 @@ type DependsOnFuncT = (props: Object) => any[]
 const createUseStyle = (
   defaultStyle?: Object | ((props: Object) => Object),
   getModifiers?: (props: Object) => KeysT,
-  getDependsOn: DependsOnFuncT = props => Object.values(props)
+  getDependsOn: DependsOnFuncT = (props) => Object.values(props)
 ) => {
   const useStyle = (props: PropsT) => {
     const { style, className, classNames, ...rest } = props
