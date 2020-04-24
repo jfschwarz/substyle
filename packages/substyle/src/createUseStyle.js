@@ -21,18 +21,21 @@ const createUseStyle = (
       [style, className, classNames, propsDecorator]
     )
 
+    // we apply an extra useMemo to the user-specified deps, so React warns if these change in length
+    const dependsOn =
+      (typeof defaultStyle === 'function' && getDependsOn(rest)) || []
+    const dependsOnMemo = useMemo(() => dependsOn, dependsOn)
+
     const modifiers = getModifiers ? coerceSelection(getModifiers(rest)) : []
+
     return useMemo(
       () =>
         substyle(
           modifiers,
           typeof defaultStyle === 'function' ? defaultStyle(rest) : defaultStyle
         ),
-      [
-        substyle,
-        ...modifiers,
-        ...((typeof defaultStyle === 'function' && getDependsOn(rest)) || []),
-      ]
+      // the array of deps must not change its length, so we join all modifiers
+      [substyle, modifiers.join(','), dependsOnMemo]
     )
   }
 
