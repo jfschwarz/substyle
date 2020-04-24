@@ -46,14 +46,13 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "codecov": "3.6.5",
+    "codecov": "^3.6.5",
     "enzyme-adapter-react-16": "^1.10.0",
     "eslint": "^5.14.1",
     "flow-copy-source": "^2.0.3",
     "jest": "24.1.0",
     "react-test-renderer": "^16.0.0",
-    "rimraf": "^2.6.1",
-    "sinon": "^3.2.1"
+    "rimraf": "^2.6.1"
   },
   "jest": {
     "setupTestFrameworkScriptFile": "<rootDir>test/setup.js"

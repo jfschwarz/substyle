@@ -2,7 +2,7 @@ import { keys, merge, omit, values } from './utils'
 
 import { isModifier } from './filterKeys'
 
-const camelize = key => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())
+const camelize = (key) => key.replace(/-(\w)/g, (m, c) => c.toUpperCase())
 
 export const pickDirectStyles = (style, objectPropertiesWhitelist = []) => {
   const styleKeys = keys(style)

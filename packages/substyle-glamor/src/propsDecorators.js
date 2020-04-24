@@ -1,7 +1,7 @@
 import { css } from 'glamor'
 import { defaultPropsDecorator } from 'substyle'
 
-export const decorateAsDataAttributes = props => {
+export const decorateAsDataAttributes = (props) => {
   const { style, className } = defaultPropsDecorator(props)
   return {
     ...css(style),
@@ -9,7 +9,7 @@ export const decorateAsDataAttributes = props => {
   }
 }
 
-export const decorateAsClasses = props => {
+export const decorateAsClasses = (props) => {
   const { style, className } = defaultPropsDecorator(props)
   return {
     className: className ? `${className} ${css(style)}` : `${css(style)}`,

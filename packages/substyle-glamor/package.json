@@ -29,11 +29,11 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "codecov": "3.6.5",
+    "codecov": "^3.6.5",
     "eslint": "^5.14.1",
     "flow-copy-source": "^2.0.3",
     "glamor": "^2.20.40",
-    "jest": "24.1.0",
+    "jest": "^24.1.0",
     "rimraf": "^2.6.1"
   },
   "peerDependencies": {

@@ -2,10 +2,10 @@ import React from 'react'
 import { createSubstyle, PropsDecoratorProvider } from 'substyle'
 import { decorateAsDataAttributes, decorateAsClasses } from './propsDecorators'
 
-export const asDataAttributes = style =>
+export const asDataAttributes = (style) =>
   createSubstyle({ style }, decorateAsDataAttributes)
 
-export const asDataClasses = style =>
+export const asDataClasses = (style) =>
   createSubstyle({ style }, decorateAsClasses)
 
 export const StylesAsDataAttributes = ({ children }) => (
