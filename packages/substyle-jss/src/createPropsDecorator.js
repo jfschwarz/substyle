@@ -1,27 +1,22 @@
 import { defaultPropsDecorator } from 'substyle'
+import { create } from 'css-jss'
 import mapPseudoSelectors from './mapPseudoSelectors'
-import hash from './hash'
 
-const createPropsDecorator = sheet => {
+const createPropsDecorator = jss => {
+  const css = create(jss)
   const decorateProps = stylingProps => {
     const decoratedStylingProps = defaultPropsDecorator(stylingProps)
-    const { style, className: baseClassName, ...rest } = decoratedStylingProps
+    const { style, className, ...rest } = decoratedStylingProps
 
     if (!style) {
       return decoratedStylingProps
     }
 
-    const ruleName = hash(style)
-
-    // prepend rule to the sheet if it does not already exist
-    const rule =
-      sheet.getRule(ruleName) ||
-      sheet.addRule(ruleName, mapPseudoSelectors(style), { index: 0 })
-
-    const className = rule.options.classes[ruleName]
-
+    const generatedClassName = css(mapPseudoSelectors(style))
     return {
-      className: baseClassName ? `${baseClassName} ${className}` : className,
+      className: className
+        ? `${className} ${generatedClassName}`
+        : generatedClassName,
       ...rest,
     }
   }

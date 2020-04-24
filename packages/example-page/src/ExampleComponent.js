@@ -1,25 +1,21 @@
 // @flow
 import React from 'react'
-import { type Substyle, defaultStyle } from 'substyle'
+import { createUseStyle } from 'substyle'
 
-type PropsT = {
-  style: Substyle,
-}
-
-function ExampleComponent({ style }: PropsT) {
-  return (
-    <div {...style}>
-      <h1 {...style('title')}>Title</h1>
-
-      <div {...style('content')}>Some text...</div>
-    </div>
-  )
-}
-
-const enhance = defaultStyle({
+const useStyle = createUseStyle({
   title: {
     fontSize: 20,
   },
 })
 
-export default enhance(ExampleComponent)
+function ExampleComponent(props: Object) {
+  const style = useStyle(props)
+  return (
+    <div {...style}>
+      <h1 {...style('title')}>Title</h1>
+      <div {...style('content')}>Some text...</div>
+    </div>
+  )
+}
+
+export default ExampleComponent

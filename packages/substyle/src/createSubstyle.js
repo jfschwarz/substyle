@@ -112,7 +112,6 @@ function createSubstyle(
           )
         })
 
-  // $FlowFixMe Flow does not believe that also a function can be spread
   const styleProps = {
     ...(typeof style === 'function' ? style : { style }),
   }
@@ -138,7 +137,7 @@ function createSubstyle(
       : {}),
   })
 
-  // assign `style` and/or `className` props to the return function object
+  // assign `style`, `className`, and/or any props added by the decorator to the return function object
   assign(substyle, propsForSpread)
   return substyle
 }

@@ -26,10 +26,9 @@
   "dependencies": {
     "glamor": "^2.20.40",
     "pretty": "^2.0.0",
-    "radium": "^0.25.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-jss": "^8.6.1",
+    "react-jss": "^10.0.0",
     "substyle": "^7.1.3",
     "substyle-glamor": "^2.1.3",
     "substyle-jss": "^2.1.3"
