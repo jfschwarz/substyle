@@ -88,14 +88,21 @@ const ensureOverrides = (overrides): OverrideT => {
 
   invariant(!Array.isArray(overrides), 'Overrides cannot be an array.')
 
-  const className = ensureClassName(overrides)
-  const classNames = ensureClassNames(overrides)
   const style = ensureStyle(overrides)
+
+  const className = style?.className
+    ? ensureClassName(style)
+    : ensureClassName(overrides)
+  const classNames = ensureClassNames(overrides)
 
   return { classNames, className, style }
 }
 
 const ensureClassName = (overrides): ?string => {
+  if (!overrides) {
+    return
+  }
+
   if (!overrides.className) {
     return
   }

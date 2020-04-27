@@ -52,7 +52,8 @@ function createSubstyle(
   { style, className, classNames }: PropsT,
   propsDecorator: DecoratorFuncT = defaultPropsDecorator
 ): SubstyleT {
-  const baseClassName = className || guessBaseClassName(classNames)
+  const baseClassName =
+    className || guessBaseClassName(classNames) || style?.className
 
   const substyle =
     typeof style === 'function'
