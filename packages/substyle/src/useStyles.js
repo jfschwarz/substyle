@@ -23,14 +23,10 @@ type InternalOverrideT = {|
   style?: void | StyleT | SubstyleT,
 |}
 
-type Args =
-  | [StyleT]
-  | [StyleT, ModifiersT]
-  | [StyleT, OverrideT]
-  | [StyleT, ModifiersT, OverrideT]
+type Args = [StyleT, OverrideT] | [StyleT, OverrideT, ModifiersT]
 
 const useStyles = (...args: Args) => {
-  const [defaultStyle, modifiers, { style, className, classNames }] = parseArgs(
+  const [defaultStyle, { style, className, classNames }, modifiers] = parseArgs(
     ...args
   )
 
@@ -49,23 +45,19 @@ const useStyles = (...args: Args) => {
 }
 
 const defaultModifiers = Object.freeze({})
-const defaultProps = Object.freeze({})
+const defaultOverrides = Object.freeze({})
 
-const parseArgs = (...args: Args): [StyleT, ModifiersT, InternalOverrideT] => {
+const parseArgs = (...args: Args): [StyleT, InternalOverrideT, ModifiersT] => {
   if (args.length === 1) {
     const [defaultStyle] = args
 
-    return [defaultStyle, defaultModifiers, defaultProps]
+    return [defaultStyle, defaultOverrides, defaultModifiers]
   }
 
   if (args.length === 2) {
-    const [defaultStyle, maybeModifiers] = args
+    const [defaultStyle, overrides] = args
 
-    if (areModifiers(maybeModifiers)) {
-      return [defaultStyle, ensureModifiers(maybeModifiers), defaultProps]
-    }
-
-    return [defaultStyle, defaultModifiers, ensureOverrides(maybeModifiers)]
+    return [defaultStyle, ensureOverrides(overrides), defaultModifiers]
   }
 
   invariant(
@@ -73,21 +65,9 @@ const parseArgs = (...args: Args): [StyleT, ModifiersT, InternalOverrideT] => {
     `useStyles must be called with either 1, 2, or 3 arguments, not ${args.length}.`
   )
 
-  const [defaultStyle, modifiers, overrides] = args
+  const [defaultStyle, overrides, modifiers] = args
 
-  return [defaultStyle, modifiers, ensureOverrides(overrides)]
-}
-
-const areModifiers = (maybeModifiers): boolean => {
-  if (typeof maybeModifiers === 'string') {
-    return true
-  }
-
-  if (Array.isArray(maybeModifiers)) {
-    return true
-  }
-
-  return Object.keys(maybeModifiers).every((key) => key.startsWith('&'))
+  return [defaultStyle, ensureOverrides(overrides), modifiers]
 }
 
 const ensureOverrides = (overrides): InternalOverrideT => {
@@ -149,10 +129,6 @@ const ensureStyle = (overrides): StyleT | SubstyleT | void => {
   )
 
   return overrides.style
-}
-
-const ensureModifiers = (modifiers): ModifiersT => {
-  return ((modifiers: any): ModifiersT)
 }
 
 export default useStyles

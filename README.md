@@ -213,7 +213,7 @@ const MyComponent = ({ align, children }) => {
 
 ## API
 
-### `useStyles(defaultStyles[, modifiers][, overrides])` (default export)
+### `useStyles(defaultStyles, overrides[, modifiers]])` (default export)
 
 Returns the [`styles` function](#stylekeys-hook-return-value) that is configured as per the passed `style`, `className`, and `classNames` props.
 
@@ -227,10 +227,6 @@ These can also include `modifier` sections to express that your component should
 > If you define this inside your render function this may result in performance degradations as `substyle` will recalculate styles all the time.
 > If you need to make this object dynamic please only update it when the respective dynamic parts change.
 
-#### `modifiers`
-
-Defines the [modifiers](#define-style-modifiers) as an object with modifiers as keys and boolean values or as an array of modifiers.
-
 #### `overrides`
 
 Accepts `className`, `classNames` and `style`.
@@ -240,6 +236,10 @@ Use this if you want to make styles part of the components API.
 Doing so ensures that BEM class names are generated correctly.
 
 > **Note:** If it is not for theming purposes, you should generally avoid defining the `defaultStyles` as a function on props. Styles depending dynamically on props should rather be defined as inline styles directly. The [`inline` util function](#inlineinlineStylesBefore-style-inlineStylesAfter) comes in handy for doing so.
+
+#### `modifiers`
+
+Defines the [modifiers](#define-style-modifiers) as an object with modifiers as keys and boolean values or as an array of modifiers.
 
 ### `styles([keys])` (hook return value)
 

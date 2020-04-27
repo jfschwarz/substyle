@@ -38,8 +38,8 @@ describe('useStyles', () => {
   const Container = ({ className, style, readOnly }) => {
     const styles = useStyles(
       defaultContainerStyle,
-      { '&readOnly': readOnly },
-      { className, style }
+      { className, style },
+      { '&readOnly': readOnly }
     )
     return (
       <div {...styles}>

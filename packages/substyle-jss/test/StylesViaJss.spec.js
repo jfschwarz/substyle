@@ -20,8 +20,8 @@ jest.mock('../src/createPropsDecorator', () => {
 describe('StylesViaJss', () => {
   const defaultStyle = { color: 'red' }
 
-  const MyComp = (props) => {
-    const styles = useStyles(defaultStyle)
+  const MyComp = ({ style }) => {
+    const styles = useStyles(defaultStyle, { style })
     return <div {...styles} />
   }
 

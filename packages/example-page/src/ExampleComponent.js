@@ -12,11 +12,11 @@ type ApiPropsT = {|
 function ExampleComponent({ size, color, className }: ApiPropsT) {
   const styles = useStyles(
     defaultStyles,
+    { className },
     {
       [`&${size}`]: true,
       [`&${color}`]: true,
-    },
-    { className }
+    }
   )
 
   return (
