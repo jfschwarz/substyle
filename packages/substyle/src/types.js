@@ -1,6 +1,4 @@
 // @flow
-import { type ComponentType } from 'react'
-
 export type ModifiersT = {|
   [string]: boolean,
 |}
@@ -31,9 +29,5 @@ export type PropsT = {
   className?: string,
   classNames?: ClassNamesT,
 }
-
-export type EnhancerFuncT = (
-  WrappedComponent: ComponentType<*>
-) => ComponentType<*>
 
 export type DecoratorFuncT = (props: PropsT) => Object

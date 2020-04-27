@@ -7,14 +7,14 @@ export const values = (obj) => {
 }
 
 function mergeDeep(target, source) {
-  let output = assign({}, target)
+  let output = Object.assign({}, target)
   if (isPlainObject(target) && isPlainObject(source)) {
     keys(source).forEach((key) => {
       if (isPlainObject(source[key])) {
-        if (!(key in target)) assign(output, { [key]: source[key] })
+        if (!(key in target)) Object.assign(output, { [key]: source[key] })
         else output[key] = mergeDeep(target[key], source[key])
       } else {
-        assign(output, { [key]: source[key] })
+        Object.assign(output, { [key]: source[key] })
       }
     })
   }
@@ -25,10 +25,6 @@ export const merge = (target, ...sources) => {
   return sources.reduce((t, s) => {
     return mergeDeep(t, s)
   }, target)
-}
-
-export const assign = (target, ...sources) => {
-  return Object.assign(target, ...sources)
 }
 
 export const identity = (value) => {
