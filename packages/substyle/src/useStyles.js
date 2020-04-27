@@ -35,7 +35,11 @@ const useStyles = (...args: Args) => {
     [style, className, classNames, propsDecorator]
   )
 
-  return useMemo(() => substyle(modifiers, defaultStyle), [substyle, modifiers])
+  return useMemo(() => substyle(modifiers, defaultStyle), [
+    substyle,
+    modifiers,
+    defaultStyle,
+  ])
 }
 
 const defaultModifiers = Object.freeze({})
