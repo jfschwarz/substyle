@@ -1,17 +1,23 @@
 // @flow
-import { type ComponentType, type Ref } from 'react'
+import { type ComponentType } from 'react'
 
-export type ModifiersT = { [string]: boolean }
+export type ModifiersT = {|
+  [string]: boolean,
+|}
 export type KeysT = string | Array<string> | ModifiersT
 
-export type StyleT = {|
-  [property: string]: string | number,
-|}
+type PlainStyleT = {
+  [string]: string | number,
+}
+
+export type StyleT = {
+  [string]: string | number | StyleT,
+}
 
 export type SubstyleT = {
-  (select: KeysT, defaultStyle?: Object): SubstyleT,
+  (select: KeysT, defaultStyle?: StyleT): SubstyleT,
 
-  style?: StyleT,
+  style?: PlainStyleT,
   className?: string,
   ...
 }
@@ -24,7 +30,6 @@ export type PropsT = {
   style?: StyleT | SubstyleT,
   className?: string,
   classNames?: ClassNamesT,
-  innerRef?: Ref<*>,
 }
 
 export type EnhancerFuncT = (
@@ -32,5 +37,3 @@ export type EnhancerFuncT = (
 ) => ComponentType<*>
 
 export type DecoratorFuncT = (props: PropsT) => Object
-
-export type ShouldUpdateFuncT = (nextProps: Object, props: Object) => boolean

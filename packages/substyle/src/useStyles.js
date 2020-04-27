@@ -1,6 +1,6 @@
 // @flow
 import invariant from 'invariant'
-import { useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { useContext, useMemo } from 'react'
 
 import { PropsDecoratorContext } from './PropsDecoratorProvider'
 import createSubstyle from './createSubstyle'
@@ -10,12 +10,17 @@ import {
   type StyleT,
   type SubstyleT,
 } from './types'
-import { shallowEqual } from './utils'
 
 type OverrideT = {|
+  className?: string,
+  classNames?: ClassNamesT,
+  style?: StyleT | SubstyleT,
+|}
+
+type InternalOverrideT = {|
   className?: ?string,
   classNames?: ?ClassNamesT,
-  style?: StyleT | SubstyleT,
+  style?: void | StyleT | SubstyleT,
 |}
 
 type Args =
@@ -46,7 +51,7 @@ const useStyles = (...args: Args) => {
 const defaultModifiers = Object.freeze({})
 const defaultProps = Object.freeze({})
 
-const parseArgs = (...args: Args): [StyleT, ModifiersT, OverrideT] => {
+const parseArgs = (...args: Args): [StyleT, ModifiersT, InternalOverrideT] => {
   if (args.length === 1) {
     const [defaultStyle] = args
 
@@ -68,7 +73,9 @@ const parseArgs = (...args: Args): [StyleT, ModifiersT, OverrideT] => {
     `useStyles must be called with either 1, 2, or 3 arguments, not ${args.length}.`
   )
 
-  return args
+  const [defaultStyle, modifiers, overrides] = args
+
+  return [defaultStyle, modifiers, ensureOverrides(overrides)]
 }
 
 const areModifiers = (maybeModifiers): boolean => {
@@ -83,7 +90,7 @@ const areModifiers = (maybeModifiers): boolean => {
   return Object.keys(maybeModifiers).every((key) => key.startsWith('&'))
 }
 
-const ensureOverrides = (overrides): OverrideT => {
+const ensureOverrides = (overrides): InternalOverrideT => {
   invariant(
     typeof overrides !== 'string',
     'Overrides must be an object, not "string".'
