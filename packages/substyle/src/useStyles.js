@@ -64,9 +64,7 @@ const parseArgs = (...args: Args): [StyleT, KeysT, OverrideT] => {
 
   invariant(
     args.length === 3,
-    `useStyles must be called with either 1, 2, or 3 arguments, not ${
-      args.length
-    }.`
+    `useStyles must be called with either 1, 2, or 3 arguments, not ${args.length}.`
   )
 
   return args
@@ -81,7 +79,7 @@ const areModifiers = (maybeModifiers): boolean => {
     return true
   }
 
-  return Object.keys(maybeModifiers).every(key => key.startsWith('&'))
+  return Object.keys(maybeModifiers).every((key) => key.startsWith('&'))
 }
 
 const ensureOverrides = (overrides): OverrideT => {

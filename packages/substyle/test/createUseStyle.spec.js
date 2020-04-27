@@ -53,12 +53,7 @@ describe('useStyles', () => {
   it('should correctly apply default styles and derive class names', () => {
     const wrapper = mount(<Container className="foo" />)
 
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toEqual({
+    expect(wrapper.find('div').at(0).prop('style')).toEqual({
       background: 'white',
     })
 
@@ -77,12 +72,7 @@ describe('useStyles', () => {
   it('should merge styles provided by the user with default styles', () => {
     const wrapper = mount(<Container style={{ cursor: 'pointer' }} />)
 
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toEqual({
+    expect(wrapper.find('div').at(0).prop('style')).toEqual({
       background: 'white',
       cursor: 'pointer',
     })
@@ -97,12 +87,7 @@ describe('useStyles', () => {
       />
     )
 
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toEqual({
+    expect(wrapper.find('div').at(0).prop('style')).toEqual({
       background: 'white',
       cursor: 'pointer',
     })
@@ -110,12 +95,10 @@ describe('useStyles', () => {
 
   it('should take a modifier selection function as second argument', () => {
     const wrapper = mount(<Container readOnly />)
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toHaveProperty('color', 'gray')
+    expect(wrapper.find('div').at(0).prop('style')).toHaveProperty(
+      'color',
+      'gray'
+    )
   })
 
   it('should apply the selected modifiers also on the style supplied by the user', () => {
@@ -130,12 +113,10 @@ describe('useStyles', () => {
       />
     )
 
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toHaveProperty('opacity', 0.5)
+    expect(wrapper.find('div').at(0).prop('style')).toHaveProperty(
+      'opacity',
+      0.5
+    )
   })
 
   it('should give precedence to styles supplied by the user, regardless the modifiers specificity', () => {
@@ -147,17 +128,15 @@ describe('useStyles', () => {
         }}
       />
     )
-    expect(
-      wrapper
-        .find('div')
-        .at(0)
-        .prop('style')
-    ).toHaveProperty('opacity', 0.7)
+    expect(wrapper.find('div').at(0).prop('style')).toHaveProperty(
+      'opacity',
+      0.7
+    )
   })
 
   it('should preserve previous default styles if none of the values returned by getDependsOn changes', () => {
     let style
-    const Component = props => {
+    const Component = (props) => {
       style = useStyles({})
       return null
     }
@@ -172,7 +151,7 @@ describe('useStyles', () => {
   })
 
   it('should support providing a props decorator function via context', () => {
-    const decorateProps = props => ({
+    const decorateProps = (props) => ({
       'data-mapped': 'foobar',
     })
     const wrapper = mount(

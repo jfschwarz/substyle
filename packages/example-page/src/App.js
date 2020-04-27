@@ -30,7 +30,7 @@ function SubstyleExample() {
               <select
                 id="titleSize"
                 value={fontSize}
-                onChange={event => setFontSize(event.target.value)}
+                onChange={(event) => setFontSize(event.target.value)}
               >
                 <option value="small">Small</option>
                 <option value="medium">Medium</option>
@@ -46,7 +46,7 @@ function SubstyleExample() {
               <select
                 id="contentColor"
                 value={color}
-                onChange={event => setColor(event.target.value)}
+                onChange={(event) => setColor(event.target.value)}
               >
                 <option value="black">Black</option>
                 <option value="red">Red</option>
