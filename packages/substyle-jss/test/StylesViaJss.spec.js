@@ -6,7 +6,7 @@ import { StylesViaJss } from '../src'
 import createPropsDecorator from '../src/createPropsDecorator'
 
 jest.mock('css-jss', () => ({
-  create: () => styles =>
+  create: () => (styles) =>
     Buffer.from(JSON.stringify(styles)).toString('base64'),
 }))
 
@@ -20,7 +20,7 @@ jest.mock('../src/createPropsDecorator', () => {
 describe('StylesViaJss', () => {
   const defaultStyle = { color: 'red' }
 
-  const MyComp = props => {
+  const MyComp = (props) => {
     const styles = useStyles(defaultStyle)
     return <div {...styles} />
   }
