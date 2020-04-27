@@ -1,11 +1,12 @@
-import React from 'react'
 import { mount } from 'enzyme'
+import React from 'react'
+import { useStyles } from 'substyle'
+
 import { StylesViaJss } from '../src'
-import { createUseStyle } from 'substyle'
 import createPropsDecorator from '../src/createPropsDecorator'
 
 jest.mock('css-jss', () => ({
-  create: () => (styles) =>
+  create: () => styles =>
     Buffer.from(JSON.stringify(styles)).toString('base64'),
 }))
 
@@ -17,10 +18,11 @@ jest.mock('../src/createPropsDecorator', () => {
 })
 
 describe('StylesViaJss', () => {
-  const useStyle = createUseStyle({ color: 'red' })
-  const MyComp = (props) => {
-    const style = useStyle(props)
-    return <div {...style} />
+  const defaultStyle = { color: 'red' }
+
+  const MyComp = props => {
+    const styles = useStyles(defaultStyle)
+    return <div {...styles} />
   }
 
   beforeEach(() => {
