@@ -106,9 +106,9 @@ const A = props => {
 ### Define default styling
 
 ```javascript
-import { createUseStyle } from 'substyle'
+import { useStyles } from 'substyle'
 
-const useStyle = createUseStyle({
+const defaultStyle = {
   position: 'absolute',
 
   close: {
@@ -116,14 +116,14 @@ const useStyle = createUseStyle({
     top: 0,
     right: 0,
   },
-})
+}
 
-const Popover = props => {
-  const style = useStyle(props)
+const Popover = ({ children }) => {
+  const styles = useStyles(defaultStyle)
   return (
-    <div {...style}>
-      <button {...style('close')}>x</button>
-      {props.children}
+    <div {...styles}>
+      <button {...styles('close')}>x</button>
+      {children}
     </div>
   )
 }
@@ -139,38 +139,32 @@ While default styles can be provided as a function on props, in most cases it is
 Following this best practice, all variant-specific styling will always be customizable also via css.
 
 ```javascript
-const useStyle = createUseStyle(
-  {
-    position: 'absolute',
+const defaultStyles = {
+  position: 'absolute',
 
-    '&align-top': {
-      top: 0,
-    },
-
-    '&align-bottom': {
-      bottom: 0,
-    },
+  '&align-top': {
+    top: 0,
   },
-  ({ small, align = 'top' }) => ({
-    '&small': small,
-    [`&align-${align}`]: true,
-  })
-)
+
+  '&align-bottom': {
+    bottom: 0,
+  },
+}
 ```
 
 If variants of the component are defined for different values of internal component states, you can merge state values with props in the `useStyle` hook call:
 
 ```javascript
-const MyComponent = props => {
+const MyComponent = ({ align, children }) => {
   const [active, setActive] = useState(false)
-  const style = useStyle({
-    ...props,
-    active,
+  const styles = useStyles(defaultStyle, {
+    '&active': active,
+    [`&align-${align}`]: true,
   })
   return (
-    <div {...style}>
-      <div {...style('header')} />
-      {props.children}
+    <div {...styles}>
+      <div {...styles('header')} />
+      {children}
     </div>
   )
 }
