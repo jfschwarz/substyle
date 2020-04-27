@@ -1,15 +1,16 @@
 // @flow
 import invariant from 'invariant'
-import { useContext, useMemo } from 'react'
+import { useContext, useEffect, useMemo, useRef, useState } from 'react'
 
 import { PropsDecoratorContext } from './PropsDecoratorProvider'
 import createSubstyle from './createSubstyle'
 import {
   type ClassNamesT,
-  type KeysT,
+  type ModifiersT,
   type StyleT,
   type SubstyleT,
 } from './types'
+import { shallowEqual } from './utils'
 
 type OverrideT = {|
   className?: ?string,
@@ -19,9 +20,9 @@ type OverrideT = {|
 
 type Args =
   | [StyleT]
-  | [StyleT, KeysT]
+  | [StyleT, ModifiersT]
   | [StyleT, OverrideT]
-  | [StyleT, KeysT, OverrideT]
+  | [StyleT, ModifiersT, OverrideT]
 
 const useStyles = (...args: Args) => {
   const [defaultStyle, modifiers, { style, className, classNames }] = parseArgs(
@@ -45,7 +46,7 @@ const useStyles = (...args: Args) => {
 const defaultModifiers = Object.freeze({})
 const defaultProps = Object.freeze({})
 
-const parseArgs = (...args: Args): [StyleT, KeysT, OverrideT] => {
+const parseArgs = (...args: Args): [StyleT, ModifiersT, OverrideT] => {
   if (args.length === 1) {
     const [defaultStyle] = args
 
@@ -143,8 +144,8 @@ const ensureStyle = (overrides): StyleT | SubstyleT | void => {
   return overrides.style
 }
 
-const ensureModifiers = (modifiers): KeysT => {
-  return ((modifiers: any): KeysT)
+const ensureModifiers = (modifiers): ModifiersT => {
+  return ((modifiers: any): ModifiersT)
 }
 
 export default useStyles

@@ -1,7 +1,8 @@
 // @flow
 import { type ComponentType, type Ref } from 'react'
 
-export type KeysT = string | Array<string> | { [string]: boolean }
+export type ModifiersT = { [string]: boolean }
+export type KeysT = string | Array<string> | ModifiersT
 
 export type StyleT = {|
   [property: string]: string | number,
