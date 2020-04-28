@@ -4,7 +4,7 @@ import { useContext, useMemo } from 'react'
 import { PropsDecoratorContext } from './PropsDecoratorProvider'
 import createSubstyle from './createSubstyle'
 import coerceSelection from './coerceSelection'
-import { type ModifiersT, type StyleT } from './types'
+import { type ModifiersT, type StyleT, type PropsT } from './types'
 
 const useStyles = (
   defaultStyle?: StyleT,
