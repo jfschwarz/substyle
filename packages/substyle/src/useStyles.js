@@ -17,7 +17,7 @@ const useStyles = (
     [style, className, classNames, propsDecorator]
   )
 
-  return substyle(selectedModifiers, defaultStyle)
+  return substyle(modifiers, defaultStyle)
 }
 
 export default useStyles
