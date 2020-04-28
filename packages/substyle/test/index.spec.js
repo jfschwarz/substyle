@@ -5,7 +5,7 @@ import useStyles from '../src/index'
 describe('default export', () => {
   it('should be usable as a hook', () => {
     const MyComp = (props) => {
-      const style = useStyles(props)
+      const style = useStyles(undefined, props)
       return <div {...style} />
     }
 
