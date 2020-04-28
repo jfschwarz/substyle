@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { useStyles } from 'substyle'
+import useStyles from 'substyle'
 
 type ApiPropsT = {|
   size: 'small' | 'medium' | 'large',

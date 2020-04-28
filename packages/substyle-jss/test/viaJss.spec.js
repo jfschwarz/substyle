@@ -1,6 +1,6 @@
 import { mount } from 'enzyme'
 import React from 'react'
-import { useStyles } from 'substyle'
+import useStyles from 'substyle'
 
 import { viaJss } from '../src'
 
