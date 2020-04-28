@@ -6,7 +6,7 @@ import createSubstyle from './createSubstyle'
 import { type ModifiersT, type StyleT, type PropsT } from './types'
 
 const useStyles = (
-  defaultStyle?: StyleT,
+  defaultStyle: ?StyleT,
   { style, className, classNames }: PropsT,
   modifiers?: ModifiersT
 ) => {
