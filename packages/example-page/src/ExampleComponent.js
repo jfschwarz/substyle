@@ -1,21 +1,62 @@
 // @flow
 import React from 'react'
-import { createUseStyle } from 'substyle'
+import useStyles from 'substyle'
 
-const useStyle = createUseStyle({
-  title: {
-    fontSize: 20,
-  },
-})
+type ApiPropsT = {|
+  size: 'small' | 'medium' | 'large',
+  color: 'black' | 'red',
 
-function ExampleComponent(props: Object) {
-  const style = useStyle(props)
+  className?: string,
+|}
+
+function ExampleComponent({ size, color, className }: ApiPropsT) {
+  const styles = useStyles(
+    defaultStyles,
+    { className },
+    {
+      [`&${size}`]: true,
+      [`&${color}`]: true,
+    }
+  )
+
   return (
-    <div {...style}>
-      <h1 {...style('title')}>Title</h1>
-      <div {...style('content')}>Some text...</div>
+    <div {...styles}>
+      <h1 {...styles('title')}>Title</h1>
+      <div {...styles('content')}>Some text...</div>
     </div>
   )
+}
+
+const defaultStyles = {
+  '&large': {
+    title: {
+      fontSize: 24,
+    },
+  },
+
+  '&medium': {
+    title: {
+      fontSize: 20,
+    },
+  },
+
+  '&small': {
+    title: {
+      fontSize: 16,
+    },
+  },
+
+  '&black': {
+    content: {
+      color: 'black',
+    },
+  },
+
+  '&red': {
+    content: {
+      color: 'red',
+    },
+  },
 }
 
 export default ExampleComponent

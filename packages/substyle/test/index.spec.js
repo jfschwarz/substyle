@@ -1,11 +1,11 @@
 import React from 'react'
 import { mount } from 'enzyme'
-import useStyle from '../src/index'
+import useStyles from '../src/index'
 
 describe('default export', () => {
   it('should be usable as a hook', () => {
     const MyComp = (props) => {
-      const style = useStyle(props)
+      const style = useStyles(undefined, props)
       return <div {...style} />
     }
 

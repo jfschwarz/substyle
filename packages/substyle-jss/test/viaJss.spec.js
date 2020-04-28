@@ -1,13 +1,14 @@
-import React from 'react'
 import { mount } from 'enzyme'
+import React from 'react'
+import useStyles from 'substyle'
+
 import { viaJss } from '../src'
-import { createUseStyle } from 'substyle'
 
 describe('StylesViaJss', () => {
-  const useStyle = createUseStyle({ color: 'red' })
-  const MyComp = (props) => {
-    const style = useStyle(props)
-    return <div {...style} />
+  const defaultStyle = { color: 'red' }
+  const MyComp = ({ style }) => {
+    const styles = useStyles(defaultStyle, { style })
+    return <div {...styles} />
   }
 
   it('should process default styles and custom styling through JSS', () => {

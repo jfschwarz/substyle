@@ -12,7 +12,7 @@ import type {
   PropsT,
   SubstyleT,
 } from './types'
-import { assign, compact, isPlainObject, keys, merge, values } from './utils'
+import { compact, isPlainObject, keys, merge, values } from './utils'
 
 const guessBaseClassName = (classNames: ?ClassNamesT): ?string => {
   // all class names must start with the same prefix: the component's base class name
@@ -52,7 +52,8 @@ function createSubstyle(
   { style, className, classNames }: PropsT,
   propsDecorator: DecoratorFuncT = defaultPropsDecorator
 ): SubstyleT {
-  const baseClassName = className || guessBaseClassName(classNames)
+  const baseClassName =
+    className || guessBaseClassName(classNames) || style?.className
 
   const substyle =
     typeof style === 'function'
@@ -138,7 +139,7 @@ function createSubstyle(
   })
 
   // assign `style`, `className`, and/or any props added by the decorator to the return function object
-  assign(substyle, propsForSpread)
+  Object.assign(substyle, propsForSpread)
   return substyle
 }
 
