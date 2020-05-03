@@ -1,7 +1,7 @@
 // @flow
-export type ModifiersT = {|
+export type ModifiersT = {
   [string]: boolean,
-|}
+}
 export type KeysT = string | Array<string> | ModifiersT
 
 type PlainStyleT = {

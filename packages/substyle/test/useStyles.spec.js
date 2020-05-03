@@ -134,12 +134,12 @@ describe('useStyles', () => {
     )
   })
 
-  it('should preserve styles if modifiers are shallow equal', () => {
+  it('should preserve styles if styling props and modifiers are shallow equal', () => {
     let style
     let defaultStyle
 
     const Component = ({ readOnly }) => {
-      style = useStyles(defaultStyle, { '&readOnly': readOnly })
+      style = useStyles(defaultStyle, {}, { '&readOnly': readOnly })
       return null
     }
     const wrapper = mount(<Component />)
