@@ -118,8 +118,10 @@ function createSubstyle(
   }
 
   const classNameSplit = [
-    ...(styleProps.className ? styleProps.className.split(' ') : []),
-    ...(baseClassName ? baseClassName.split(' ') : []),
+    ...new Set([
+      ...(styleProps.className ? styleProps.className.split(' ') : []),
+      ...(baseClassName ? baseClassName.split(' ') : []),
+    ]),
   ]
   const mappedClassNames = classNames
     ? compact(
