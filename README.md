@@ -22,7 +22,7 @@ npm install --save substyle
 Let's create a simple `Popover` component using _substyle_:
 
 ```javascript
-import { useStyles } from 'substyle'
+import useStyles from 'substyle'
 
 const defaultStyle = {
   position: 'relative',
@@ -166,7 +166,7 @@ If the user provides a `style` prop these will be merged with the default styles
 User provided styles take precedence.
 
 ```javascript
-import { useStyles } from 'substyle'
+import useStyles from 'substyle'
 
 const defaultStyle = {
   position: 'absolute',
@@ -244,7 +244,7 @@ const MyComponent = ({ align, children, style, className, classNames }) => {
 If modifiers are not useful because the dynamic parts of the styles cannot practically be organized in a set of variants, you can still assign direct inline styles to elements using the [`inline` helper function](inlineinlineStylesBefore-styles-inlineStylesAfter).
 
 ```javascript
-import { inline } from 'substyle'
+import useStyles, { inline } from 'substyle'
 
 const defaultStyle = {}
 
