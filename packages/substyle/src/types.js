@@ -12,22 +12,21 @@ export type StyleT = {
   [string]: string | number | StyleT,
 }
 
-export type SubstyleT = {
+export type SubstyleT = {|
   (select: KeysT, defaultStyle?: StyleT): SubstyleT,
 
   style?: PlainStyleT,
   className?: string,
-  ...
-}
+|}
 
 export type ClassNamesT = {
   [string]: string,
 }
 
-export type PropsT = {
+export type PropsT = {|
   style?: StyleT | SubstyleT,
   className?: string,
   classNames?: ClassNamesT,
-}
+|}
 
 export type DecoratorFuncT = (props: PropsT) => Object
