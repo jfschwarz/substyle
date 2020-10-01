@@ -31,7 +31,10 @@ declare module 'substyle' {
       className?: string
     }
 
-    export function inline(base: Substyle, styles: Style): Substyle
+    export function inline(
+      base: Substyle,
+      inlineStyle: PlainStyle
+    ): { style?: PlainStyle; className?: string }
   }
 
   function useStyles(
