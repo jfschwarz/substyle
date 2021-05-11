@@ -1,4 +1,6 @@
 declare module 'substyle' {
+  import * as React from 'react'
+
   type PlainStyle = {
     [key: string]: string | number
   }
@@ -24,12 +26,23 @@ declare module 'substyle' {
       classNames?: ClassNames
     }
 
+    type DecoratorFunc = (props: StylingProps) => Object
+
     export type Substyle = {
       (select: Keys, defaultStyle?: Style): Substyle
 
       style?: PlainStyle
       className?: string
     }
+
+    export function createSubstyle(
+      props: StylingProps,
+      propsDecorator?: DecoratorFunc
+    ): Substyle
+
+    export const defaultPropsDecorator: DecoratorFunc
+    export const PropsDecoratorContext: React.Context<DecoratorFunc>
+    export const PropsDecoratorProvider: React.Context<DecoratorFunc>['Provider']
 
     export function inline(
       base: Substyle,
